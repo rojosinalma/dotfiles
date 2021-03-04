@@ -18,9 +18,9 @@ alias tf="terraform"
 alias tg="terragrunt"
 alias ts="terraspace"
 alias kc="kubectl"
-#alias open="xdg-open"
 alias cm="chezmoi"
 alias bs="brew services"
+#alias open="xdg-open" # TODO: Just for Linux
 
 # Config files
 export CHEZMOIR_SOURCE_DIR='/Users/rojo/dev/Rojo/Github/dotfiles'
@@ -34,10 +34,6 @@ alias preztheme="subl $HOME/.zprezto/modules/prompt/functions/prompt_rojo_setup"
 alias sshconfig="subl $HOME/.ssh/"
 alias hostconf="sudo subl /etc/hosts"
 alias gitconfig="subl $HOME/.gitconfig"
-
-# Quick nav
-#alias utils="cd /Users/rojo/dev/Rojo/Github/utils && subl /Users/rojo/dev/Rojo/Github/utils"
-#alias scripts="cd /Users/rojo/dev/Rojo/Github/scripts && subl /Users/rojo/dev/Rojo/Github/scripts"
 
 # Ruby/Rails
 alias rs="rails server"
