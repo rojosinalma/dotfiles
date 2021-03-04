@@ -1,0 +1,61 @@
+# Prezto
+if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+fi
+
+# GENERAL CONFIG AND PATH
+# (For other env vars and dirs, check zshenv)
+#------------------
+
+# FPATH
+fpath=("~/.fpath" $fpath)
+fpath=($(brew --prefix)/share/zsh/site-functions $fpath) # Homebrew zsh completions
+
+# Custom PATH
+export PATH="$PATH:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export PATH="$PATH:/Applications/Sublime Text.app/Contents/SharedSupport/bin:/Applications/Sublime Merge.app/Contents/SharedSupport/bin"
+
+# zsh autocompletion
+autoload -U +X bashcompinit && bashcompinit
+autoload -Uz compinit && compinit
+
+# Autojump
+[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
+
+# asdf
+. $HOME/.asdf/asdf.sh
+#. /home/rojo/.asdf/asdf.sh
+
+# COMPLETIONS
+#------------------
+
+# GH CLI completion
+eval $(gh completion -s zsh)
+
+# AWS CLI completion
+complete -C '/usr/local/bin/aws_completer' aws
+
+# fff cd on exit
+# f() {
+#     fff "$@"
+#     cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")"
+# }
+
+# colorls
+#source $(dirname $(gem which colorls))/tab_complete.sh
+
+# mcfly
+# if [[ -r "/usr/local/opt/mcfly/mcfly.zsh" ]]; then
+#   source "/usr/local/opt/mcfly/mcfly.zsh"
+# fi
+
+
+# PERSONAL EXTRAS
+#------------------
+source ~/.zsh_opts
+source ~/.zsh_env
+source ~/.zsh_functions
+source ~/.zsh_aliases
+
+# iTerm Shell Integration
+test -e ${HOME}/.iterm2_shell_integration.zsh && source ${HOME}/.iterm2_shell_integration.zsh
