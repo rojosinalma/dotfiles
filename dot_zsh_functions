@@ -1,0 +1,91 @@
+# TODO:
+# - Check the duration and reuse them if still valid
+# You need to have `assume-role` installed (brew install remind101/formulae/assume-role)
+
+function ar(){
+  # Let's set the env that called this func.
+  local aws_environment
+  local duration
+  aws_environment=$@
+
+  # Checking the env actually exists (just add new ones to this case switch)
+  case $aws_environment in
+  "prod")
+    echo "Switched to prod/admin role"
+    duration="8h"
+    ;;
+  "dev")
+    echo "Switched to dev/admin role"
+    duration="8h"
+    ;;
+  "tf")
+    echo "Switched to base/terraform role"
+    duration="1h"
+    ;;
+  "admin")
+    echo "Switched to base/admin role"
+    duration="1h"
+    ;;
+  "default")
+    echo "Cleaned assumed role"
+    unset AWS_SESSION_TOKEN
+    unset AWS_SECURITY_TOKEN
+    unset AWS_ACCESS_KEY_ID
+    unset AWS_SECRET_ACCESS_KEY
+    export AWS_DEFAULT_PROFILE=base
+    return 0
+    ;;
+  "list")
+    echo "List of options"
+    echo " prod"
+    echo " dev"
+    echo " admin"
+    echo " tf"
+    echo " default"
+    return 0
+    ;;
+  *)
+    echo "That environment doesn't exist, dummy"
+    return 0
+    ;;
+  esac
+
+  rm -f ~/.aws/assume-role-creds.$aws_environment # Delete old creds
+  assume-role -duration $duration $aws_environment >| ~/.aws/assume-role-creds.$aws_environment # Save new creds
+  source ~/.aws/assume-role-creds.$aws_environment # Source new creds
+  export AWS_DEFAULT_PROFILE=$aws_environment # Change aws profile
+
+  # if [ $aws_environment = "prod" ] || [ $aws_environment = "dev"];
+  # then
+  #   kubectl config use-context $aws_environment # Change k8s context if it applies
+  # fi
+}
+
+# Hacky func to bypass MFA if creds haven't expired.
+function cr(){
+  # Let's set the env that called this func.
+  local aws_environment
+  aws_environment=$@
+
+  source ~/.aws/assume-role-creds.$aws_environment
+  export AWS_DEFAULT_PROFILE="${aws_environment}"
+}
+
+# man() {
+#  env \
+#    LESS_TERMCAP_mb=$(printf "\e[1;31m") \
+#    LESS_TERMCAP_md=$(printf "\e[1;31m") \
+#    LESS_TERMCAP_me=$(printf "\e[0m") \
+#    LESS_TERMCAP_se=$(printf "\e[0m") \
+#    LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
+#    LESS_TERMCAP_ue=$(printf "\e[0m") \
+#    LESS_TERMCAP_us=$(printf "\e[1;32m") \
+#      man "$@"
+#}
+
+# jhome () {
+#   export JAVA_HOME=`/usr/libexec/java_home $@`
+#   echo "JAVA_HOME:" $JAVA_HOME
+#   echo "java -version:"
+#   java -version
+# }

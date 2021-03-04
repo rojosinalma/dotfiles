@@ -1,0 +1,88 @@
+# Binds (https://stackoverflow.com/questions/6205157/iterm-2-how-to-set-keyboard-shortcuts-to-jump-to-beginning-end-of-line#10485061)
+#-------------------
+
+bindkey -e
+bindkey '^[[1;9C' forward-word
+bindkey '^[[1;9D' backward-word
+
+# Aliases
+#-------------------
+
+# Builtins
+alias c="clear"
+alias ls="colorls --dark -1 --sd --gs"
+alias l="ls -lac"
+
+# Tools
+alias tf="terraform"
+alias tg="terragrunt"
+alias ts="terraspace"
+alias kc="kubectl"
+#alias open="xdg-open"
+alias cm="chezmoi"
+alias bs="brew services"
+
+# Config files
+export CHEZMOIR_SOURCE_DIR='/Users/rojo/dev/Rojo/Github/dotfiles'
+alias zshsource="source ~/.zshrc && source ~/.zpreztorc"
+alias zshaliases="subl $CHEZMOIR_SOURCE_DIR/dot_zsh_aliases"
+alias zshenv="subl $CHEZMOIR_SOURCE_DIR/dot_zsh_env"
+alias zshopts="subl $CHEZMOIR_SOURCE_DIR/dot_zsh_opts"
+alias zshconfig="subl $CHEZMOIR_SOURCE_DIR/dot_zshrc"
+alias prezconfig="subl $CHEZMOIR_SOURCE_DIR/dot_zpreztorc"
+alias preztheme="subl ~/.zprezto/modules/prompt/functions/prompt_rojo_setup"
+alias sshconfig="subl ~/.ssh/"
+alias hostconf="sudo subl /etc/hosts"
+alias gitconfig="subl ~/.gitconfig"
+
+# Quick nav
+#alias utils="cd /Users/rojo/dev/Rojo/Github/utils && subl /Users/rojo/dev/Rojo/Github/utils"
+#alias scripts="cd /Users/rojo/dev/Rojo/Github/scripts && subl /Users/rojo/dev/Rojo/Github/scripts"
+
+# Ruby/Rails
+alias rs="rails server"
+alias rc="rails console"
+alias be="bundle exec"
+alias gemconfig="subl ~/.rvm/gemsets/global.gems"
+alias rspuma="RAILS_ENV=development bundle exec rails s Puma -p 8080"
+alias dbreset="rake db:migrate:reset && rake db:reset"
+alias mtest="ruby -r minitest/pride *_test.rb"
+
+# Docker
+alias dimg="docker images" # Show docker images.
+alias drmi='docker rmi $(docker images -q)' # Remove all images.
+alias dpsa="docker ps -a" # Show running docker containers.
+alias dpsaq="docker ps -aq" # Show running docker containers without Header (used for other aliases).
+alias dstop='docker stop $(dpsaq)' # Stop all running containers.
+alias drma='docker rm $(dpsaq)' # Remove all running containers.
+alias dclean="docker images -qf dangling=true | xargs docker rmi" # Remove all dangling images.
+alias dprune="docker system prune -a" # Delete unused or dangling images, containers, volumes and networks
+alias dfind='docker images -a | grep $1' # List images that match pattern.
+alias dfindrm='docker images -a | grep $1 | awk "{print $3}" | xargs docker rmi' # Remove images that match pattern.
+alias dex="docker ps -a -f status=exited" # List exited containers.
+alias dexrm='docker rm $(docker ps -a -f status=exited -q)' # Stop exited containers.
+alias drmf='docker stop $(dpsaq) && docker rm $(dpsaq)' # Stop and Remove all containers
+alias dc="docker-compose"
+
+# Makefile
+# alias mkt="make test"
+# alias mktb="make test-build"
+# alias mktd="make test-down"
+# alias mktp="make test-prompt"
+# alias mkd="make dev"
+# alias mkdd="make dev-down"
+# alias mks="make status"
+
+# Rancher ctl
+# #alias rkctl="rancher kubectl"
+# # i.e: `rkxc <some_namespace> <some_pod_id> -- ash`
+# alias rkxc="rkctl exec -i -t -n"
+# # i.e: `rkgp <some_namespace>`
+# alias rkgp="rkctl get pods -n"
+# # i.e: `pfwd gateway kong-postgres-0 5433:5432`
+# alias pfwd="rkctl port-forward -n $1 $2 $3"
+
+
+# Remap dirs (used to override prezto module)
+alias d='dirs -v'
+for index ({1..11}) alias "$index"="cd -${index}"; unset index
