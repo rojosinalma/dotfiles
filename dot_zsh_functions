@@ -37,11 +37,11 @@ function ar(){
     ;;
   "list")
     echo "List of options"
-    echo " prod"
-    echo " dev"
-    echo " admin"
-    echo " tf"
-    echo " default"
+    echo "  prod"
+    echo "  dev"
+    echo "  admin"
+    echo "  tf"
+    echo "  default (clear assumed roles)"
     return 0
     ;;
   *)
