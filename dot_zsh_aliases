@@ -21,6 +21,8 @@ alias kc="kubectl"
 alias cm="chezmoi"
 alias bs="brew services"
 #alias open="xdg-open" # TODO: Just for Linux
+alias oc="overcommit"        # https://github.com/sds/overcommit#installation
+alias ocr="overcommit --run"
 
 # Config files
 export CHEZMOIR_SOURCE_DIR='/Users/rojo/dev/Rojo/Github/dotfiles'
@@ -29,6 +31,7 @@ alias zshaliases="subl $CHEZMOIR_SOURCE_DIR/dot_zsh_aliases"
 alias zshenv="subl $CHEZMOIR_SOURCE_DIR/dot_zsh_env"
 alias zshopts="subl $CHEZMOIR_SOURCE_DIR/dot_zsh_opts"
 alias zshconfig="subl $CHEZMOIR_SOURCE_DIR/dot_zshrc"
+alias zsecrets="subl $HOME/.zsh_secrets"
 alias prezconfig="subl $CHEZMOIR_SOURCE_DIR/dot_zpreztorc"
 alias preztheme="subl $HOME/.zprezto/modules/prompt/functions/prompt_rojo_setup"
 alias sshconfig="subl $HOME/.ssh/"
@@ -38,6 +41,7 @@ alias gitconfig="subl $HOME/.gitconfig"
 # Ruby/Rails
 alias rs="rails server"
 alias rc="rails console"
+alias bc="bin/console"
 alias be="bundle exec"
 alias gemconfig="subl $HOME/.rvm/gemsets/global.gems"
 alias rspuma="RAILS_ENV=development bundle exec rails s Puma -p 8080"
