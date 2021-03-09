@@ -57,3 +57,6 @@ export AWS_DEFAULT_PROFILE="dev"
 # k8s
 export KUBECONFIG="$HOME/.kube/config.dev:$HOME/.kube/config.prod"
 export KUBECTL_EXTERNAL_DIFF="colordiff -N -u"
+
+# Overcommit
+export GIT_TEMPLATE_DIR="$(overcommit --template-dir)"
