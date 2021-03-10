@@ -53,3 +53,5 @@
 [heroku]
 	remote = heroku
 
+[init]
+	defaultBranch = master
