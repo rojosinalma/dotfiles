@@ -1,0 +1,5 @@
+ruby 3.0.0
+terraform 0.14.7
+terragrunt 0.28.7
+python 3.9.2
+nodejs 15.11.0
