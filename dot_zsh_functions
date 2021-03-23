@@ -35,6 +35,10 @@ function ar(){
     export AWS_DEFAULT_PROFILE=base
     return 0
     ;;
+  "current")
+    aws sts get-caller-identity
+    return 0
+    ;;
   "list")
     echo "List of options"
     echo "  prod"

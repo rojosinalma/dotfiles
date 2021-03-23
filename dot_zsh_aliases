@@ -86,3 +86,6 @@ alias dc="docker-compose"
 # Remap dirs (used to override prezto module)
 alias d='dirs -v'
 for index ({1..11}) alias "$index"="cd -${index}"; unset index
+
+## AWS
+alias ausers='aws iam list-users | jq '.Users[].UserName'
