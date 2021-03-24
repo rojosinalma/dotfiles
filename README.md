@@ -17,7 +17,7 @@ These are my dotfiles, there's many like them but these are mine.
         ln -s dot_config/chezmoi/chezmoi.yml $HOME/.config/chezmoi/chezmoi.yml
     ```
 
-2. Change the `sourceDir` inside the `chezmoi.yml` file to where you cloned the repository.
+2. Change the `sourceDir` inside the `chezmoi.yml` file to where you cloned this.
 3. `chezmoi -v apply`
 4. Celebrate :tada:
 
