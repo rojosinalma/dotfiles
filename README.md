@@ -14,7 +14,7 @@ These are my dotfiles, there's many like them but these are mine.
     ```
         git clone https://github.com/rojosinalma/dotfiles
         cd dotfiles
-        ln -s .config/chezmoi/chezmoi.yml $HOME/.config/chezmoi/chezmoi.yml
+        ln -s dot_config/chezmoi/chezmoi.yml $HOME/.config/chezmoi/chezmoi.yml
     ```
 
 2. Change the `sourceDir` inside the `chezmoi.yml` file to where you cloned the repository.
