@@ -10,8 +10,8 @@ cmd + ctrl + shift - w : launchctl kickstart -k "gui/${UID}/homebrew.mxcl.skhd"
 # WINDOWS
 
 # navigate windows and spaces
-alt - k : yabai -m window --focus stack.next || yabai -m window --focus next || yabai -m window --focus first
 alt - j : yabai -m window --focus stack.prev || yabai -m window --focus prev || yabai -m window --focus last
+alt - k : yabai -m window --focus stack.next || yabai -m window --focus next || yabai -m window --focus first
 
 # move window
 alt + shift - j: yabai -m window --warp prev
@@ -21,8 +21,8 @@ alt + shift - k: yabai -m window --warp next
 alt + shift - backspace : yabai -m space --balance
 
 # resize windows
-cmd + ctrl - h : yabai -m window --resize left:-60:0
-cmd + ctrl - l : yabai -m window --resize right:60:0
+alt + shift - h : yabai -m window --resize left:-60:0
+alt + shift - l : yabai -m window --resize right:60:0
 
 # mirror tree x-axis
 alt + shift - v : yabai -m space --mirror y-axis
@@ -42,11 +42,11 @@ alt - f : yabai -m window --toggle zoom-fullscreen
 # toggle window split type
 alt + shift - space : yabai -m window --toggle split
 
-
 # SPACES
 # fast focus desktop
-alt - n : yabai -m space  --focus next
-alt - m : yabai -m space  --focus prev
+alt - n : yabai -m space --focus prev || yabai -m space --focus prev || yabai -m space --focus last
+alt - m : yabai -m space --focus next || yabai -m space --focus next || yabai -m space --focus first
+
 cmd + ctrl - tab : yabai -m space --focus recent
 # alt - 1 : yabai -m space --focus 1
 # alt - 2 : yabai -m space --focus 2
