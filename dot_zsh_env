@@ -55,8 +55,11 @@ export AWS_DEFAULT_REGION="eu-west-1"
 export AWS_DEFAULT_PROFILE="dev"
 
 # k8s
-export KUBECONFIG="$HOME/.kube/config.dev:$HOME/.kube/config.prod"
+export KUBECONFIG="$HOME/.kube/config.dev:$HOME/.kube/config.prod:$HOME/.kube/config.local:$HOME/.kube/config.pokemon"
 export KUBECTL_EXTERNAL_DIFF="colordiff -N -u"
+
+# Skaffold
+export SKAFFOLD_DEFAULT_REPO="rojosinalma"
 
 # Overcommit
 export GIT_TEMPLATE_DIR="$(overcommit --template-dir)"

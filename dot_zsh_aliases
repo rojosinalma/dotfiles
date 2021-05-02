@@ -64,6 +64,9 @@ alias dexrm='docker rm $(docker ps -a -f status=exited -q)' # Stop exited contai
 alias drmf='docker stop $(dpsaq) && docker rm $(dpsaq)' # Stop and Remove all containers
 alias dc="docker-compose"
 
+# Skaffold
+alias ska='skaffold'
+
 # Makefile
 # alias mkt="make test"
 # alias mktb="make test-build"
@@ -82,10 +85,9 @@ alias dc="docker-compose"
 # # i.e: `pfwd gateway kong-postgres-0 5433:5432`
 # alias pfwd="rkctl port-forward -n $1 $2 $3"
 
-
 # Remap dirs (used to override prezto module)
 alias d='dirs -v'
 for index ({1..11}) alias "$index"="cd -${index}"; unset index
 
 ## AWS
-alias ausers='aws iam list-users | jq '.Users[].UserName'
+alias ausers="aws iam list-users | jq '.Users[].UserName'"
