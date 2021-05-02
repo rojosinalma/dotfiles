@@ -26,7 +26,7 @@ function ar(){
     echo "Switched to base/admin role"
     duration="1h"
     ;;
-  "default")
+  "base")
     echo "Cleaned assumed role"
     unset AWS_SESSION_TOKEN
     unset AWS_SECURITY_TOKEN
@@ -45,7 +45,7 @@ function ar(){
     echo "  dev"
     echo "  admin"
     echo "  tf"
-    echo "  default (clear assumed roles)"
+    echo "  base (clear assumed roles)"
     return 0
     ;;
   *)
@@ -55,7 +55,7 @@ function ar(){
   esac
 
   rm -f ~/.aws/assume-role-creds.$aws_environment # Delete old creds
-  assume-role -duration $duration $aws_environment >| ~/.aws/assume-role-creds.$aws_environment # Save new creds
+  assume-role -duration $duration $aws_environment > ~/.aws/assume-role-creds.$aws_environment # Save new creds
   source ~/.aws/assume-role-creds.$aws_environment # Source new creds
   export AWS_DEFAULT_PROFILE=$aws_environment # Change aws profile
 
@@ -66,6 +66,7 @@ function ar(){
 }
 
 # Hacky func to bypass MFA if creds haven't expired.
+# stands for change role
 function cr(){
   # Let's set the env that called this func.
   local aws_environment

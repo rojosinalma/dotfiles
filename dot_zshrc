@@ -35,6 +35,12 @@ eval $(gh completion -s zsh)
 # AWS CLI completion
 complete -C '/usr/local/bin/aws_completer' aws
 
+# Kustomize completion
+eval $(kustomize completion zsh)
+
+# eksctl completion
+eval $(eksctl completion zsh)
+
 # fff cd on exit
 # f() {
 #     fff "$@"
