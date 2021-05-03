@@ -5,7 +5,7 @@ alt - 0x54 : yabai -m space --layout stack
 
 # Quick restart
 alt + shift - f5 : launchctl kickstart -k "gui/${UID}/homebrew.mxcl.yabai"
-alt + shift - f6 : launchctl kickstart -k "gui/${UID}/homebrew.mxcl.skhd"
+alt + shift - f6 : skhd -r
 
 ## WINDOWS MANAGEMENT
 # Rotate windows focus
@@ -35,8 +35,8 @@ alt + shift - t : yabai -m window --toggle float;\
 alt - t : yabai -m window --toggle float
 
 # Move windows between displays (with , and .)
-alt + shift - 0x2B : yabai -m window --display 1; yabai -m display --focus 1
-alt + shift - 0x2F : yabai -m window --display 2; yabai -m display --focus 2
+alt + shift - n : yabai -m window --display 1; yabai -m display --focus 1
+alt + shift - m : yabai -m window --display 2; yabai -m display --focus 2
 
 
 ## SPACE MANAGEMENT
