@@ -1,88 +1,70 @@
-# Base from: https://github.com/kkga/dotfiles/blob/master/.config/yabai/yabairc
+# Change layout of desktop (Num1, Num2 ,Num3)
+alt - 0x53 : yabai -m space --layout bsp
+alt - 0x55 : yabai -m space --layout float
+alt - 0x54 : yabai -m space --layout stack
 
 # Quick restart
-cmd + ctrl + shift - q : launchctl kickstart -k "gui/${UID}/homebrew.mxcl.yabai"
-cmd + ctrl + shift - w : launchctl kickstart -k "gui/${UID}/homebrew.mxcl.skhd"
+alt + shift - f5 : launchctl kickstart -k "gui/${UID}/homebrew.mxcl.yabai"
+alt + shift - f6 : launchctl kickstart -k "gui/${UID}/homebrew.mxcl.skhd"
 
-# APPS
-# cmd + ctrl - t : kitty -d=$HOME --single-instance --listen-on=unix:/tmp/mykitty
-
-# WINDOWS
-
-# navigate windows and spaces
+## WINDOWS MANAGEMENT
+# Rotate windows focus
 alt - j : yabai -m window --focus stack.prev || yabai -m window --focus prev || yabai -m window --focus last
 alt - k : yabai -m window --focus stack.next || yabai -m window --focus next || yabai -m window --focus first
 
-# move window
-alt + shift - j: yabai -m window --warp prev
-alt + shift - k: yabai -m window --warp next
+# Move window
+alt + shift - j: yabai -m window --swap prev || yabai -m window --swap last
+alt + shift - k: yabai -m window --swap next || yabai -m window --swap first
 
-# balance size of windows
-alt + shift - backspace : yabai -m space --balance
+# Balance size
+alt - backspace : yabai -m space --balance
 
-# resize windows
+# Balance and mirror (initialize master-stack layout)
+alt + shift - backspace : yabai -m space --balance;\
+                          yabai -m space --mirror y-axis
+
+# Resize window
 alt + shift - h : yabai -m window --resize left:-60:0
 alt + shift - l : yabai -m window --resize right:60:0
 
-# mirror tree x-axis
-alt + shift - v : yabai -m space --mirror y-axis
-
-
-# float / unfloat window and center on screen
+# (Un)Float and center
 alt + shift - t : yabai -m window --toggle float;\
                   yabai -m window --grid 8:8:1:1:6:6
 
+# Float window
+alt - t : yabai -m window --toggle float
+
+# Move windows between displays (with , and .)
+alt + shift - 0x2B : yabai -m window --display 1; yabai -m display --focus 1
+alt + shift - 0x2F : yabai -m window --display 2; yabai -m display --focus 2
+
+
+## SPACE MANAGEMENT
+# Rotate display focus
+alt - n : yabai -m display --focus prev || yabai -m display --focus last
+alt - m : yabai -m display --focus next || yabai -m display --focus first
+
+# Mirror split
+alt + shift - v : yabai -m space --mirror y-axis
+
+
 # TOGGLES
-alt - p : yabai -m window --toggle border
+# Toggle border
+alt - b : yabai -m window --toggle border
+
+# Toggle gap
 alt - g : yabai -m space --toggle gap
 
-# toggle window fullscreen zoom
+# Toggle window fullscreen
 alt - f : yabai -m window --toggle zoom-fullscreen
+alt + shift - f : yabai -m window --toggle zoom-parent
 
-# toggle window split type
+# Toggle split type
 alt + shift - space : yabai -m window --toggle split
 
-# SPACES
-# fast focus desktop
-alt - n : yabai -m space --focus prev || yabai -m space --focus prev || yabai -m space --focus last
-alt - m : yabai -m space --focus next || yabai -m space --focus next || yabai -m space --focus first
+# Toggle sticky/topmost
+alt - s : yabai -m window --togle sticky
+alt + shift - s: yabai -m window --toggle topmost
 
-cmd + ctrl - tab : yabai -m space --focus recent
-# alt - 1 : yabai -m space --focus 1
-# alt - 2 : yabai -m space --focus 2
-# alt - 3 : yabai -m space --focus 3
-# alt - 4 : yabai -m space --focus 4
-# alt - 5 : yabai -m space --focus 5
-# alt - 6 : yabai -m space --focus 6
-# alt - 7 : yabai -m space --focus 7
-# alt - 8 : yabai -m space --focus 8
-# alt - 9 : yabai -m space --focus 9
-
-# send window to desktop and follow focus
-# alt + shift - tab : yabai -m window --space recent; yabai -m space --focus recent
-# alt + shift - n : yabai -m window --space next; yabai -m space --focus next
-# alt + shift - p : yabai -m window --space prev; yabai -m space --focus prev
-# alt + shift - 1 : yabai -m window --space  1; yabai -m space --focus 1
-# alt + shift - 2 : yabai -m window --space  2; yabai -m space --focus 2
-# alt + shift - 3 : yabai -m window --space  3; yabai -m space --focus 3
-# alt + shift - 4 : yabai -m window --space  4; yabai -m space --focus 4
-# alt + shift - 5 : yabai -m window --space  5; yabai -m space --focus 5
-# alt + shift - 6 : yabai.-m window --space  6; yabai -m space --focus 6
-# alt + shift - 7 : yabai.-m window --space  7; yabai -m space --focus 7
-# alt + shift - 8 : yabai.-m window --space  8; yabai -m space --focus 8
-# alt + shift - 9 : yabai.-m window --space  9; yabai -m space --focus 9
-
-# change layout of desktop
-# alt - z : yabai -m space --layout bsp
-# alt - x : yabai -m space --layout float
-# alt - c : yabai -m space --layout stack
-
-
-# DISPLAYS
-
-# focus display
-cmd + ctrl - 0x2B : yabai -m display --focus prev
-cmd + ctrl - 0x2F : yabai -m display --focus next
-cmd + ctrl + shift - 0x2B : yabai -m window --display 1; yabai -m display --focus 1
-cmd + ctrl + shift - 0x2F : yabai -m window --display 2; yabai -m display --focus 2
-# ctrl + alt - tab  : yabai -m display --focus recent
+# APPS
+# NONE FOR NOW
