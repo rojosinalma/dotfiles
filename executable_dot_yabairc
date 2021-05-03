@@ -14,7 +14,7 @@
 sudo yabai --load-sa
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 
-# global settings
+# Global settings
 yabai -m config mouse_follows_focus          on
 yabai -m config focus_follows_mouse          on
 yabai -m config window_placement             second_child
@@ -36,7 +36,7 @@ yabai -m config mouse_action1                move
 yabai -m config mouse_action2                resize
 yabai -m config mouse_drop_action            swap
 
-# general space settings
+# General space settings
 yabai -m config layout                       bsp
 yabai -m config top_padding                  0
 yabai -m config bottom_padding               0
@@ -49,8 +49,13 @@ yabai -m config window_gap                   10
 yabai -m rule --add app="^Discord$"            opacity=1
 yabai -m rule --add app="^Franz$"              opacity=1
 yabai -m rule --add app="^Telegram$"           opacity=1
-yabai -m rule --add app="^finder$"              opacity=1
-yabai -m rule --add app="^Dropbox$"              opacity=1
+yabai -m rule --add app="^Finder$"             opacity=1
+yabai -m rule --add app="^Dropbox Passwords$"  opacity=1
+yabai -m rule --add app="^Vivaldi$"            opacity=1
+yabai -m rule --add app="^zoom.us$"            opacity=1
+
+# Fullscreen
+
 
 # UNMANAGED
 yabai -m rule --add app="^System Preferences$" manage=off
@@ -60,11 +65,7 @@ yabai -m rule --add app="^Preview$"            manage=off
 yabai -m rule --add app="^iStat Menus Status$" manage=off
 yabai -m rule --add app='^Little Snitch$'      manage=off
 yabai -m rule --add app="^zoom.us$"            manage=off
-yabai -m rule --add app="^Dropbox$"            manage=off
+yabai -m rule --add app="^Dropbox Passwords$"  manage=off
 yabai -m rule --add app="^Authy Desktop$"      manage=off
-# yabai -m rule --add app="^Kap$"                manage=off
-# yabai -m rule --add app="^Bitwarden$"          manage=off
-# yabai -m rule --add app="^Quick Add to Trello$" manage=off
-# yabai -m rule --add app="Godot"          manage=off
 
 echo "yabai configuration loaded.."
