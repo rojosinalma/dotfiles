@@ -2,7 +2,7 @@
 #-------------------
 
 # Default Editor
-export EDITOR="subl -n -w"
+export EDITOR="subl -w"
 export VISUAL="$EDITOR"
 
 # LC

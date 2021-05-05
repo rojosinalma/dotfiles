@@ -3,6 +3,6 @@ terraform 0.14.7
 terragrunt 0.28.7
 python 3.9.2
 nodejs 15.11.0
-skaffold 1.21.0
+skaffold 1.23.0
 kustomize 4.0.1
 eksctl 0.45.0
