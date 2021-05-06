@@ -63,3 +63,6 @@ export SKAFFOLD_DEFAULT_REPO="rojosinalma"
 
 # Overcommit
 export GIT_TEMPLATE_DIR="$(overcommit --template-dir)"
+
+# Chezmoi
+export CHEZMOIR_SOURCE_DIR='/Users/rojo/dev/Rojo/Github/dotfiles'
