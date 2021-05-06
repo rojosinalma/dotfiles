@@ -25,7 +25,6 @@ alias oc="overcommit"        # https://github.com/sds/overcommit#installation
 alias ocr="overcommit --run"
 
 # Config files
-export CHEZMOIR_SOURCE_DIR='/Users/rojo/dev/Rojo/Github/dotfiles'
 alias zshsource="source $HOME/.zshrc && source $HOME/.zpreztorc"
 alias zshaliases="subl $CHEZMOIR_SOURCE_DIR/dot_zsh_aliases"
 alias zshenv="subl $CHEZMOIR_SOURCE_DIR/dot_zsh_env"
@@ -37,6 +36,8 @@ alias preztheme="subl $HOME/.zprezto/modules/prompt/functions/prompt_rojo_setup"
 alias sshconfig="subl $HOME/.ssh/"
 alias hostconf="sudo subl /etc/hosts"
 alias gitconfig="subl $HOME/.gitconfig"
+alias yabaiconfig="subl ~/.yabairc"
+alias skhdconfig="subl ~/.skhdrc"
 
 # Ruby/Rails
 alias rs="rails server"
