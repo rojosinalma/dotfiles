@@ -41,6 +41,9 @@ eval $(kustomize completion zsh)
 # eksctl completion
 eval $(eksctl completion zsh)
 
+# Kitty
+kitty + complete setup zsh | source /dev/stdin
+
 # fff cd on exit
 # f() {
 #     fff "$@"

@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
 
+# Setup
 sudo yabai --load-sa
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 
@@ -32,6 +33,18 @@ yabai -m config bottom_padding               0
 yabai -m config left_padding                 0
 yabai -m config right_padding                0
 yabai -m config window_gap                   10
+
+# Spacebar (top bar)
+# SPACEBAR_HEIGHT=$(spacebar -m config height)
+# yabai -m config external_bar                 all:$SPACEBAR_HEIGHT:0
+
+# Defaults for spaces
+yabai -m config --space 2 layout                stack
+yabai -m config --space 2 top_padding           0
+yabai -m config --space 2 bottom_padding        0
+yabai -m config --space 2 left_padding          0
+yabai -m config --space 2 right_padding         0
+yabai -m config --space 2 window_gap            0
 
 ## RULES
 yabai -m rule --add app="^Discord$"            opacity=1
