@@ -36,9 +36,9 @@ alias preztheme="subl $HOME/.zprezto/modules/prompt/functions/prompt_rojo_setup"
 alias sshconfig="subl $CHEZMOIR_SOURCE_DIR/private_dot_ssh/"
 alias hostconf="sudo subl /etc/hosts"
 alias gitconfig="subl $CHEZMOIR_SOURCE_DIR/dot_gitconfig"
-alias yabaiconfig="subl $CHEZMOIR_SOURCE_DIR/dot_config/yabai/yabairc"
-alias skhdconfig="subl $CHEZMOIR_SOURCE_DIR/dot_config/skhd/skhdrc"
-alias skhdconfig="subl $CHEZMOIR_SOURCE_DIR/dot_config/spacebar/spacebarrc"
+alias yabaiconfig="subl $CHEZMOIR_SOURCE_DIR/dot_config/yabai/executable_yabairc"
+alias skhdconfig="subl $CHEZMOIR_SOURCE_DIR/dot_config/skhd/executable_skhdrc"
+#alias spacebarconfig="subl $CHEZMOIR_SOURCE_DIR/dot_config/spacebar/spacebarrc"
 
 # Ruby/Rails
 alias rs="rails server"

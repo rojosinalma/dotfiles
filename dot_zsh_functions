@@ -14,7 +14,15 @@ function ar(){
     echo "Switched to prod/admin role"
     duration="8h"
     ;;
+  "fatmap-production-admin")
+    echo "Switched to prod/admin role"
+    duration="8h"
+    ;;
   "dev")
+    echo "Switched to dev/admin role"
+    duration="8h"
+    ;;
+  "fatmap-development-admin")
     echo "Switched to dev/admin role"
     duration="8h"
     ;;

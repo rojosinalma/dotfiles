@@ -55,7 +55,9 @@ export AWS_DEFAULT_REGION="eu-west-1"
 export AWS_DEFAULT_PROFILE="dev"
 
 # k8s
-export KUBECONFIG="$HOME/.kube/config.dev:$HOME/.kube/config.prod:$HOME/.kube/config.local:$HOME/.kube/config.pokemon"
+export KUBECONFIG="$HOME/.kube/config.dev"
+export KUBECONFIG="$KUBECONFIG:$HOME/.kube/config.prod"
+export KUBECONFIG="$KUBECONFIG:$HOME/.kube/config.local"
 export KUBECTL_EXTERNAL_DIFF="colordiff -N -u"
 
 # Skaffold
@@ -66,3 +68,10 @@ export GIT_TEMPLATE_DIR="$(overcommit --template-dir)"
 
 # Chezmoi
 export CHEZMOIR_SOURCE_DIR='/Users/rojo/dev/Rojo/Github/dotfiles'
+
+# Android Studio (for React Native)
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+export PATH=$PATH:$ANDROID_HOME/platform-tools

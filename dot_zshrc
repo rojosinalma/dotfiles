@@ -7,17 +7,11 @@ fi
 # (For other env vars and dirs, check zshenv)
 #------------------
 
-# FPATH
-fpath=("~/.fpath" $fpath)
-fpath=($(brew --prefix)/share/zsh/site-functions $fpath) # Homebrew zsh completions
+
 
 # Custom PATH
 export PATH="$PATH:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="$PATH:/Applications/Sublime Text.app/Contents/SharedSupport/bin:/Applications/Sublime Merge.app/Contents/SharedSupport/bin"
-
-# zsh autocompletion
-autoload -U +X bashcompinit && bashcompinit
-autoload -Uz compinit && compinit
 
 # Autojump
 [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
@@ -28,6 +22,15 @@ autoload -Uz compinit && compinit
 
 # COMPLETIONS
 #------------------
+
+# FPATH
+fpath=("~/.fpath" $fpath)
+fpath=($(brew --prefix)/share/zsh/site-functions $fpath) # Homebrew zsh completions
+fpath=(${ASDF_DIR}/completions $fpath)
+
+# Init completions
+autoload -U +X bashcompinit && bashcompinit
+autoload -Uz compinit && compinit
 
 # GH CLI completion
 eval $(gh completion -s zsh)
@@ -57,6 +60,9 @@ kitty + complete setup zsh | source /dev/stdin
 # if [[ -r "/usr/local/opt/mcfly/mcfly.zsh" ]]; then
 #   source "/usr/local/opt/mcfly/mcfly.zsh"
 # fi
+
+## Bitwarden
+eval $(bw completion --shell zsh)
 
 
 # PERSONAL EXTRAS
