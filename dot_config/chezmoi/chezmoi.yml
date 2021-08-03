@@ -3,6 +3,5 @@ diff:
   format: git
 gpg:
   recipient: "rojo@rojo.dev"
-color: auto
 verbose: true
 follow: true
