@@ -5,7 +5,7 @@ These are my dotfiles, there's many like them but these are mine.
 
 ### Requirements:
 
-* [Chezmoi](https://github.com/rojosinalma/dotfiles) 2.1.3
+* [Chezmoi](https://github.com/twpayne/chezmoi) 2.1.3
 * Files
 
 ## Usage:
