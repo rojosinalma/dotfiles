@@ -67,6 +67,7 @@ yabai -m rule --add app="^Docker Desktop$"     opacity=1 manage=off
 yabai -m rule --add app="^Contexts$"           opacity=1 manage=off
 yabai -m rule --add app="^Finder$"             opacity=1 manage=off
 yabai -m rule --add app="^TeamViewer$"         opacity=1 manage=off
+yabai -m rule --add app="^AppCleaner$"         opacity=1 manage=off
 yabai -m rule --add app='^Little Snitch$'      opacity=1 manage=off grid=8:8:1:1:6:6
 yabai -m rule --add app="^Activity Monitor$"   opacity=1 manage=off grid=8:8:1:1:6:6
 yabai -m rule --add app="^Dropbox$"            opacity=1 manage=off grid=8:8:1:1:6:6
