@@ -1,4 +1,4 @@
-ruby 3.0.0
+ruby 3.0.1
 terraform 0.14.7
 terragrunt 0.28.7
 python 3.9.2
