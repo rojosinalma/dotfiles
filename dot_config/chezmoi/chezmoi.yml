@@ -5,3 +5,8 @@ gpg:
   recipient: "rojo@rojo.dev"
 verbose: true
 follow: true
+format: yaml
+git:
+  autoAdd: true
+  autoCommit: true
+  autoPush: true
