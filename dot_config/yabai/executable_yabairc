@@ -31,7 +31,7 @@ yabai -m config mouse_drop_action            swap
 # yabai -m config external_bar                 all:$SPACEBAR_HEIGHT:0
 
 # General space settings
-yabai -m config layout                       stack
+yabai -m config layout                       bsp
 yabai -m config top_padding                  0
 yabai -m config bottom_padding               0
 yabai -m config left_padding                 0
