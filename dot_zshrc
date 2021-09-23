@@ -3,6 +3,9 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
+# When using zsh-autocompletion
+# source ~/.zprezto/contrib/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+
 # GENERAL CONFIG AND PATH
 # (For other env vars and dirs, check zshenv)
 #------------------
@@ -28,10 +31,6 @@ export PATH="$PATH:/Applications/Sublime Text.app/Contents/SharedSupport/bin:/Ap
 fpath=("~/.fpath" $fpath)
 fpath=($(brew --prefix)/share/zsh/site-functions $fpath) # Homebrew zsh completions
 fpath=(${ASDF_DIR}/completions $fpath)
-
-# Init completions
-autoload -U +X bashcompinit && bashcompinit
-autoload -Uz compinit && compinit
 
 # GH CLI completion
 eval $(gh completion -s zsh)
@@ -65,6 +64,9 @@ eval $(gh completion -s zsh)
 ## Bitwarden
 eval $(bw completion --shell zsh)
 
+# Init completions
+autoload -U +X bashcompinit && bashcompinit
+autoload -Uz compinit && compinit
 
 # PERSONAL EXTRAS
 #------------------

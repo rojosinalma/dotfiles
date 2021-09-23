@@ -32,9 +32,11 @@ zstyle ':prezto:load' pmodule \
   'syntax-highlighting' \
   'history-substring-search' \
   'autosuggestions' \
-  'kubectl' \
-  'kube-ps1' \
   'prompt'
+  
+  # 'kubectl' \
+  # 'kube-ps1' \
+  # 'zsh-autocomplete' \
 
 autoload -Uz promptinit
 promptinit
@@ -107,3 +109,8 @@ zstyle ':prezto:module:ruby:chruby' auto-switch 'yes'
 # before deleting or overwriting files. Set to 'no' to disable this safer
 # behavior.
 zstyle ':prezto:module:utility' safe-ops 'yes'
+
+# zsh-autocompletions
+# zstyle ':autocomplete:*' default-context ''
+# zstyle ':autocomplete:*' min-input 1  # int
+# zstyle ':autocomplete:*' recent-dirs autojump
