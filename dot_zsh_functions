@@ -6,17 +6,18 @@ function ar(){
   # Let's set the env that called this func.
   local aws_environment
   local duration
+  local stage
   aws_environment=$@
 
   # Checking the env actually exists (just add new ones to this case switch)
   case $aws_environment in
   "prod")
-    echo "Switched to production role"
     duration="1h"
+    stage="production"
     ;;
   "sta")
-    echo "Switched to staging role"
     duration="1h"
+    stage="staging"
     ;;
   "base")
     echo "Cleaned assumed role"
@@ -45,7 +46,7 @@ function ar(){
   esac
 
   rm -f ~/.aws/assume-role-creds.$aws_environment # Delete old creds
-  echo $duration
+  echo "Switched to ${stage} role for ${duration}"
   assume-role -duration $duration $aws_environment > ~/.aws/assume-role-creds.$aws_environment # Save new creds
   source ~/.aws/assume-role-creds.$aws_environment # Source new creds
   export AWS_DEFAULT_PROFILE=$aws_environment # Change aws profile
