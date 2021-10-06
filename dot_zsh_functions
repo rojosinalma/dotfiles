@@ -68,6 +68,24 @@ function cr(){
   export AWS_DEFAULT_PROFILE="${aws_environment}"
 }
 
+function aws-docker-login(){
+  local aws_environment
+  aws_environment=$@
+
+  if [[ $aws_environment == "" ]]
+  then
+    echo "You have to pick an environment 🙈"
+    return 0
+  fi
+
+  echo "Loading ${aws_environment} credentials"
+  cr $aws_environment
+
+  # TODO: Make the account ID not hardcoded.
+  echo "Trying to login to ECR with ${aws_environment} credentials"
+  aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 911322667399.dkr.ecr.eu-central-1.amazonaws.com
+}
+
 # man() {
 #  env \
 #    LESS_TERMCAP_mb=$(printf "\e[1;31m") \
