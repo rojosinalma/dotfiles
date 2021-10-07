@@ -36,7 +36,7 @@ fpath=(${ASDF_DIR}/completions $fpath)
 eval $(gh completion -s zsh)
 
 # # AWS CLI completion
-# complete -C '/usr/local/bin/aws_completer' aws
+complete -C '/opt/homebrew/bin/aws_completer' aws
 
 # # Kustomize completion
 # eval $(kustomize completion zsh)
@@ -54,7 +54,7 @@ eval $(gh completion -s zsh)
 # }
 
 # colorls
-#source $(dirname $(gem which colorls))/tab_complete.sh
+source $(dirname $(gem which colorls))/tab_complete.sh
 
 # mcfly
 # if [[ -r "/usr/local/opt/mcfly/mcfly.zsh" ]]; then
@@ -63,6 +63,9 @@ eval $(gh completion -s zsh)
 
 ## Bitwarden
 eval $(bw completion --shell zsh)
+
+## Exo
+export PATH=$PATH:/Users/rojo/.exo/bin
 
 # Init completions
 autoload -U +X bashcompinit && bashcompinit
