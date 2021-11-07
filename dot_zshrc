@@ -36,7 +36,7 @@ fpath=(${ASDF_DIR}/completions $fpath)
 eval $(gh completion -s zsh)
 
 # # AWS CLI completion
-complete -C '/opt/homebrew/bin/aws_completer' aws
+# complete -C '/opt/homebrew/bin/aws_completer' aws
 
 # # Kustomize completion
 # eval $(kustomize completion zsh)
@@ -67,10 +67,6 @@ eval $(bw completion --shell zsh)
 ## Exo
 export PATH=$PATH:/Users/rojo/.exo/bin
 
-# Init completions
-autoload -U +X bashcompinit && bashcompinit
-autoload -Uz compinit && compinit
-
 # PERSONAL EXTRAS
 #------------------
 source ~/.zsh_opts
@@ -81,3 +77,7 @@ source ~/.zsh_secrets
 
 # iTerm Shell Integration
 test -e ${HOME}/.iterm2_shell_integration.zsh && source ${HOME}/.iterm2_shell_integration.zsh
+
+# Init completions
+autoload -U +X bashcompinit && bashcompinit
+autoload -Uz compinit && compinit
