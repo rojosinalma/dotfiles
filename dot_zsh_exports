@@ -1,0 +1,79 @@
+# CONFIG VARS
+#-------------------
+
+# Default Editor
+export EDITOR="code -w"
+export VISUAL="$EDITOR"
+
+# LC
+export LC_CTYPE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export LC_MESSAGES=en_US.UTF-8
+
+# GO
+export GOPATH=$HOME/dev/Rojo/Learn/Go
+
+# Hombrew JDK
+export CPPFLAGS="-I/usr/local/opt/openjdk/include"
+
+# PG
+# export PGDATA="$HOME/dev/Rojo/Files/pgdata/"
+
+# Ansible
+export ANSIBLE_HOST_KEY_CHECKING=False
+
+## Git Radar (https://github.com/michaeldfallen/git-radar)
+export PATH=$PATH:$HOME/utils/git-radar
+export GIT_RADAR_COLOR_BRANCH='%F{cyan}'
+export GIT_RADAR_COLOR_LOCAL_AHEAD
+export GIT_RADAR_COLOR_LOCAL_BEHIND
+export GIT_RADAR_COLOR_LOCAL_DIVERGED
+export GIT_RADAR_COLOR_REMOTE_AHEAD
+export GIT_RADAR_COLOR_REMOTE_BEHIND
+export GIT_RADAR_COLOR_REMOTE_DIVERGED
+export GIT_RADAR_COLOR_REMOTE_NOT_UPSTREAM
+export GIT_RADAR_COLOR_CHANGES_STAGED
+export GIT_RADAR_COLOR_CHANGES_UNSTAGED
+export GIT_RADAR_COLOR_CHANGES_CONFLICTED
+export GIT_RADAR_COLOR_CHANGES_UNTRACKED
+export GIT_RADAR_MAIN_BRANCH="origin/main"
+export GIT_RADAR_FETCH_TIME=30
+
+# HUB CLI
+export GITHUB_HOST=github.com
+export HUB_PROTOCOL=ssh
+
+# Go
+export PATH=$PATH:${GOPATH//://bin:}/bin
+
+# Haskel Stacks
+export PATH="$PATH:$HOME/.local/bin"
+
+# BREW OPENSSL
+export PKG_CONFIG_PATH="/usr/local/opt/openssl/lib/pkgconfig"
+
+# AWS
+export AWS_DEFAULT_REGION="eu-west-1"
+export AWS_DEFAULT_PROFILE="dev"
+
+# k8s
+export KUBECONFIG="$HOME/.kube/config.dev"
+export KUBECONFIG="$KUBECONFIG:$HOME/.kube/config.prod"
+export KUBECONFIG="$KUBECONFIG:$HOME/.kube/config.local"
+export KUBECTL_EXTERNAL_DIFF="colordiff -N -u"
+
+# Skaffold
+export SKAFFOLD_DEFAULT_REPO="rojosinalma"
+
+# Overcommit
+export GIT_TEMPLATE_DIR="$(overcommit --template-dir)"
+
+# Chezmoi
+export CHEZMOIR_SOURCE_DIR='/Users/rojo/dev/Rojo/Github/dotfiles'
+
+# Android Studio (for React Native)
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+export PATH=$PATH:$ANDROID_HOME/platform-tools
