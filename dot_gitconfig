@@ -1,57 +1,57 @@
 [user]
-	name = Rojo
-	email = rojo@rojo.dev
-	signingkey = 523CE7AD
+  name = Rojo
+  email = rojo@rojo.dev
+  signingkey = 523CE7AD
 
 [commit]
-  	gpgsign = true
+  gpgsign = true
 
 [gpg]
-	program = gpg2
+  program = gpg
 
 [core]
-	excludesfile = ~/.gitignore
-  	quotepath = false
-	editor = subl -n -w
-	autocrlf = input
+  excludesfile = ~/.gitignore
+  quotepath = false
+  editor = subl -n -w
+  autocrlf = input
 
 [pull]
-	rebase = true
+  rebase = true
 
 [branch]
-  	autosetuprebase = always
+  autosetuprebase = always
 
 [color]
-  	ui = true
+  ui = true
 
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-  	required = true
-	process = git-lfs filter-process
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  required = true
+  process = git-lfs filter-process
 
 [push]
-  	default = matching
+  default = matching
 
 [merge]
-  	tool = sublimemerge
+  tool = sublimemerge
 
 [mergetool "sublimerge"]
-  	cmd = subl -n --wait \"$REMOTE\" \"$BASE\" \"$LOCAL\" \"$MERGED\" --command \"sublimerge_diff_views\"
-  	trustExitCode = false
+  cmd = subl -n --wait \"$REMOTE\" \"$BASE\" \"$LOCAL\" \"$MERGED\" --command \"sublimerge_diff_views\"
+  trustExitCode = false
 
 [diff]
-  	tool = sublimerge
+  tool = sublimerge
 
 [difftool "sublimerge"]
-  	cmd = subl -n --wait \"$REMOTE\" \"$LOCAL\" --command \"sublimerge_diff_views {\\\"left_read_only\\\": true, \\\"right_read_only\\\": true}\"
-  	tool = opendiff
+  cmd = subl -n --wait \"$REMOTE\" \"$LOCAL\" --command \"sublimerge_diff_views {\\\"left_read_only\\\": true, \\\"right_read_only\\\": true}\"
+  tool = opendiff
 
 [credential]
-	helper = osxkeychain
+  helper = osxkeychain
 
 [heroku]
-	remote = heroku
+  remote = heroku
 
 [init]
-	defaultBranch = master
+  defaultBranch = master
