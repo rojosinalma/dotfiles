@@ -80,6 +80,7 @@ brew "llvm"
 brew "lua"
 brew "m-cli"
 brew "mailhog", restart_service: true
+brew "mas"
 brew "mtr"
 brew "mutt"
 brew "navi"
@@ -94,6 +95,7 @@ brew "postgresql@12", restart_service: true
 brew "procs"
 brew "putty"
 brew "pwgen"
+brew "reattach-to-user-namespace"
 brew "redis", restart_service: true
 brew "rlwrap"
 brew "sk"
@@ -181,3 +183,9 @@ cask "typora"
 cask "visual-studio-code"
 cask "vlc"
 cask "xquartz"
+mas "Bitwarden", id: 1352778147
+mas "GarageBand", id: 682658836
+mas "iMovie", id: 408981434
+mas "Keynote", id: 409183694
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541
