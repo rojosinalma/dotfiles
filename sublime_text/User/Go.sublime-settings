@@ -1,0 +1,9 @@
+{
+  "auto_complete_triggers": [
+    {
+      "selector": "source.go - string - comment - constant.numeric",
+      "characters": "."
+    }
+  ],
+  "auto_complete_selector": "meta.tag - punctuation.definition.tag.begin, source - comment - string - constant.numeric"
+}

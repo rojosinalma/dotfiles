@@ -1,0 +1,6 @@
+{
+  "linux": {
+    "PATH": "/home/rojo/.asdf/shims/go",
+    "GOPATH": "/home/rojo/dev/Rojo/Learn/Go"
+  },
+}
