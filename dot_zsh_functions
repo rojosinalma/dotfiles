@@ -20,12 +20,13 @@ function ar(){
     stage="staging"
     ;;
   "base")
-    echo "Cleaned assumed role"
     unset AWS_SESSION_TOKEN
     unset AWS_SECURITY_TOKEN
     unset AWS_ACCESS_KEY_ID
     unset AWS_SECRET_ACCESS_KEY
     export AWS_DEFAULT_PROFILE=base
+    source ~/.aws/creds.base
+    echo "Cleaned assumed role"
     return 0
     ;;
   "current")
@@ -50,11 +51,6 @@ function ar(){
   assume-role -duration $duration $aws_environment > ~/.aws/assume-role-creds.$aws_environment # Save new creds
   source ~/.aws/assume-role-creds.$aws_environment # Source new creds
   export AWS_DEFAULT_PROFILE=$aws_environment # Change aws profile
-
-  # if [ $aws_environment = "prod" ] || [ $aws_environment = "dev"];
-  # then
-  #   kubectl config use-context $aws_environment # Change k8s context if it applies
-  # fi
 }
 
 # Hacky func to bypass MFA if creds haven't expired.
