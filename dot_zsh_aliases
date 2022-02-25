@@ -8,7 +8,7 @@ bindkey '^[[1;9D' backward-word
 # Aliases
 #-------------------
 
-export ALIAS_EDITOR="subl"
+export ALIAS_EDITOR="code"
 
 # Builtins
 alias c="clear"
