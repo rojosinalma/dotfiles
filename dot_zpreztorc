@@ -7,18 +7,18 @@ zstyle ':completion:*:cd:*'     ignore-parents parent pwd
 ## Prezto
 
 # Custom modules folder.
-zstyle ':prezto:load' pmodule-dirs $HOME/.zprezto-contrib
+#zstyle ':prezto:load' pmodule-dirs $HOME/.zprezto-contrib
 
 # Set the Prezto modules to load (browse modules).
 # The order matters.
 
 zstyle ':prezto:load' pmodule \
+  'tmux' \
   'environment' \
   'autoenv' \
   'ssh' \
   'terminal' \
   'zsh-notify' \
-  'tmux' \
   'editor' \
   'history' \
   'directory' \
@@ -33,7 +33,7 @@ zstyle ':prezto:load' pmodule \
   'history-substring-search' \
   'autosuggestions' \
   'prompt'
-  
+
   # 'kubectl' \
   # 'kube-ps1' \
   # 'zsh-autocomplete' \
@@ -90,8 +90,10 @@ zstyle ':prezto:module:editor' key-bindings 'vi'
 zstyle ':prezto:module:editor' dot-expansion 'yes'
 
 ## Tmux
+zstyle ':prezto:module:tmux:auto-start' local 'yes'
 zstyle ':prezto:module:tmux:auto-start' remote 'yes'
 zstyle ':prezto:module:tmux:iterm' integrate 'yes'
+zstyle ':prezto:module:tmux:session' name 'rojo'
 
 # Set the query found color.
 zstyle ':prezto:module:history-substring-search:color' found 'green'
