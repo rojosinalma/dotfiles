@@ -21,7 +21,7 @@ export PATH="$PATH:/Applications/Sublime Text.app/Contents/SharedSupport/bin:/Ap
 [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
 
 # asdf
-. $HOME/.asdf/asdf.sh
+. /opt/homebrew/opt/asdf/libexec/asdf.sh
 #. /home/rojo/.asdf/asdf.sh
 
 # COMPLETIONS
