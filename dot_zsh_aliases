@@ -72,7 +72,7 @@ alias dc="docker-compose"
 alias ska='skaffold'
 
 # Vim
-alias vim=neovim
+alias vim=nvim
 
 # Makefile
 # alias mkt="make test"
