@@ -67,6 +67,9 @@ eval $(bw completion --shell zsh)
 ## Exo
 export PATH=$PATH:/Users/rojo/.exo/bin
 
+## Mysql-client
+export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
+
 # PERSONAL EXTRAS
 #------------------
 source ~/.zsh_opts
