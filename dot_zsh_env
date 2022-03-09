@@ -23,7 +23,6 @@ export CPPFLAGS="-I/usr/local/opt/openjdk/include"
 export ANSIBLE_HOST_KEY_CHECKING=False
 
 ## Git Radar (https://github.com/michaeldfallen/git-radar)
-export PATH=$PATH:$HOME/utils/git-radar
 export GIT_RADAR_COLOR_BRANCH='%F{cyan}'
 export GIT_RADAR_COLOR_LOCAL_AHEAD
 export GIT_RADAR_COLOR_LOCAL_BEHIND
@@ -53,7 +52,7 @@ export PATH="$PATH:$HOME/.local/bin"
 export PKG_CONFIG_PATH="/usr/local/opt/openssl/lib/pkgconfig"
 
 # AWS
-export AWS_DEFAULT_REGION="eu-west-1"
+export AWS_DEFAULT_REGION="us-east-1"
 export AWS_DEFAULT_PROFILE="base"
 
 # k8s
