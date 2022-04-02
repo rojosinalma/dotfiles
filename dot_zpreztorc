@@ -7,7 +7,7 @@ zstyle ':completion:*:cd:*'     ignore-parents parent pwd
 ## Prezto
 
 # Custom modules folder.
-#zstyle ':prezto:load' pmodule-dirs $HOME/.zprezto-contrib
+#zstyle ':prezto:load' pmodule-dirs $HOME/.zprezto/contrib
 
 # Set the Prezto modules to load (browse modules).
 # The order matters.
@@ -17,6 +17,7 @@ zstyle ':prezto:load' pmodule \
   'environment' \
   'autoenv' \
   'ssh' \
+  'kubectl' \
   'terminal' \
   'zsh-notify' \
   'editor' \
