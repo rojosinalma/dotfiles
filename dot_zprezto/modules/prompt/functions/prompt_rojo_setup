@@ -31,7 +31,7 @@ function prompt_rojo_setup {
   KUBE_PS1_SYMBOL_ENABLE=true
   #PROMPT='%F{white}%B$%b '
   PROMPT='%F{green} ➜ '
-  RPROMPT='%F{blue}[%F{magenta}aws: $AWS_DEFAULT_PROFILE%F{blue}] [%F{magenta}%D{%H:%M}%F{blue}]%f'
+  RPROMPT='%F{blue} $(kube_ps1)%F{blue}[%F{magenta}aws: %F{cyan}$AWS_DEFAULT_PROFILE%F{blue}]%F{blue}[%F{magenta}%D{%H:%M}%F{blue}]%f'
 }
 
 prompt_rojo_setup "$@"
