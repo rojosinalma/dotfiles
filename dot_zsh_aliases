@@ -105,4 +105,4 @@ alias ghdr='gh api repos/$1/actions/runs | jq -r ".workflow_runs[] | select(.hea
 ## Kubernetes
 alias ktp="kc run test-pod --image ubuntu:latest sleep infinity"
 alias ketp="kc exec -it test-pod -- bash"
-alias kex="kc exec -it"
+alias kex="kc exec -it --"
