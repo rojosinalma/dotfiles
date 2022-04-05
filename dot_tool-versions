@@ -11,3 +11,4 @@ kubectl 1.21.0
 bitwarden v1.16.0
 pulumi 3.25.0
 k9s 0.25.18
+kubectx 0.9.4
