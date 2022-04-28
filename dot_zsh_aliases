@@ -103,6 +103,6 @@ alias ausers="aws iam list-users | jq '.Users[].UserName'"
 alias ghdr='gh api repos/$1/actions/runs | jq -r ".workflow_runs[] | select(.head_branch != \"docker\") | \"(.id)\"" | xargs -n1 -J % gh api repos/$1/actions/runs/% -X DELETE'
 
 ## Kubernetes
-alias ktp="kc run test-pod --image ubuntu:latest sleep infinity"
+alias krtp="kc run test-pod --image ubuntu:latest sleep infinity"
 alias ketp="kc exec -it test-pod -- bash"
 alias kex="kc exec -it"
