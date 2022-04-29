@@ -13,8 +13,7 @@ function ar(){
   case $aws_environment in
   "prod")
     duration="1h"
-    stage="production"
-    export AWS_DEFAULT_PROFILE=production # Change aws profile
+    stage="xepelin-production"
     ;;
   "sta")
     duration="1h"
@@ -47,10 +46,11 @@ function ar(){
     ;;
   esac
 
-  # rm -f ~/.aws/assume-role-creds.$aws_environment # Delete old creds
-  # echo "Switched to ${stage} role for ${duration}"
-  # assume-role -duration $duration $aws_environment > ~/.aws/assume-role-creds.$aws_environment # Save new creds
-  # source ~/.aws/assume-role-creds.$aws_environment # Source new creds
+  rm -f ~/.aws/assume-role-creds.$aws_environment # Delete old creds
+  echo "Switched to ${stage} role for ${duration}"
+  assume-role -duration $duration $aws_environment > ~/.aws/assume-role-creds.$aws_environment # Save new creds
+  source ~/.aws/assume-role-creds.$aws_environment # Source new creds
+  export AWS_DEFAULT_PROFILE=$aws_environment # Change aws profile
 
 }
 
