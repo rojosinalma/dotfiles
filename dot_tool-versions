@@ -17,3 +17,4 @@ ansible-base 2.10.17
 helm 3.8.2
 krew 0.4.3
 golang 1.18.1
+teleport-ent 9.0.0
