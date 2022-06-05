@@ -20,6 +20,10 @@ function ar(){
     duration="1h"
     stage="staging"
     ;;
+  "plat")
+    duration="1h"
+    stage="xepelin-platform"
+    ;;
   "base")
     unset AWS_SESSION_TOKEN
     unset AWS_SECURITY_TOKEN
@@ -38,6 +42,7 @@ function ar(){
     echo "List of options"
     echo "  prod"
     echo "  sta"
+    echo "  plat"
     echo "  base (clear assumed roles)"
     return 0
     ;;
