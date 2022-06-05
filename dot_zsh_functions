@@ -1,6 +1,7 @@
 # TODO:
 # - Check the duration and reuse them if still valid
 # You need to have `assume-role` installed (brew install remind101/formulae/assume-role)
+# If you're using a mac m1, you need to compile the tool manually
 
 function ar(){
   # Let's set the env that called this func.
@@ -70,20 +71,21 @@ function cr(){
   export AWS_DEFAULT_PROFILE="${aws_environment}"
 }
 
-function aws-docker-login(){
-  local aws_environment
-  aws_environment=$@
+# Login to ECR
+# function aws-docker-login(){
+#   local aws_environment
+#   aws_environment=$@
 
-  if [[ $aws_environment == "" ]]
-  then
-    echo "You have to pick an environment 🙈"
-    return 0
-  fi
+#   if [[ $aws_environment == "" ]]
+#   then
+#     echo "You have to pick an environment 🙈"
+#     return 0
+#   fi
 
-  echo "Loading ${aws_environment} credentials"
-  cr $aws_environment
+#   echo "Loading ${aws_environment} credentials"
+#   cr $aws_environment
 
-  # TODO: Make the account ID not hardcoded.
-  echo "Trying to login to ECR with ${aws_environment} credentials"
-  aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 911322667399.dkr.ecr.eu-central-1.amazonaws.com
-}
+#   # TODO: Make the account ID not hardcoded.
+#   echo "Trying to login to ECR with ${aws_environment} credentials"
+#   aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 911322667399.dkr.ecr.eu-central-1.amazonaws.com
+# }
