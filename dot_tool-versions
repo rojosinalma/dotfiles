@@ -1,7 +1,7 @@
 ruby 3.1.1
 terraform 1.1.6
 terragrunt 0.28.7
-python 3.9.2
+python 3.10.5
 nodejs 16.1.0
 skaffold 1.37.0
 kustomize 4.5.2
@@ -18,3 +18,9 @@ helm 3.8.2
 krew 0.4.3
 golang 1.18.1
 teleport-ent 9.0.0
+java openjdk-18.0.1
+sqlite 3.39.1
+pre-commit 2.20.0
+postgres 14.4
+gradle 7.5-milestone-1
+adr-tools 3.0.0
