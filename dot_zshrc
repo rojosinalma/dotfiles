@@ -14,7 +14,7 @@ fi
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # Custom PATH
-export PATH="$PATH:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export PATH="$PATH:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/rojo/.asdf/installs/python/3.10.5/bin"
 export PATH="$PATH:/Applications/Sublime Text.app/Contents/SharedSupport/bin:/Applications/Sublime Merge.app/Contents/SharedSupport/bin"
 
 # Autojump
