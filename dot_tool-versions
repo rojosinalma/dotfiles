@@ -24,3 +24,4 @@ pre-commit 2.20.0
 postgres 14.4
 gradle 7.5-milestone-1
 adr-tools 3.0.0
+awscli 2.7.6
