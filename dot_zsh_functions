@@ -89,3 +89,7 @@ function cr(){
 #   echo "Trying to login to ECR with ${aws_environment} credentials"
 #   aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 911322667399.dkr.ecr.eu-central-1.amazonaws.com
 # }
+
+function kex(){
+  kubectl exec -it $1 -- sh -c "clear; (bash || ash || sh)"
+}

@@ -31,6 +31,7 @@ alias zshsource="source $HOME/.zshrc && source $HOME/.zpreztorc"
 alias zshaliases="$ALIAS_EDITOR $CHEZMOIR_SOURCE_DIR/dot_zsh_aliases"
 alias zshenv="$ALIAS_EDITOR $CHEZMOIR_SOURCE_DIR/dot_zsh_env"
 alias zshopts="$ALIAS_EDITOR $CHEZMOIR_SOURCE_DIR/dot_zsh_opts"
+alias zshfunctions="$ALIAS_EDITOR $CHEZMOIR_SOURCE_DIR/dot_zsh_functions"
 alias zshconfig="$ALIAS_EDITOR $CHEZMOIR_SOURCE_DIR/dot_zshrc"
 alias zsecrets="$ALIAS_EDITOR $HOME/.zsh_secrets"
 alias prezconfig="$ALIAS_EDITOR $CHEZMOIR_SOURCE_DIR/dot_zpreztorc"
@@ -105,4 +106,4 @@ alias ghdr='gh api repos/$1/actions/runs | jq -r ".workflow_runs[] | select(.hea
 ## Kubernetes
 alias krtp="kc run test-pod --image ubuntu:latest sleep infinity"
 alias ketp="kc exec -it test-pod -- bash"
-alias kex="kc exec -it"
+alias kex="kc exec -it function _a(){$1} -- sh -c 'clear; (bash || ash || sh)'"
