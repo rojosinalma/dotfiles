@@ -25,6 +25,9 @@ export PATH="$PATH:/Applications/Sublime Text.app/Contents/SharedSupport/bin:/Ap
 # . /opt/homebrew/opt/asdf/libexec/asdf.sh
 #. /home/rojo/.asdf/asdf.sh
 
+# Rust
+source "/Users/rojo/.asdf/installs/rust/1.65.0/env"
+
 # COMPLETIONS
 #------------------
 
