@@ -1,0 +1,7 @@
+set number
+set syntax
+filetype on
+set cursorline
+set tabstop=2
+set showmode
+set hlsearch
