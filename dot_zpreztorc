@@ -37,6 +37,7 @@ zstyle ':prezto:load' pmodule \
   'prompt'
 
   # 'zsh-autocomplete' \
+source $HOME/.zprezto/contrib/gcloud-ps1/gcloud-ps1.sh
 
 autoload -Uz promptinit
 promptinit
