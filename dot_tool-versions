@@ -1,6 +1,6 @@
 ruby 3.2.2
-terraform 1.1.6
-terragrunt 0.28.7
+terraform 1.5.2
+terragrunt 0.48.0
 python 3.10.5
 nodejs 16.16.0
 skaffold 1.37.0
