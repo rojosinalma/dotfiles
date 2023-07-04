@@ -74,7 +74,7 @@ alias dc="docker-compose"
 alias ska='skaffold'
 
 # GCP
-alias gcp='gcloud'
+alias gc='gcloud'
 
 # Makefile
 # alias mkt="make test"

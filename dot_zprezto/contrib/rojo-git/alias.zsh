@@ -45,7 +45,7 @@ alias gd='git diff'
 gdv() { git diff -w "$@" | view - }
 compdef _git gdv=git-diff
 alias gdt='git difftool'
-alias gc='git commit -v'
+#alias gc='git commit -v'
 compdef _git gc=git-commit
 alias gc!='git commit -v --amend'
 compdef _git gc!=git-commit
