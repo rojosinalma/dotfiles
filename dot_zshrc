@@ -10,6 +10,9 @@ fi
 # (For other env vars and dirs, check zshenv)
 #------------------
 
+#autoload -U compinit compdef
+#compinit
+
 # HOMEBREW
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
@@ -41,6 +44,10 @@ eval $(gh completion -s zsh)
 
 # # AWS CLI completion
 # complete -C '/opt/homebrew/bin/aws_completer' aws
+
+# GCP completions.
+# Needs homebrew google-cloud-sdk
+source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
 
 # # Kustomize completion
 # eval $(kustomize completion zsh)
