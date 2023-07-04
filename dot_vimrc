@@ -1,7 +1,16 @@
 set number
-set syntax
-filetype on
-set cursorline
 set tabstop=2
-set showmode
-set hlsearch
+set shiftwidth=2
+set expandtab
+set cursorline
+syntax enable
+"set cursorcolumn
+
+" Autoreload vimrc
+augroup myvimrc
+    au!
+    au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
+augroup END
+
+packadd! dracula
+colorscheme dracula
