@@ -73,8 +73,8 @@ alias dc="docker-compose"
 # Skaffold
 alias ska='skaffold'
 
-# Vim
-alias vim=nvim
+# GCP
+alias gcp='gcloud'
 
 # Makefile
 # alias mkt="make test"
