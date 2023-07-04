@@ -77,6 +77,7 @@ alias ska='skaffold'
 alias gc='gcloud'
 alias gcl='gcloud config configurations list'
 alias gca='gcloud config configurations activate'
+alias gcpl='gcloud projects list'
 
 # Makefile
 # alias mkt="make test"
