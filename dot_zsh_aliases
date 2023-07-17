@@ -30,7 +30,7 @@ alias ocr="overcommit --run"
 # Config files
 alias zshsource="source $HOME/.zshrc && source $HOME/.zpreztorc"
 alias zshaliases="$ALIAS_EDITOR $CHEZMOIR_SOURCE_DIR/dot_zsh_aliases"
-alias zshenv="$ALIAS_EDITOR $CHEZMOIR_SOURCE_DIR/dot_zsh_env"
+alias zshenv="cm edit ~/.zsh_env"
 alias zshopts="$ALIAS_EDITOR $CHEZMOIR_SOURCE_DIR/dot_zsh_opts"
 alias zshconfig="$ALIAS_EDITOR $CHEZMOIR_SOURCE_DIR/dot_zshrc"
 alias zsecrets="$ALIAS_EDITOR $HOME/.zsh_secrets"
