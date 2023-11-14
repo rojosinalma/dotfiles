@@ -1,0 +1,121 @@
+## General ZSH
+
+zstyle ':completion:*:*:kill:*' menu yes select
+zstyle ':completion:*:kill:*'   force-list always
+zstyle ':completion:*:cd:*'     ignore-parents parent pwd
+
+## Prezto
+
+# Custom modules folder.
+#zstyle ':prezto:load' pmodule-dirs $HOME/.zprezto-contrib
+
+# Set the Prezto modules to load (browse modules).
+# Order matters.
+
+zstyle ':prezto:load' pmodule \
+  'environment' \
+  'terminal' \
+  'editor' \
+  'history' \
+  'directory' \
+  'spectrum' \
+  'utility' \
+  'completion' \
+  'history-substring-search' \
+  'autoenv' \
+  'ssh' \
+  'kubectl' \
+  'kube-ps1' \
+  'zsh-notify' \
+  'homebrew' \
+  'osx' \
+  'rojo-git' \
+  'archive' \
+  'syntax-highlighting' \
+  'autosuggestions' \
+  'prompt'
+
+# Disabled
+# 'tmux' \
+
+# 'zsh-autocomplete' \
+source $HOME/.zprezto/contrib/gcloud-ps1/gcloud-ps1.sh
+
+autoload -Uz promptinit
+promptinit
+zstyle ':prezto:module:prompt' theme 'rojo' # Prompt
+zstyle ':prezto:*:*' color 'yes' # Color output (auto set to 'no' on dumb terminals).
+zstyle ':prezto:module:ssh:load' identities 'id_rsa'
+# zstyle ':prezto:load' zmodule 'attr' 'stat'
+# zstyle ':prezto:load' zfunction 'zargs' 'zmv'
+
+# Completions
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+zstyle ':completion:*:default' list-colors '' # Directories
+zstyle ':completion:*' completer _complete _match _approximate
+zstyle ':completion:*:match:*' original only
+zstyle ':completion:*:approximate:*' max-errors 1 numeric
+zstyle ':completion:*:functions' ignored-patterns '_*'
+zstyle ':completion:*:cd:*' ignore-parents parent pwd
+
+## Syntax Highlighting
+zstyle ':prezto:module:syntax-highlighting' color 'yes'
+
+# Set syntax highlighters.
+# By default, only the main highlighter is enabled.
+zstyle ':prezto:module:syntax-highlighting' highlighters \
+  'main' \
+  'brackets' \
+  'pattern' \
+  'cursor' \
+  'root' \
+  'line' \
+  'main'
+
+# Set syntax highlighting styles.
+zstyle ':prezto:module:syntax-highlighting' styles \
+  'builtin' 'fg=green' \
+  'command' 'fg=green' \
+  'function' 'fg=green'
+
+# Autosuggestion
+#zstyle ':prezto:module:autosuggestions' color 'yes'
+#zstyle ':prezto:module:autosuggestions:color' found 'green'
+
+## Terminal
+zstyle ':prezto:module:terminal' auto-title 'yes'
+zstyle ':prezto:module:terminal:window-title' format '%n@%m: %s'
+zstyle ':prezto:module:terminal:tab-title' format '%m: %s'
+
+## Editor
+zstyle ':prezto:module:editor' key-bindings 'vi'
+zstyle ':prezto:module:editor' dot-expansion 'yes'
+
+## Tmux
+zstyle ':prezto:module:tmux:auto-start' local 'yes'
+zstyle ':prezto:module:tmux:auto-start' remote 'yes'
+zstyle ':prezto:module:tmux:iterm' integrate 'yes'
+zstyle ':prezto:module:tmux:session' name 'rojo'
+
+# Set the query found color.
+zstyle ':prezto:module:history-substring-search:color' found 'green'
+
+# Set the query not found color.
+zstyle ':prezto:module:history-substring-search:color' not-found 'grey'
+
+# Set the search globbing flags.
+#zstyle ':prezto:module:history-substring-search' globbing-flags ''
+
+# Auto switch the Ruby version on directory change.
+zstyle ':prezto:module:ruby:chruby' auto-switch 'yes'
+
+# Enabled safe options. This aliases cp, ln, mv and rm so that they prompt
+# before deleting or overwriting files. Set to 'no' to disable this safer
+# behavior.
+zstyle ':prezto:module:utility' safe-ops 'yes'
+
+# zsh-autocompletions
+# zstyle ':autocomplete:*' default-context ''
+# zstyle ':autocomplete:*' min-input 1  # int
+# zstyle ':autocomplete:*' recent-dirs autojump
