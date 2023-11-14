@@ -1,4 +1,4 @@
-# Prezto
+# Init Prezto
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
@@ -10,44 +10,76 @@ fi
 # (For other env vars and dirs, check zshenv)
 #------------------
 
-#autoload -U compinit compdef
-#compinit
+# HOMEBREW INSTALLED
+if [ -d "/opt/homebrew" ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# HOMEBREW
-eval "$(/opt/homebrew/bin/brew shellenv)"
+  # Autojump
+  [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
 
-# Custom PATH
-export PATH="$PATH:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/rojo/.asdf/installs/python/3.10.5/bin"
-export PATH="$PATH:/Applications/Sublime Text.app/Contents/SharedSupport/bin:/Applications/Sublime Merge.app/Contents/SharedSupport/bin"
+  # asdf-vm
+  # . $(brew --prefix asdf)/libexec/asdf.sh
+  # . /opt/homebrew/opt/asdf/libexec/asdf.sh
 
-# Autojump
-[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
+  # smerge
+  export PATH="$PATH:/Applications/Sublime Text.app/Contents/SharedSupport/bin:/Applications/Sublime Merge.app/Contents/SharedSupport/bin"
 
-# asdf
-. $(brew --prefix asdf)/libexec/asdf.sh
-# . /opt/homebrew/opt/asdf/libexec/asdf.sh
-#. /home/rojo/.asdf/asdf.sh
+  # Completions for brew
+  fpath=($(brew --prefix)/share/zsh/site-functions $fpath) # Homebrew zsh completions
+
+  # iTerm Shell Integration
+  test -e ${HOME}/.iterm2_shell_integration.zsh && source ${HOME}/.iterm2_shell_integration.zsh
+fi
+
+# LINUX INSTALLED
+if [ -d "/home/rojo" ]; then
+  . /home/rojo/.asdf/asdf.sh
+  export PATH="$PATH:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/rojo/.asdf/installs/python/3.10.5/bin"
+
+fi
+
+# PATH
+#------------------
 
 # Rust
-source "/Users/rojo/.asdf/installs/rust/1.70.0/env"
+if [ -d "/Users/rojo/.asdf/installs/rust" ]; then
+  source "/Users/rojo/.asdf/installs/rust/1.70.0/env"
+fi
+
+## Exo
+if [ -d "/Users/rojo/.exo" ]; then
+  export PATH=$PATH:/Users/rojo/.exo/bin
+fi
+
+## Mysql-client
+if [ -d "/opt/homebrew/opt/mysql-client" ]; then
+  export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
+fi
 
 # COMPLETIONS
 #------------------
 
 # FPATH
 fpath=("~/.fpath" $fpath)
-fpath=($(brew --prefix)/share/zsh/site-functions $fpath) # Homebrew zsh completions
 fpath=(${ASDF_DIR}/completions $fpath)
 
 # GH CLI completion
-eval $(gh completion -s zsh)
+if command -v gh > /dev/null 2>&1; then
+  eval $(gh completion -s zsh)
+fi
+
+# colorls
+if command -v colorls > /dev/null 2>&1; then
+  source $(dirname $(gem which colorls))/tab_complete.sh
+fi
+
+## Bitwarden
+if command -v bw > /dev/null 2>&1; then
+  eval $(bw completion --shell zsh)
+fi
 
 # # AWS CLI completion
 # complete -C '/opt/homebrew/bin/aws_completer' aws
-
-# GCP completions.
-# Needs homebrew google-cloud-sdk
-source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
 
 # # Kustomize completion
 # eval $(kustomize completion zsh)
@@ -64,22 +96,10 @@ source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
 #     cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")"
 # }
 
-# colorls
-source $(dirname $(gem which colorls))/tab_complete.sh
-
 # mcfly
 # if [[ -r "/usr/local/opt/mcfly/mcfly.zsh" ]]; then
 #   source "/usr/local/opt/mcfly/mcfly.zsh"
 # fi
-
-## Bitwarden
-eval $(bw completion --shell zsh)
-
-## Exo
-export PATH=$PATH:/Users/rojo/.exo/bin
-
-## Mysql-client
-export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
 
 # PERSONAL EXTRAS
 #------------------
@@ -88,9 +108,6 @@ source ~/.zsh_env
 source ~/.zsh_functions
 source ~/.zsh_aliases
 source ~/.zsh_secrets
-
-# iTerm Shell Integration
-test -e ${HOME}/.iterm2_shell_integration.zsh && source ${HOME}/.iterm2_shell_integration.zsh
 
 # Init completions
 autoload -U +X bashcompinit && bashcompinit
