@@ -12,9 +12,12 @@ export ALIAS_EDITOR="code"
 
 # Builtins
 alias c="clear"
-alias ls="colorls --dark -1 --sd --gs"
 alias l="ls -lac"
 alias lsd="ls -d */"
+
+if command -v colorls > /dev/null 2>&1; then
+  alias ls="colorls --dark -1 --sd --gs"
+fi
 
 # Tools
 alias tf="terraform"
@@ -58,6 +61,7 @@ alias mtest="ruby -r minitest/pride *_test.rb"
 alias dimg="docker images" # Show docker images.
 alias drmi='docker rmi $(docker images -q)' # Remove all images.
 alias dpsa="docker ps -a" # Show running docker containers.
+alias dpsap='docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Networks}}\t{{.Ports}}"' # Show containers with ports
 alias dpsaq="docker ps -aq" # Show running docker containers without Header (used for other aliases).
 alias dstop='docker stop $(dpsaq)' # Stop all running containers.
 alias drma='docker rm $(dpsaq)' # Remove all running containers.
