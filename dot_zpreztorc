@@ -13,30 +13,32 @@ zstyle ':completion:*:cd:*'     ignore-parents parent pwd
 # Order matters.
 
 zstyle ':prezto:load' pmodule \
-  'tmux' \
   'environment' \
-  'autoenv' \
-  'ssh' \
-  'kubectl' \
-  'kube-ps1' \
   'terminal' \
-  'zsh-notify' \
   'editor' \
   'history' \
   'directory' \
   'spectrum' \
   'utility' \
   'completion' \
+  'history-substring-search' \
+  'autoenv' \
+  'ssh' \
+  'kubectl' \
+  'kube-ps1' \
+  'zsh-notify' \
   'homebrew' \
   'osx' \
   'rojo-git' \
   'archive' \
   'syntax-highlighting' \
-  'history-substring-search' \
   'autosuggestions' \
   'prompt'
 
-  # 'zsh-autocomplete' \
+# Disabled
+# 'tmux' \
+
+# 'zsh-autocomplete' \
 source $HOME/.zprezto/contrib/gcloud-ps1/gcloud-ps1.sh
 
 autoload -Uz promptinit
