@@ -1,4 +1,4 @@
-sourceDir: /Users/rojo/dev/Rojo/Github/dotfiles
+sourceDir: /home/rojo/dev/dotfiles
 diff:
   format: git
 gpg:
