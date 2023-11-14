@@ -12,7 +12,12 @@ function prompt_rojo_pwd() {
 }
 
 function prompt_rojo_precmd() {
-  print -rP "%F{blue}%n%F{blue}@%F{blue}%m: %F{yellow}$(prompt_rojo_pwd)%F{grey}$(git-radar --zsh --fetch)"
+  if command -v git-radar > /dev/null 2>&1; then
+    print -rP "%F{blue}%n%F{blue}@%F{blue}%m: %F{yellow}$(prompt_rojo_pwd)%F{grey}$(git-radar --zsh --fetch)"
+  else
+    print -rP "%F{blue}%n%F{blue}@%F{blue}%m: %F{yellow}$(prompt_rojo_pwd)"
+  fi
+
   # $(kube_ps1)
 }
 

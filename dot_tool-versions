@@ -27,3 +27,4 @@ adr-tools 3.0.0
 awscli 2.7.6
 rust 1.70.0
 gcloud 437.0.1
+chezmoi 2.41.0

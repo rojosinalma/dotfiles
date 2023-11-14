@@ -112,3 +112,8 @@ source ~/.zsh_secrets
 # Init completions
 autoload -U +X bashcompinit && bashcompinit
 autoload -Uz compinit && compinit
+
+## General ZSH
+zstyle ':completion:*:*:kill:*' menu yes select
+zstyle ':completion:*:kill:*'   force-list always
+zstyle ':completion:*:cd:*'     ignore-parents parent pwd
