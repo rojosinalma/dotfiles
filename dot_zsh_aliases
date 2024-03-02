@@ -60,7 +60,7 @@ alias mtest="ruby -r minitest/pride *_test.rb"
 # Docker
 alias dimg="docker images" # Show docker images.
 alias drmi='docker rmi $(docker images -q)' # Remove all images.
-alias dpsa="docker ps -a" # Show running docker containers.
+alias dpsa='docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Networks}}\t{{.Image}}"' # Show running docker containers.
 alias dpsap='docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Networks}}\t{{.Ports}}"' # Show containers with ports
 alias dpsaq="docker ps -aq" # Show running docker containers without Header (used for other aliases).
 alias dstop='docker stop $(dpsaq)' # Stop all running containers.
@@ -114,3 +114,17 @@ alias ghdr='gh api repos/$1/actions/runs | jq -r ".workflow_runs[] | select(.hea
 ## Kubernetes
 alias krtp="kc run test-pod --image ubuntu:latest sleep infinity"
 alias ketp="kc exec -it test-pod -- bash"
+
+# Nala
+
+apt() { 
+  command nala "$@"
+}
+sudo() {
+  if [ "$1" = "apt" ]; then
+    shift
+    command sudo nala "$@"
+  else
+    command sudo "$@"
+  fi
+}
