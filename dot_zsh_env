@@ -1,0 +1,81 @@
+# CONFIG VARS
+#-------------------
+
+# Default Editor
+export EDITOR="nvim"
+export VISUAL="$EDITOR"
+
+# LC
+export LC_CTYPE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export LC_MESSAGES=en_US.UTF-8
+
+# GPG
+export GPG_TTY=$(tty)
+
+# HUB CLI
+export GITHUB_HOST=github.com
+export HUB_PROTOCOL=ssh
+
+# HOMEBREW OPENSSL (OSX)
+export PKG_CONFIG_PATH="/usr/local/opt/openssl/lib/pkgconfig"
+
+# AWS
+export AWS_DEFAULT_REGION="us-east-1"
+export AWS_DEFAULT_PROFILE="base"
+
+# FZF
+export FZF_TMUX_OPTS="-p 80%"
+export FZF_CTRL_R_OPTS="--reverse --preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
+
+# HOMEBREW JDK (OSX)
+#export CPPFLAGS="-I/usr/local/opt/openjdk/include"
+
+# Ansible
+# export ANSIBLE_HOST_KEY_CHECKING=False
+
+# k8s
+# export KUBECONFIG=
+# export KUBECONFIG=
+# export KUBECONFIG=
+# export KUBECTL_EXTERNAL_DIFF="colordiff -N -u"
+
+# Skaffold
+# export SKAFFOLD_DEFAULT_REPO="rojosinalma"
+
+# Overcommit
+# if command -v overcommit > /dev/null 2>&1; then
+#   export GIT_TEMPLATE_DIR="$(overcommit --template-dir)"
+# fi
+
+#--- LONG STATIC STUFF ---#
+
+# Git Radar (https://github.com/michaeldfallen/git-radar)
+export PATH=$PATH:$HOME/.git-radar
+export GIT_RADAR_COLOR_BRANCH='%F{cyan}'
+export GIT_RADAR_COLOR_LOCAL_AHEAD
+export GIT_RADAR_COLOR_LOCAL_BEHIND
+export GIT_RADAR_COLOR_LOCAL_DIVERGED
+export GIT_RADAR_COLOR_REMOTE_AHEAD
+export GIT_RADAR_COLOR_REMOTE_BEHIND
+export GIT_RADAR_COLOR_REMOTE_DIVERGED
+export GIT_RADAR_COLOR_REMOTE_NOT_UPSTREAM
+export GIT_RADAR_COLOR_CHANGES_STAGED
+export GIT_RADAR_COLOR_CHANGES_UNSTAGED
+export GIT_RADAR_COLOR_CHANGES_CONFLICTED
+export GIT_RADAR_COLOR_CHANGES_UNTRACKED
+export GIT_RADAR_MAIN_BRANCH="origin/main"
+export GIT_RADAR_FETCH_TIME=30
+
+# Kube PS1
+# KUBE_PS1_BINARY=kubectl       # Default Kubernetes binary
+# KUBE_PS1_DIVIDER=": "         # Separator between context and namespace
+# KUBE_PS1_NS_ENABLE=true       # Display the namespace. If set to false, this will also disable KUBE_PS1_DIVIDER
+# KUBE_PS1_PREFIX=[             # Prompt opening character
+# KUBE_PS1_SEPARATOR=|          # Separator between symbol and context name
+# KUBE_PS1_SUFFIX=%F{blue}]     # Prompt closing character
+# KUBE_PS1_SYMBOL_DEFAULT=⎈	    # Default prompt symbol. Unicode \u2388
+# KUBE_PS1_SYMBOL_ENABLE=false  # Display the prompt Symbol. If set to false, this will also disable KUBE_PS1_SEPARATOR
+# KUBE_PS1_SYMBOL_PADDING=true  # Adds a space (padding) after the symbol to prevent clobbering prompt characters
+# KUBE_PS1_SYMBOL_USE_IMG=false # ☸️ , Unicode \u2638 as the prompt symbol
+
