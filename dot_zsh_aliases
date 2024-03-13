@@ -23,12 +23,13 @@ fi
 alias d='dirs -v'
 for index ({1..11}) alias "$index"="cd -${index}"; unset index
 
-## TOOL ALIASES
+## TOOLS ALIASES
 alias vim="nvim" 
 alias cm="$(asdf which chezmoi)"
 alias kc="kubectl"
 alias cf="cloudflared"
 alias tf="terraform"
+alias lg="lazygit"
 # alias tg="terragrunt"
 # alias ts="terraspace"
 # alias bs="brew services"
