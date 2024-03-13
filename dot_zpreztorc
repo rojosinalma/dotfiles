@@ -33,10 +33,8 @@ zstyle ':prezto:load' pmodule \
   'archive' \
   'syntax-highlighting' \
   'autosuggestions' \
-  'prompt'
-
-# Disabled
-# 'tmux' \
+  'prompt' \
+  'tmux'
 
 # 'zsh-autocomplete' \
 source $HOME/.zprezto/contrib/gcloud-ps1/gcloud-ps1.sh
@@ -57,7 +55,7 @@ zstyle ':completion:*' completer _complete _match _approximate
 zstyle ':completion:*:match:*' original only
 zstyle ':completion:*:approximate:*' max-errors 1 numeric
 zstyle ':completion:*:functions' ignored-patterns '_*'
-zstyle ':completion:*:cd:*' ignore-parents parent pwd
+zstyle ':completion:*:cd:*' ignore-parents parent pd
 
 ## Syntax Highlighting
 zstyle ':prezto:module:syntax-highlighting' color 'yes'
@@ -96,7 +94,7 @@ zstyle ':prezto:module:editor' dot-expansion 'yes'
 zstyle ':prezto:module:tmux:auto-start' local 'yes'
 zstyle ':prezto:module:tmux:auto-start' remote 'yes'
 zstyle ':prezto:module:tmux:iterm' integrate 'yes'
-zstyle ':prezto:module:tmux:session' name 'rojo'
+zstyle ':prezto:module:tmux:session' name 'main'
 
 # Set the query found color.
 zstyle ':prezto:module:history-substring-search:color' found 'green'
