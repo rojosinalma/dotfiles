@@ -8,10 +8,6 @@ bindkey '^[[1;9D' backward-word
 # Aliases
 #-------------------
 
-export ALIAS_EDITOR="nvim"
-export VISUAL="nvim"
-export EDITOR="nvim"
-
 # Builtins
 alias c="clear"
 alias l="ls -lac"
