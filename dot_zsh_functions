@@ -93,3 +93,8 @@ function cr(){
 function kex(){
   kubectl exec -it $1 -- sh -c "clear; (bash || ash || sh)"
 }
+
+## FZF-TMUX
+fzf-tmux() {
+  command fzf-tmux $FZF_TMUX_OPTS
+}
