@@ -39,9 +39,16 @@ zstyle ':prezto:load' pmodule \
 # 'zsh-autocomplete' \
 source $HOME/.zprezto/contrib/gcloud-ps1/gcloud-ps1.sh
 
+
+## PROMPT SETUP
 autoload -Uz promptinit
 promptinit
-zstyle ':prezto:module:prompt' theme 'rojo' # Prompt
+
+# The contrib folder is not in the fpath and the prompt module only loads functions in the fpath
+fpath=($HOME/.zprezto/contrib/rojo-prompt $fpath) 
+zstyle ':prezto:module:prompt' theme 'rojo'
+
+# Prezto Modules 
 zstyle ':prezto:*:*' color 'yes' # Color output (auto set to 'no' on dumb terminals).
 zstyle ':prezto:module:ssh:load' identities 'id_rsa'
 # zstyle ':prezto:load' zmodule 'attr' 'stat'
