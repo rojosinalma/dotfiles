@@ -12,6 +12,7 @@ bindkey '^[[1;9D' backward-word
 alias c="clear"
 alias l="ls -lac"
 alias lsd="ls -d */"
+alias motd="sudo run-parts /etc/update-motd.d"
 
 # Colorls
 if command -v colorls > /dev/null 2>&1; then
