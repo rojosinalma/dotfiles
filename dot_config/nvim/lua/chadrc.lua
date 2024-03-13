@@ -3,8 +3,8 @@ local M = {}
 M.ui = {
   vim.o.cursorlineopt =='number,line',
 
-  theme = "yoru",
-  -- telescope = { style = "bordered" },
+  theme = "chadracula-evondev",
+  telescope = { style = "bordered" },
 
   hl_override = {
     CursorLine = {
@@ -19,7 +19,7 @@ M.ui = {
 
   tabufline = {
     enabled = true,
-    lazyload = false,
+    lazyload = true,
   },
 
   nvdash = {
