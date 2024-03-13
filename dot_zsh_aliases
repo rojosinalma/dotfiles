@@ -31,33 +31,37 @@ alias tf="terraform"
 # alias tg="terragrunt"
 # alias ts="terraspace"
 # alias bs="brew services"
-#alias open="xdg-open" # TODO: Just for Linux
+# alias open="xdg-open" # TODO: Just for Linux
 # alias oc="overcommit"        # https://github.com/sds/overcommit#installation
 # alias ocr="overcommit --run"
 
-# Config files
+# Source dotfiles
 alias zshsource="source $HOME/.zshrc && source $HOME/.zpreztorc"
-alias zshaliases="$ALIAS_EDITOR $(cm source-path)/dot_zsh_aliases"
-alias zshenv="cm edit ~/.zsh_env"
-alias zshopts="$ALIAS_EDITOR $(cm source-path)/dot_zsh_opts"
-alias zshconfig="$ALIAS_EDITOR $(cm source-path)/dot_zshrc"
-alias zsecrets="$ALIAS_EDITOR $HOME/.zsh_secrets"
-alias zshfunctions="$ALIAS_EDITOR $(cm source-path)/dot_zsh_functions"
-alias prezconfig="$ALIAS_EDITOR $(cm source-path)/dot_zpreztorc"
-alias preztheme="$ALIAS_EDITOR $HOME/.zprezto/modules/prompt/functions/prompt_rojo_setup"
-alias sshconfig="$ALIAS_EDITOR ~/.ssh/"
-alias hostconf="sudo $ALIAS_EDITOR /etc/hosts"
-alias gitconfig="$ALIAS_EDITOR $(cm source-path)/dot_gitconfig"
-# alias yabaiconfig="$ALIAS_EDITOR $(cm source-dir)/dot_config/yabai/executable_yabairc"
-# alias skhdconfig="$ALIAS_EDITOR $(cm source-dir)/dot_config/skhd/executable_skhdrc"
-#alias spacebarconfig="$ALIAS_EDITOR $(cm source-dir)/dot_config/spacebar/spacebarrc"
+
+# Edit Regular Config files
+alias zshaliases="$EDITOR $(cm source-path)dot_zsh_aliases"
+alias zshenv="$EDITOR $(cm source-path)/dot_zsh_env"
+alias zshopts="$EDITOR $(cm source-path)/dot_zsh_opts"
+alias zshconfig="$EDITOR $(cm source-path)/dot_zshrc"
+alias zshfunctions="$EDITOR $(cm source-path)/dot_zsh_functions"
+alias prezconfig="$EDITOR $(cm source-path)/dot_zpreztorc"
+alias preztheme="$EDITOR $HOME/.zprezto/modules/prompt/functions/prompt_rojo_setup"
+alias gitconfig="$EDITOR $(cm source-path)/dot_gitconfig"
+# alias yabaiconfig="$EDITOR $(cm source-dir)/dot_config/yabai/executable_yabairc"
+# alias skhdconfig="$EDITOR $(cm source-dir)/dot_config/skhd/executable_skhdrc"
+# alias spacebarconfig="$EDITOR $(cm source-dir)/dot_config/spacebar/spacebarrc"
+
+# Edit Encrypted Config Files
+alias zsecrets="cm edit $HOME/.zsh_secrets"
+alias sshconfig="cm edit $HOME/.ssh/"
+alias hostconf="sudo $EDITOR /etc/hosts"
 
 # Ruby/Rails
 # alias rs="rails server"
 # alias rc="rails console"
 # alias bc="bin/console"
 # alias be="bundle exec"
-# alias gemconfig="$ALIAS_EDITOR $HOME/.rvm/gemsets/global.gems"
+# alias gemconfig="$EDITOR $HOME/.rvm/gemsets/global.gems"
 # alias rspuma="RAILS_ENV=development bundle exec rails s Puma -p 8080"
 # alias dbreset="rake db:migrate:reset && rake db:reset"
 # alias mtest="ruby -r minitest/pride *_test.rb"
@@ -106,10 +110,6 @@ alias dc="docker-compose"
 # # i.e: `pfwd gateway kong-postgres-0 5433:5432`
 # alias pfwd="rkctl port-forward -n $1 $2 $3"
 
-
-
-
-
 # AWS
 # alias ausers="aws iam list-users | jq '.Users[].UserName'"
 #
@@ -120,16 +120,3 @@ alias dc="docker-compose"
 # alias krtp="kc run test-pod --image ubuntu:latest sleep infinity"
 # alias ketp="kc exec -it test-pod -- bash"
 
-# Nala
-
-apt() { 
-  command nala "$@"
-}
-sudo() {
-  if [ "$1" = "apt" ]; then
-    shift
-    command sudo nala "$@"
-  else
-    command sudo "$@"
-  fi
-}
