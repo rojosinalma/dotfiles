@@ -95,6 +95,6 @@ function kex(){
 }
 
 ## FZF-TMUX
-fzf-tmux() {
-  command fzf-tmux $FZF_TMUX_OPTS
-}
+# fzf-tmux() {
+#   command fzf-tmux $FZF_TMUX_OPTS
+# }
