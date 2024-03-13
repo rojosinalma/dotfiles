@@ -1,6 +1,0 @@
-[
-  { "keys": ["alt+m"], "command": "markdown_preview", "args": {"target": "browser", "parser":"github"} },
-  { "keys": ["ctrl+t", "ctrl+w"], "command": "toggle_setting", "args": {"setting": "word_wrap"}},
-  { "keys": ["ctrl+º"], "command": "show_panel", "args": {"panel": "console", "toggle": true} },
-  { "keys": ["super+shift+o"], "command": "prompt_add_folder" }
-]

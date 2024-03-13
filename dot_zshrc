@@ -31,36 +31,19 @@ if [ -d "/opt/homebrew" ]; then
   test -e ${HOME}/.iterm2_shell_integration.zsh && source ${HOME}/.iterm2_shell_integration.zsh
 fi
 
-# LINUX INSTALLED
-if [ -d "/home/rojo" ]; then
-  . /home/rojo/.asdf/asdf.sh
-  export PATH="$PATH:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/rojo/.asdf/installs/python/3.10.5/bin"
-
-fi
-
 # PATH
 #------------------
 
-# Rust
-if [ -d "/Users/rojo/.asdf/installs/rust" ]; then
-  source "/Users/rojo/.asdf/installs/rust/1.70.0/env"
-fi
-
-## Exo
-if [ -d "/Users/rojo/.exo" ]; then
-  export PATH=$PATH:/Users/rojo/.exo/bin
-fi
-
-## Mysql-client
-if [ -d "/opt/homebrew/opt/mysql-client" ]; then
-  export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
+# ASDF 
+if [ -d ${ASDF_DIR} ]; then
+  . ${HOME}/.asdf/asdf.sh
 fi
 
 # COMPLETIONS
 #------------------
 
 # FPATH
-fpath=("~/.fpath" $fpath)
+fpath=("$HOME/.fpath" $fpath)
 fpath=(${ASDF_DIR}/completions $fpath)
 
 # GH CLI completion
@@ -77,29 +60,6 @@ fi
 if command -v bw > /dev/null 2>&1; then
   eval $(bw completion --shell zsh)
 fi
-
-# # AWS CLI completion
-# complete -C '/opt/homebrew/bin/aws_completer' aws
-
-# # Kustomize completion
-# eval $(kustomize completion zsh)
-
-# # eksctl completion
-# eval $(eksctl completion zsh)
-
-# # Kitty
-# kitty + complete setup zsh | source /dev/stdin
-
-# fff cd on exit
-# f() {
-#     fff "$@"
-#     cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")"
-# }
-
-# mcfly
-# if [[ -r "/usr/local/opt/mcfly/mcfly.zsh" ]]; then
-#   source "/usr/local/opt/mcfly/mcfly.zsh"
-# fi
 
 # PERSONAL EXTRAS
 #------------------
