@@ -8,7 +8,9 @@ bindkey '^[[1;9D' backward-word
 # Aliases
 #-------------------
 
-export ALIAS_EDITOR="code"
+export ALIAS_EDITOR="nvim"
+export VISUAL="nvim"
+export EDITOR="nvim"
 
 # Builtins
 alias c="clear"
@@ -29,6 +31,8 @@ alias bs="brew services"
 #alias open="xdg-open" # TODO: Just for Linux
 alias oc="overcommit"        # https://github.com/sds/overcommit#installation
 alias ocr="overcommit --run"
+alias cf="cloudflared"
+alias vim="nvim" 
 
 # Config files
 alias zshsource="source $HOME/.zshrc && source $HOME/.zpreztorc"
