@@ -39,7 +39,7 @@ alias tf="terraform"
 alias zshsource="source $HOME/.zshrc && source $HOME/.zpreztorc"
 
 # Edit Regular Config files
-alias zshaliases="$EDITOR $(cm source-path)dot_zsh_aliases"
+alias zshaliases="$EDITOR $(cm source-path)/dot_zsh_aliases"
 alias zshenv="$EDITOR $(cm source-path)/dot_zsh_env"
 alias zshopts="$EDITOR $(cm source-path)/dot_zsh_opts"
 alias zshconfig="$EDITOR $(cm source-path)/dot_zshrc"
