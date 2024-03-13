@@ -33,3 +33,4 @@ cloudflared 2024.2.1
 tmux 3.4
 fzf 0.46.1
 bat 0.24.0
+lazygit 0.40.2
