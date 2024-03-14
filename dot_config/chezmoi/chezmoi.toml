@@ -1,4 +1,4 @@
-sourceDir = "$HOME/dev/dotfiles"
+sourceDir = "/home/rojo/dev/dotfiles"
 color     = true
 follow    = true
 verbose   = true
