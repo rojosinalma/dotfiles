@@ -37,3 +37,14 @@ require "nvchad.autocmds"
 vim.schedule(function()
   require "mappings"
 end)
+
+local vim = vim
+local Plug = vim.fn['plug#']
+
+-- setting up vim plug
+
+vim.call('plug#begin')
+
+Plug('mg979/vim-visual-multi')
+
+vim.call('plug#end')
