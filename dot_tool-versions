@@ -35,3 +35,4 @@ fzf 0.46.1
 bat 0.24.0
 lazygit 0.40.2
 lua-language-server 3.7.4
+zoxide 0.9.4
