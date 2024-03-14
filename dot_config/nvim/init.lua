@@ -41,7 +41,13 @@ end)
 local vim = vim
 local Plug = vim.fn['plug#']
 
--- setting up vim plug
+-- setting up vim-plug
+local plugpath = vim.fn.stdpath "data" .. "/site/autoload/lazy.nvim"
+
+if not vim.loop.fs_stat(plugpath) then
+  local plug_raw ="https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+  vim.fn.system { "curl", "-fLo", plugpath, "--create-dirs", plug_raw }
+end
 
 vim.call('plug#begin')
 
