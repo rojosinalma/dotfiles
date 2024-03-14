@@ -1,7 +1,8 @@
 local M = {}
 
+vim.o.cursorlineopt = 'number,line'
+
 M.ui = {
-  vim.o.cursorlineopt =='number,line',
 
   theme = "chadracula-evondev",
   telescope = { style = "bordered" },
@@ -25,7 +26,6 @@ M.ui = {
   nvdash = {
     load_on_startup = true,
   }
-
 }
 
 return M
