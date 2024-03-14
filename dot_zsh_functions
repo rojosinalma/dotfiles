@@ -21,3 +21,9 @@ sudo() {
     command sudo "$@"
   fi
 }
+
+# cht.sh
+
+cht() {
+  command curl cht.sh "$@"
+}
