@@ -1,6 +1,10 @@
 # CONFIG VARS
 #-------------------
 
+# PATH
+export PATH=$PATH:$HOME/.bin/
+
+
 # Default Editor
 export EDITOR="nvim"
 export VISUAL="$EDITOR"
