@@ -25,7 +25,7 @@ for index ({1..11}) alias "$index"="cd -${index}"; unset index
 
 ## ASDF TOOLS
 alias cm="$(asdf which chezmoi)"
-alias vim="$(asdf which neovim)"
+alias vim="$(asdf which nvim)"
 
 ## TOOLS ALIASES
 alias kc="kubectl"
