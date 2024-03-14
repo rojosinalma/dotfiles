@@ -25,5 +25,5 @@ sudo() {
 # cht.sh
 
 cht() {
-  command curl cht.sh "$@"
+  command curl cht.sh/"$@"
 }
