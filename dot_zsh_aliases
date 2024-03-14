@@ -43,7 +43,7 @@ alias lg="lazygit"
 alias zshsource="source $HOME/.zshrc && source $HOME/.zpreztorc"
 
 # Edit Regular Config files
-alias zshaliases="cm edit $HOME/.zsh_aliases &cm apply"
+alias zshaliases="cm edit $HOME/.zsh_aliases & cm apply"
 alias zshenv="cm edit $HOME/.zsh_env"
 alias zshopts="cm edit $HOME/.zsh_opts"
 alias zshconfig="cm edit $HOME/.zshrc"
