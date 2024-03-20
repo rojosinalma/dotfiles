@@ -18,7 +18,7 @@ args    = ["ssh silver"]
 # working_directory = "None"  # Default: "None"
 
 # Live config reload (changes require restart)
-# live_config_reload = true  # Default: true
+# live_config_reload = "true"  # Default: true
 
 # Offer IPC using alacritty msg (unix only)
 # ipc_socket = true  # Default: true
@@ -52,7 +52,7 @@ dynamic_padding = true  # Default: false
 decorations = "Full"  # Default: "Full"
 
 # Opacity
-opacity = 1.0  # Default: 1.0
+opacity = 0.7  # Default: 1.0
 
 # Blur (macOS/KDE Wayland only)
 blur = false  # Default: false
@@ -157,7 +157,7 @@ save_to_clipboard = false  # Default: false
 [cursor]
 
 # Cursor style
-style = { shape = "Block", blinking = "On" }  # Default: shape = "Block", blinking = "Off"
+style = { shape = "Beam", blinking = "On" }  # Default: shape = "Block", blinking = "Off"
 
 # Vi mode cursor style (falls back to the active value of the normal cursor if "None")
 vi_mode_style = "None"  # Default: "None"
@@ -224,7 +224,16 @@ alphabet = "jfkdls;ahgurieowpq"  # Default: "jfkdls;ahgurieowpq"
 # Define keyboard bindings here
 # Example placeholder (actual bindings need to be defined based on user preference)
 bindings = [
-    # { key = "Key", mods = "Modifiers", action = "Action" },
-    # { key = "Key", mods = "Modifiers", chars = "Characters to send" },
-    # ...
+  # (Windows/Linux only)
+  { key = "V",        mods = "Control|Shift", action = "Paste"            },
+  { key = "C",        mods = "Control|Shift", action = "Copy"             },
+  { key = "Paste",                            action = "Paste"            },
+  { key = "Copy",                             action = "Copy"             },
+  { key = "Insert",   mods = "Shift",         action = "PasteSelection"   },
+  { key = "Key0",     mods = "Control",       action = "ResetFontSize"    },
+  { key = "Equals",   mods = "Control",       action = "IncreaseFontSize" },
+  { key = "Minus",    mods = "Control",       action = "DecreaseFontSize" },
 ]
+
+[debug]
+# render_timer = true
