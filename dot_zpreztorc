@@ -33,7 +33,7 @@ zstyle ':prezto:load' pmodule \
   'archive' \
   'syntax-highlighting' \
   'autosuggestions' \
-  'prompt' \
+  'prompt'\
   'tmux'
 
 # 'zsh-autocomplete' \
