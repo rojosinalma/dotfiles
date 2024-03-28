@@ -16,7 +16,7 @@ neovim 0.9.5
 ansible-base 2.10.17
 helm 3.8.2
 krew 0.4.3
-golang 1.18.1
+golang 1.22.1
 teleport-ent 9.0.0
 java openjdk-18.0.1
 sqlite 3.39.1
