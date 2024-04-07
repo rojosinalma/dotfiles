@@ -9,26 +9,33 @@ import = ["C:\\Users\\Rojo\\AppData\\Roaming\\alacritty\\dracula.toml"]
 
 # Shell program and its arguments
 # Default for Linux/BSD/macOS is $SHELL or user's login shell
+
 # Default for Windows is "powershell"
 [shell]
 program = "wsl"
 args    = ["ssh silver"]
 
+
 # Working directory
 # working_directory = "None"  # Default: "None"
 
+
 # Live config reload (changes require restart)
+
 # live_config_reload = "true"  # Default: true
 
 # Offer IPC using alacritty msg (unix only)
 # ipc_socket = true  # Default: true
 
+
 #######
 # ENV #
+
 #######
 
 [env]
 # Environment variables
+
 
 ##########
 # WINDOW #
@@ -45,14 +52,16 @@ position = { x = 300, y = 50 }  # Default: "None"
 # Padding
 padding = { x = 0, y = 0 }  # Default: x = 0, y = 0
 
+
 # Dynamic padding
-dynamic_padding = true  # Default: false
+dynamic_padding = false  # Default: false
 
 # Window decorations
 decorations = "Full"  # Default: "Full"
 
+
 # Opacity
-opacity = 0.7  # Default: 1.0
+opacity = 0.8  # Default: 1.0
 
 # Blur (macOS/KDE Wayland only)
 blur = false  # Default: false
@@ -84,6 +93,7 @@ resize_increments = false  # Default: false
 
 [scrolling]
 
+
 # Maximum number of lines in the scrollback buffer
 history = 10000  # Default: 10000
 
@@ -93,6 +103,7 @@ multiplier = 3  # Default: 3
 ########
 # FONT #
 ########
+
 
 [font]
 
@@ -111,11 +122,13 @@ bold_italic = { style = "Bold Italic" }  # Inherits family from normal, Default 
 # Font size in points
 size = 16  # Default: 11.25
 
+
 # Offset is extra space around each character
 offset = { x = 0, y = 0 }  # Default: x = 0, y = 0
 
 # Glyph offset determines the locations of the glyphs within their cells
 glyph_offset = { x = 0, y = 0 }  # Default: x = 0, y = 0
+
 
 # Use built-in font for box drawing characters
 builtin_box_drawing = true  # Default: true
@@ -123,6 +136,7 @@ builtin_box_drawing = true  # Default: true
 ########
 # BELL #
 ########
+
 
 [bell]
 
@@ -154,6 +168,7 @@ save_to_clipboard = false  # Default: false
 # CURSOR #
 ##########
 
+
 [cursor]
 
 # Cursor style
@@ -165,11 +180,13 @@ vi_mode_style = "None"  # Default: "None"
 # Cursor blinking interval in milliseconds
 blink_interval = 750  # Default: 750
 
+
 # Time after which cursor stops blinking, in seconds
 blink_timeout = 0  # Default: 5
 
 # When true, the cursor will be rendered as a hollow box when the window is not focused
 unfocused_hollow = true  # Default: true
+
 
 # Thickness of the cursor relative to the cell width
 thickness = 0.15  # Default: 0.15
@@ -179,6 +196,7 @@ thickness = 0.15  # Default: 0.15
 ############
 
 [terminal]
+
 
 # Controls the OSC 52 behavior for clipboard interactions
 osc52 = "CopyPaste"  # Default: "OnlyCopy"
@@ -192,18 +210,25 @@ osc52 = "CopyPaste"  # Default: "OnlyCopy"
 # When true, the cursor is temporarily hidden when typing
 hide_when_typing = true  # Default: false
 
+
 # Mouse bindings (actual bindings need to be defined as per user preference)
 # Example: bindings = [{ mouse = "Left", action = "Paste" }]
+
 bindings = []
 
+
 #########
+
 # HINTS #
 #########
 
+
 [hints]
+
 
 # Define the keys used for hint labels
 alphabet = "jfkdls;ahgurieowpq"  # Default: "jfkdls;ahgurieowpq"
+
 
 # Enable specific hints
 #[[hints.enabled]]
@@ -237,3 +262,4 @@ bindings = [
 
 [debug]
 # render_timer = true
+
