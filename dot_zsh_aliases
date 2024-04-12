@@ -85,7 +85,7 @@ alias dfindrm='docker images -a | grep $1 | awk "{print $3}" | xargs docker rmi'
 alias dex="docker ps -a -f status=exited" # List exited containers.
 alias dexrm='docker rm $(docker ps -a -f status=exited -q)' # Stop exited containers.
 alias drmf='docker stop $(dpsaq) && docker rm $(dpsaq)' # Stop and Remove all containers
-alias dc="docker-compose"
+alias dc="docker compose"
 
 # Skaffold
 #alias ska='skaffold'
