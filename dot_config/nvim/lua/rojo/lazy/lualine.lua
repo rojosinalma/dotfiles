@@ -7,6 +7,11 @@ return {
         theme = "dracula",
       },
 
+      disabled_filetypes = {
+        'NVimTree',
+        'Lazy',
+      },
+
       sections = {
         lualine_a = {
           'mode',
