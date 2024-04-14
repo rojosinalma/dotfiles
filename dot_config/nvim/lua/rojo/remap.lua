@@ -31,3 +31,4 @@ vim.keymap.set("n", "<C-b>", vim.cmd.NvimTreeToggle)
 
 -- search highlight
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+
