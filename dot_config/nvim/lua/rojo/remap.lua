@@ -13,6 +13,7 @@ vim.keymap.set("n", "<A-d>", vim.cmd.vnew)
 vim.keymap.set("n", "<A-v>", vim.cmd.new)
 vim.keymap.set("n", "<A-q>", vim.cmd.quit)
 vim.keymap.set("n", "<A-w>", vim.cmd.bd)
+vim.keymap.set("n", "<A-=>", "<C-w>=")
 
 -- resize normal mode
 vim.keymap.set("n", "<C-Up>", ":resize +2<CR>")
@@ -28,8 +29,13 @@ vim.keymap.set("t", "<C-Right>", "<cmd>vertical resize +2<CR>")
 
 -- nvimtree
 vim.keymap.set("n", "<C-b>", vim.cmd.NvimTreeToggle)
-vim.keymap.set("n", "<A-b>", vim.cmd.NvimTreeToggle)
+vim.keymap.set("n", "<A-b>", vim.cmd.NvimTreeToggle, { desc = "Toggle NvimTree" } )
+vim.keymap.set("n", "<A-f>", vim.cmd.NvimTreeFindFileToggle, { desc = "Show current file in the tree" } )
+vim.keymap.set("n", "<A-r>", vim.cmd.NvimTreeRefresh, { desc = "Refresh NvimTree" } )
 
 -- search highlight
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+-- lsp related
+vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, {})
+vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action)
