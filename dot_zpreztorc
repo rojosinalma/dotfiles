@@ -118,7 +118,7 @@ zstyle ':prezto:module:ruby:chruby' auto-switch 'yes'
 # Enabled safe options. This aliases cp, ln, mv and rm so that they prompt
 # before deleting or overwriting files. Set to 'no' to disable this safer
 # behavior.
-zstyle ':prezto:module:utility' safe-ops 'yes'
+zstyle ':prezto:module:utility' safe-ops 'no'
 
 # zsh-autocompletions
 # zstyle ':autocomplete:*' default-context ''
