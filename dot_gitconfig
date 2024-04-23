@@ -15,6 +15,7 @@
   editor = subl -n -w
   autocrlf = input
 	hooksPath = /Users/rojo/.git/hooks
+	filemode = false
 
 [pull]
   rebase = true
