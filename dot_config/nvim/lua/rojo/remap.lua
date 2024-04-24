@@ -6,6 +6,7 @@ vim.keymap.set("n", "<leader>ee", vim.cmd.Ex) -- open nvim explorer
 vim.keymap.set("n", "<leader>ll", vim.cmd.Lazy) -- open Lazy
 vim.keymap.set("n", "<leader>so", vim.cmd.so) -- source current file
 vim.keymap.set("n", "<A-s>", vim.cmd.write) -- save
+vim.keymap.set("n", "<C-c>", "<Esc>") -- save
 
 -- windows & splits 
 -- NOTE: The rest of the bindings are taken care of in nvim-tmux-navigator

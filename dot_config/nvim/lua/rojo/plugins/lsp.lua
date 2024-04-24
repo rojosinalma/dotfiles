@@ -14,6 +14,7 @@ return {
   },
 
   config = function()
+    -- Completions
     local cmp = require('cmp')
     local cmp_lsp = require("cmp_nvim_lsp")
     local capabilities = vim.tbl_deep_extend(
@@ -21,10 +22,37 @@ return {
       "force",
       {},
       vim.lsp.protocol.make_client_capabilities(),
-      cmp_lsp.default_capabilities())
+      cmp_lsp.default_capabilities()
+    )
 
+    local cmp_select = { behavior = cmp.SelectBehavior.Select }
+    cmp.setup({
+      snippet = {
+        expand = function(args)
+          require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        end,
+      },
+      mapping = cmp.mapping.preset.insert({
+        ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
+        ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
+        ['<CR>'] = cmp.mapping.confirm(--[[{ select = true }--]]),
+        ["<C-space>"] = cmp.mapping.complete(),
+      }),
+      sources = cmp.config.sources(
+        {
+          { name = 'nvim_lsp' },
+          { name = 'luasnip' }, -- For luasnip users.
+        },
+        {
+          { name = 'buffer' },
+        }
+      )
+    })
+
+    -- Fidget
     require("fidget").setup({})
 
+    -- Mason
     require("mason").setup()
     require("mason-lspconfig").setup({
       ensure_installed = {
@@ -57,28 +85,7 @@ return {
       }
     })
 
-    local cmp_select = { behavior = cmp.SelectBehavior.Select }
-
-    cmp.setup({
-      snippet = {
-        expand = function(args)
-          require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-        end,
-      },
-      mapping = cmp.mapping.preset.insert({
-        ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-        ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-        ['<CR>'] = cmp.mapping.confirm(--[[{ select = true }--]]),
-        ["<C-space>"] = cmp.mapping.complete(),
-      }),
-      sources = cmp.config.sources({
-        { name = 'nvim_lsp' },
-        { name = 'luasnip' }, -- For luasnip users.
-      }, {
-          { name = 'buffer' },
-        })
-    })
-
+    -- Diagnostics
     vim.diagnostic.config({
       -- update_in_insert = true,
       float = {
