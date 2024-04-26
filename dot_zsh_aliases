@@ -10,14 +10,20 @@ bindkey '^[[1;9D' backward-word
 
 # Builtins
 alias c="clear"
-alias l="ls -lac"
+alias l="ls -la"
 alias lsd="ls -d */"
 alias motd="sudo run-parts /etc/update-motd.d"
 
 # Colorls
-if command -v colorls > /dev/null 2>&1; then
-  alias ls="colorls --dark -1 --sd --gs"
+#if command -v colorls > /dev/null 2>&1; then
+#  alias ls="colorls --dark -1 --sd --gs"
+#fi
+
+# EZA
+if command -v eza > /dev/null 2>&1; then
+  alias ls="eza --icons -1 --group-directories-first -g --git --git-repos -o"
 fi
+
 
 # Remap dirs (used to override prezto module)
 alias d='dirs -v'
