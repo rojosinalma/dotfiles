@@ -1,9 +1,7 @@
 # source "${0:h}/browser_github.sh"
 
 # Custom Aliases
-alias gchm='git checkout master;pull'
-compdef _git gchm=git-checkout
-alias gchma='git checkout main;pull'
+alias gchm='git checkout main;pull'
 compdef _git gchm=git-checkout
 alias gchp='git checkout production;pull'
 compdef _git gchp=git-checkout
