@@ -24,8 +24,6 @@ zstyle ':prezto:load' pmodule \
   'history-substring-search' \
   'autoenv' \
   'ssh' \
-  'kubectl' \
-  'kube-ps1' \
   'zsh-notify' \
   'homebrew' \
   'osx' \
@@ -33,8 +31,11 @@ zstyle ':prezto:load' pmodule \
   'archive' \
   'syntax-highlighting' \
   'autosuggestions' \
-  'prompt' \
-  'rojo-tmux'
+  'prompt' 
+ 
+# 'kubectl'
+# 'kube-ps1'
+# 'rojo-tmux'
 
 # 'zsh-autocomplete' \
 source $HOME/.zprezto/contrib/gcloud-ps1/gcloud-ps1.sh
