@@ -1,9 +1,6 @@
 # CONFIG VARS
 #-------------------
 
-# TERM
-[[ "${TERM}" == "alacritty" ]] && export TERM=alacritty-direct
-
 # PATH
 export PATH=$PATH:$HOME/.bin/
 
