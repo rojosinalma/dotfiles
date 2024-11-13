@@ -35,9 +35,6 @@
 [push]
   default = matching
 
-[merge]
-  tool = sublimemerge
-
 [mergetool "sublimerge"]
   cmd = subl -n --wait \"$REMOTE\" \"$BASE\" \"$LOCAL\" \"$MERGED\" --command \"sublimerge_diff_views\"
   trustExitCode = false
