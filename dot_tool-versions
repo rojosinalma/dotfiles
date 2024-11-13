@@ -39,3 +39,4 @@ zoxide 0.9.4
 pipx 1.4.3
 eza 0.18.13
 redis-cli 7.2.5
+glab 1.48.0
