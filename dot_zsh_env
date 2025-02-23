@@ -17,6 +17,9 @@ export LC_MESSAGES=en_US.UTF-8
 # GPG
 export GPG_TTY=$(tty)
 
+# GIT
+export GIT_SSH_COMMAND="ssh -T"
+
 # HUB CLI
 export GITHUB_HOST=github.com
 export HUB_PROTOCOL=ssh
