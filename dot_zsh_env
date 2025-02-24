@@ -85,3 +85,10 @@ export GIT_RADAR_FETCH_TIME=30
 # KUBE_PS1_SYMBOL_PADDING=true  # Adds a space (padding) after the symbol to prevent clobbering prompt characters
 # KUBE_PS1_SYMBOL_USE_IMG=false # ☸️ , Unicode \u2638 as the prompt symbol
 
+# Work
+# set the required environment variables
+export RP_INFRA_LIVE_ROOT=$HOME/dev/infrastructure-live
+export RP_INFRA_MODULES_ROOT=$HOME/dev/infrastructure-modules
+export RP_INFRA_TOOLS_ROOT=$HOME/dev/infrastructure-tools
+export RP_ROLE_NAME=allow-dev-access-from-other-accounts
+source $RP_INFRA_TOOLS_ROOT/init.sh
