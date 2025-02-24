@@ -2,8 +2,8 @@
 #-------------------
 
 # PATH
+export PATH=$HOME/.local/bin:$PATH
 export PATH=$PATH:$HOME/.bin/
-
 
 # Default Editor
 export EDITOR="nvim"
