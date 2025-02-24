@@ -36,7 +36,8 @@ fi
 
 # ASDF 
 if [ -d ${ASDF_DIR} ]; then
-  . ${HOME}/.asdf/asdf.sh
+  export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+  fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath) # completions
 fi
 
 # COMPLETIONS
@@ -44,7 +45,6 @@ fi
 
 # FPATH
 fpath=("$HOME/.fpath" $fpath)
-fpath=(${ASDF_DIR}/completions $fpath)
 
 # GH CLI completion
 if command -v gh > /dev/null 2>&1; then
