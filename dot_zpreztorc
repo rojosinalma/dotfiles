@@ -33,8 +33,9 @@ zstyle ':prezto:load' pmodule \
   'archive' \
   'syntax-highlighting' \
   'autosuggestions' \
-  'prompt' \
-  'rojo-tmux'
+  'prompt'
+
+#'rojo-tmux'
 
 # 'zsh-autocomplete' \
 source $HOME/.zprezto/contrib/gcloud-ps1/gcloud-ps1.sh
