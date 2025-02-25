@@ -87,8 +87,8 @@ export GIT_RADAR_FETCH_TIME=30
 
 # Work
 # set the required environment variables
-export RP_INFRA_LIVE_ROOT=$HOME/dev/infrastructure-live
-export RP_INFRA_MODULES_ROOT=$HOME/dev/infrastructure-modules
-export RP_INFRA_TOOLS_ROOT=$HOME/dev/infrastructure-tools
+export RP_INFRA_LIVE_ROOT=$HOME/dev/Repos/infrastructure-live
+export RP_INFRA_MODULES_ROOT=$HOME/dev/Repos/infrastructure-modules
+export RP_INFRA_TOOLS_ROOT=$HOME/dev/Repos/infrastructure-tools
 export RP_ROLE_NAME=allow-dev-access-from-other-accounts
-source $RP_INFRA_TOOLS_ROOT/init.sh
+source $RP_INFRA_TOOLS_ROOT/nit.sh
