@@ -66,6 +66,11 @@ if command -v pipx > /dev/null 2>&1; then
   export PATH=$PATH:$HOME/.local/bin
 fi
 
+if [[ -d "${$HOME"}/.docker"]]; then
+  source "${HOME}/.docker/bin"
+fi
+
+
 
 # PERSONAL EXTRAS
 #------------------
