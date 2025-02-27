@@ -87,4 +87,4 @@ autoload -Uz compinit && compinit
 ## General ZSH
 zstyle ':completion:*:*:kill:*' menu yes select
 zstyle ':completion:*:kill:*'   force-list always
-zstyle ':completion:*:cd:*'     ignore-parents parent pwd
+zstyle ':completion:*:cd:*'     ignore-parents parent
