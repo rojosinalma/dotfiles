@@ -92,3 +92,6 @@ export RP_INFRA_MODULES_ROOT=$HOME/dev/Repos/infrastructure-modules
 export RP_INFRA_TOOLS_ROOT=$HOME/dev/Repos/infrastructure-tools
 export RP_ROLE_NAME=allow-dev-access-from-other-accounts
 source $RP_INFRA_TOOLS_ROOT/init.sh
+
+# Jira
+export JIRA_API_TOKEN=fagarnovoa
