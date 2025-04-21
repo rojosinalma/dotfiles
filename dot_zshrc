@@ -75,6 +75,10 @@ if command -v aws > /dev/null 2>&1; then
   complete -C aws_completer aws
 fi
 
+## aws-cli
+if command -v eksctl > /dev/null 2>&1; then
+  fpath=($fpath ~/.zsh/completion)
+fi
 
 # PERSONAL EXTRAS
 #------------------
