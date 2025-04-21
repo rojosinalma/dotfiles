@@ -70,6 +70,12 @@ if [[ -d ${HOME}/.docker ]]; then
   PATH=$PATH:$HOME/.docker/bin
 fi
 
+## aws-cli
+if command -v aws > /dev/null 2>&1; then
+  complete -C aws_completer aws
+fi
+
+
 # PERSONAL EXTRAS
 #------------------
 source ~/.zsh_opts
