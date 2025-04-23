@@ -1,4 +1,5 @@
 #!/bin/bash
+[ -t 0 ] || exit
 
 # Check if already inside a tmux session
 if [ -z "$TMUX" ]; then
