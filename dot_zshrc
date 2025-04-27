@@ -73,7 +73,6 @@ fi
 # aws-cli
 if command -v aws > /dev/null 2>&1; then
   source ~/.aws_env
-  complete -C aws_completer aws
 fi
 
 
