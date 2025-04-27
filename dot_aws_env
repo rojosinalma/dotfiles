@@ -3,6 +3,8 @@ export AWS_DEFAULT_REGION="us-east-1"
 export AWS_DEFAULT_PROFILE="base"
 export EKS_CLUSTER_NAME=eks-production-01
 
+## Aliases
+alias ausers="aws iam list-users | jq '.Users[].UserName'"
 
 ## FUNCTIONS
 # Set cluster name to avoid using --cluster-name

@@ -14,12 +14,7 @@ alias l="ls -la"
 alias lsd="ls -d */"
 alias motd="sudo run-parts /etc/update-motd.d"
 
-# Colorls
-#if command -v colorls > /dev/null 2>&1; then
-#  alias ls="colorls --dark -1 --sd --gs"
-#fi
-
-# EZA
+# EZA for colorful ls
 if command -v eza > /dev/null 2>&1; then
   alias ls="eza --icons -1 --group-directories-first -g --git --git-repos -o"
 fi
@@ -121,9 +116,6 @@ alias dc="docker compose"
 # # i.e: `pfwd gateway kong-postgres-0 5433:5432`
 # alias pfwd="rkctl port-forward -n $1 $2 $3"
 
-# AWS
-# alias ausers="aws iam list-users | jq '.Users[].UserName'"
-#
 # ## Github Actions
 # alias ghdr='gh api repos/$1/actions/runs | jq -r ".workflow_runs[] | select(.head_branch != \"docker\") | \"(.id)\"" | xargs -n1 -J % gh api repos/$1/actions/runs/% -X DELETE'
 #
