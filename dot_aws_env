@@ -1,0 +1,12 @@
+## ENV
+export AWS_DEFAULT_REGION="us-east-1"
+export AWS_DEFAULT_PROFILE="base"
+export EKS_CLUSTER_NAME=eks-production-01
+
+
+## FUNCTIONS
+# Set cluster name to avoid using --cluster-name
+aws_eks() {
+  aws eks "$@" --cluster-name "$EKS_CLUSTER_NAME"
+}
+
