@@ -6,6 +6,10 @@ fi
 # When using zsh-autocompletion
 # source ~/.zprezto/contrib/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 
+# Init completions
+autoload -U +X bashcompinit && bashcompinit
+autoload -Uz compinit && compinit
+
 # GENERAL CONFIG AND PATH
 # (For other env vars and dirs, check zshenv)
 #------------------
@@ -73,6 +77,7 @@ fi
 # aws-cli
 if command -v aws > /dev/null 2>&1; then
   source ~/.aws_env
+  complete -C aws_completer aws
 fi
 
 
@@ -83,10 +88,6 @@ source ~/.zsh_env
 source ~/.zsh_functions
 source ~/.zsh_aliases
 source ~/.zsh_secrets
-
-# Init completions
-autoload -U +X bashcompinit && bashcompinit
-autoload -Uz compinit && compinit
 
 ## General ZSH
 zstyle ':completion:*:*:kill:*' menu yes select
