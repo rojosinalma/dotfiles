@@ -26,10 +26,6 @@ export HUB_PROTOCOL=ssh
 # HOMEBREW OPENSSL (OSX)
 export PKG_CONFIG_PATH="/usr/local/opt/openssl/lib/pkgconfig"
 
-# AWS
-export AWS_DEFAULT_REGION="us-east-1"
-export AWS_DEFAULT_PROFILE="base"
-
 # FZF
 export FZF_TMUX_OPTS="-p 80%"
 export FZF_CTRL_R_OPTS="--reverse --preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
