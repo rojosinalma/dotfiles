@@ -5,10 +5,8 @@ export EKS_CLUSTER_NAME=eks-production-01
 
 ## Aliases
 alias ausers="aws iam list-users | jq '.Users[].UserName'"
+alias aws_eks='aws eks --cluster-name $AWS_DEFAULT_CLUSTER_NAME'
 
 ## FUNCTIONS
-# Set cluster name to avoid using --cluster-name
-aws_eks() {
-  aws eks "$@" --cluster-name "$EKS_CLUSTER_NAME"
-}
+
 
