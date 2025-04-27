@@ -41,7 +41,7 @@ function prompt_rojo_setup {
   # RPROMPT='%F{blue}$(kube_ps1)$(gcloud_ps1)%F{blue}[%F{magenta}%D{%H:%M}%F{blue}]%f'
 
   # Without
-  RPROMPT='%F{blue}[%F{magenta}%D{%H:%M}%F{blue}]%f'
+  RPROMPT='%F{blue}$(kube_ps1)[%F{magenta}%D{%H:%M}%F{blue}]%f'
 }
 
 prompt_rojo_setup "$@"
