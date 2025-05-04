@@ -18,9 +18,10 @@ alias kca='_kca(){ kubectl "$@" --all-namespaces;  unset -f _kca; }; _kca'
 
 # Apply a YML file
 alias kaf='kubectl apply -f'
+alias kak='kubectl apply -k' # For kustomize
 
 # Drop into an interactive terminal on a container
-alias keti='kubectl exec -ti'
+alias keti='kubectl exec -ti $1 -- '
 
 # Manage configuration quickly to switch contexts between local, dev ad staging.
 alias kcuc='kubectl config use-context'
@@ -71,7 +72,12 @@ alias kgns='kubectl get namespaces'
 alias kens='kubectl edit namespace'
 alias kdns='kubectl describe namespace'
 alias kdelns='kubectl delete namespace'
-alias kcn='kubectl config set-context $(kubectl config current-context) --namespace'
+
+# Set context
+kcn() {
+  kubectl config set-context "$(kubectl config current-context)" --namespace="$1"
+  export K8S_NAMESPACE="$1"
+}
 
 # ConfigMap management
 alias kgcm='kubectl get configmaps'
@@ -178,3 +184,47 @@ if (( ${+_comps[kubectl]} )); then
   compdef kjx=kubectl
   compdef ky=kubectl
 fi
+
+
+# Exec function
+kexec() {
+  local pod_base="$1"
+  shift
+  if [[ -z "$pod_base" ]]; then
+    echo "❌ Usage: kexec <pod-name-prefix>"
+    return 1
+  fi
+
+  # Search all namespaces for a pod that starts with the given name
+  local line
+  line=$(kubectl get pods --all-namespaces --no-headers -o custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name | grep "^.*[[:space:]]$pod_base" | head -n 1)
+
+  if [[ -z "$line" ]]; then
+    line=$(kubectl get pods --all-namespaces --no-headers -o custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name | grep "$pod_base" | head -n 1)
+  fi
+
+  if [[ -z "$line" ]]; then
+    echo "❌ No pod found matching prefix '$pod_base' in any namespace"
+    return 1
+  fi
+
+  local namespace pod_name
+  namespace=$(echo "$line" | awk '{print $1}')
+  pod_name=$(echo "$line" | awk '{print $2}')
+
+  echo "✅ Found pod: $pod_name in namespace: $namespace"
+
+  # Try available shells
+  for shell in bash zsh sh ash; do
+    echo "🔍 Trying shell: $shell"
+    if kubectl exec -n "$namespace" -it "$pod_name" -- "$shell" -c "exit" &>/dev/null; then
+      echo "🚀 Launching shell: $shell"
+      kubectl exec -n "$namespace" -it "$pod_name" -- "$shell"
+      return
+    fi
+  done
+
+  echo "❌ No supported shell (bash, zsh, sh, ash) found in pod '$pod_name'"
+  return 1
+}
+
