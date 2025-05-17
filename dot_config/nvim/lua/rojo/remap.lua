@@ -2,9 +2,9 @@
 vim.g.mapleader = " "
 
 -- quick cmds
-vim.keymap.set("n", "<leader>ee", vim.cmd.Ex) -- open nvim explorer
-vim.keymap.set("n", "<leader>ll", vim.cmd.Lazy) -- open Lazy
-vim.keymap.set("n", "<leader>so", vim.cmd.so) -- source current file
+vim.keymap.set("n", "<leader>ee", vim.cmd.Ex, { desc = "Open nvim explorer"}) -- open nvim explorer
+vim.keymap.set("n", "<leader>ll", vim.cmd.Lazy, { desc = "Open Lazy"} ) -- open Lazy
+vim.keymap.set("n", "<leader>so", vim.cmd.so, { desc = "Reload current file"} ) -- source current file
 vim.keymap.set("n", "<A-s>", vim.cmd.write) -- save
 vim.keymap.set("n", "<C-c>", "<Esc>") -- escape
 
@@ -13,8 +13,13 @@ vim.keymap.set("n", "<C-c>", "<Esc>") -- escape
 vim.keymap.set("n", "<A-d>", vim.cmd.vnew)
 vim.keymap.set("n", "<A-v>", vim.cmd.new)
 vim.keymap.set("n", "<A-q>", vim.cmd.qa)
---vim.keymap.set("n", "<A-w>", vim.cmd.bd)
 vim.keymap.set("n", "<A-=>", "<C-w>=")
+
+-- Go to tab 1-4 with Alt+1-4
+vim.keymap.set("n", "<A-1>", "<cmd>BufferLineGoToBuffer 1<CR>", { desc = "Go to buffer 1" })
+vim.keymap.set("n", "<A-2>", "<cmd>BufferLineGoToBuffer 2<CR>", { desc = "Go to buffer 2" })
+vim.keymap.set("n", "<A-3>", "<cmd>BufferLineGoToBuffer 3<CR>", { desc = "Go to buffer 3" })
+vim.keymap.set("n", "<A-4>", "<cmd>BufferLineGoToBuffer 4<CR>", { desc = "Go to buffer 4" })
 
 -- resize normal mode
 vim.keymap.set("n", "<C-Down>", ":resize -2<CR>")          -- Ctrl + Up: Decrease window height
@@ -38,22 +43,22 @@ vim.keymap.set("n", "<A-r>", vim.cmd.NvimTreeRefresh, { desc = "Refresh NvimTree
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- lsp related
-vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, {})
-vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action)
+vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = "Rename Buffer"} )
+vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = "[C]ode [A]ction"} )
 
 vim.keymap.set("n", "<A-w>", function()
   if vim.bo.modified then
     -- Prompt user to save or discard changes
     local choice = vim.fn.confirm("Save changes before closing?", "&Yes\n&No\n&Cancel", 1)
     if choice == 1 then
-      vim.cmd("write")        -- Save the file
-      vim.cmd("bd")           -- Close the buffer
+      vim.cmd("write")              -- Save the file
+      vim.cmd("Bdelete")            -- Close the buffer
     elseif choice == 2 then
-      vim.cmd("bd!")          -- Discard changes and close buffer
+      vim.cmd("Bdelete!")           -- Discard changes and close buffer
     end
     -- If choice == 3 (Cancel), do nothing
   else
-    vim.cmd("bd")             -- Close buffer if no changes
+    vim.cmd("Bdelete")              -- Close buffer if no changes
   end
 end)
 
