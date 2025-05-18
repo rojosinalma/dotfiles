@@ -20,6 +20,9 @@ alias kca='_kca(){ kubectl "$@" --all-namespaces;  unset -f _kca; }; _kca'
 alias kaf='kubectl apply -f'
 alias kak='kubectl apply -k' # For kustomize
 
+# Replace stuff
+alias krf='kubectl replace -f'
+
 # Drop into an interactive terminal on a container
 alias keti='kubectl exec -ti $1 -- '
 
@@ -35,6 +38,7 @@ alias kcgc='kubectl config get-contexts'
 # General aliases
 alias kdel='kubectl delete'
 alias kdelf='kubectl delete -f'
+alias kdelk='kubectl delete -k'
 
 # Pod management.
 alias kgp='kubectl get pods'
@@ -134,10 +138,21 @@ alias kl='kubectl logs'
 alias kl1h='kubectl logs --since 1h'
 alias kl1m='kubectl logs --since 1m'
 alias kl1s='kubectl logs --since 1s'
-alias klf='kubectl logs -f'
+alias klf='kubectl logs -f --timestamps'
 alias klf1h='kubectl logs --since 1h -f'
 alias klf1m='kubectl logs --since 1m -f'
 alias klf1s='kubectl logs --since 1s -f'
+
+# Pretty logs
+alias klp=' _klog_pretty'
+alias klpf=' _klog_pretty -f'
+alias klp1h=' _klog_pretty --since 1h'
+alias klp1m=' _klog_pretty --since 1m'
+alias klp1s=' _klog_pretty --since 1s'
+alias klpf1h=' _klog_pretty --since 1h -f'
+alias klpf1m=' _klog_pretty --since 1m -f'
+alias klpf1s=' _klog_pretty --since 1s -f'
+
 
 # File copy
 alias kcp='kubectl cp'
@@ -220,7 +235,7 @@ kexec() {
     if kubectl exec -n "$namespace" -it "$pod_name" -- "$shell" -c "exit" &>/dev/null; then
       echo "🚀 Launching shell: $shell"
       kubectl exec -n "$namespace" -it "$pod_name" -- "$shell"
-      return
+      retur
     fi
   done
 
@@ -228,3 +243,19 @@ kexec() {
   return 1
 }
 
+# Pretty-print kubectl logs timestamps: 2025-05-18T14:23:45.678Z → 18.05 14:23:45
+_klog_pretty() {
+  kubectl logs --timestamps "$@" | \
+  awk '{
+    ts = $1                                # full RFC-3339 stamp
+    split(ts, a, "T")                      # a[1]=YYYY-MM-DD  a[2]=hh:mm:ss.fffZ
+    split(a[1], d, "-")                    # d[1]=YYYY d[2]=MM d[3]=DD
+    split(a[2], t, ":")                    # t[1]=HH t[2]=MM t[3]=SS(.fffZ)
+    gsub(/[.Z].*/, "", t[3])               # keep only SS
+    yy = substr(d[1], 3, 2)                # last two digits of year
+    printf "%s.%s.%s %s:%s:%s - ", d[3], d[2], yy, t[1], t[2], t[3]
+    $1 = ""                                # drop original stamp
+    sub(/^ /, "")                          # trim leading space
+    print                                  # emit the rest of the line
+  }'
+}
