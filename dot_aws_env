@@ -1,11 +1,12 @@
 ## ENV
 export AWS_DEFAULT_REGION="us-east-1"
-export AWS_DEFAULT_PROFILE="base"
-export EKS_CLUSTER_NAME=eks-production-01
+export AWS_DEFAULT_PROFILE="prod"
+export AWS_VAULT_BACKEND="pass"
+export AWS_VAULT_PASS_PASSWORD_STORE_DIR=$HOME/.password-store/aws-vault
 
 ## Aliases
+alias aws='aws-vault exec prod -- aws'
 alias ausers="aws iam list-users | jq '.Users[].UserName'"
-alias aws_eks='aws eks --cluster-name $AWS_DEFAULT_CLUSTER_NAME'
 
 ## FUNCTIONS
 
