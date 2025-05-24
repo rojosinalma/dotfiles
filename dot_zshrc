@@ -6,6 +6,8 @@ fi
 # When using zsh-autocompletion
 # source ~/.zprezto/contrib/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 
+set +o clobber
+
 # Init completions
 autoload -U +X bashcompinit && bashcompinit
 autoload -Uz compinit && compinit
@@ -78,6 +80,11 @@ fi
 if command -v aws > /dev/null 2>&1; then
   source ~/.aws_env
   complete -C aws_completer aws
+fi
+
+# Autojump in Linux
+if [[ -f /usr/share/autojump/autojump.sh ]]; then
+  . /usr/share/autojump/autojump.sh
 fi
 
 
