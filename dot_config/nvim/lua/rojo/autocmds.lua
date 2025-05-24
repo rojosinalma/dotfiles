@@ -36,4 +36,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*",
+  callback = function()
+    -- 1. Make whitespace-only lines truly empty
+    vim.cmd([[%s/^\s\+$//e]])
+    -- 2. Remove trailing spaces everywhere else
+    vim.cmd([[%s/\s\+$//e]])
+  end,
+})
 
