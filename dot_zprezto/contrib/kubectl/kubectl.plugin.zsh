@@ -235,7 +235,7 @@ kexec() {
     if kubectl exec -n "$namespace" -it "$pod_name" -- "$shell" -c "exit" &>/dev/null; then
       echo "🚀 Launching shell: $shell"
       kubectl exec -n "$namespace" -it "$pod_name" -- "$shell"
-      retur
+      return
     fi
   done
 
