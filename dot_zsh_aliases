@@ -5,7 +5,7 @@ bindkey -e
 bindkey '^[[1;9C' forward-word
 bindkey '^[[1;9D' backward-word
 
-# Aliases
+# Core
 #-------------------
 
 # Builtins
@@ -19,10 +19,17 @@ if command -v eza > /dev/null 2>&1; then
   alias ls="eza --icons -1 --group-directories-first -g --git --git-repos -o"
 fi
 
-
 # Remap dirs (used to override prezto module)
 alias d='dirs -v'
 for index ({1..11}) alias "$index"="cd -${index}"; unset index
+
+# Various Aliases
+#--------------------
+
+# My Utils
+alias agrep="alias | grep" # Find some pattern in my aliases
+
+
 
 ## ASDF TOOLS
 alias cm="$(asdf which chezmoi)"
@@ -39,6 +46,7 @@ alias lg="lazygit"
 # alias open="xdg-open" # TODO: Just for Linux
 # alias oc="overcommit"        # https://github.com/sds/overcommit#installation
 # alias ocr="overcommit --run"
+
 
 # Source dotfiles
 alias zshsource="source $HOME/.zshrc && source $HOME/.zpreztorc"
@@ -61,6 +69,9 @@ alias nvimconfig="nvim ~/.config/nvim"
 alias zsecrets="cm edit $HOME/.zsh_secrets"
 alias sshconfig="cm edit $HOME/.ssh/"
 alias hostconf="sudo $EDITOR /etc/hosts"
+
+# GH CLI Utils (keep requests every 5 seconds to avoid getting rate limited)
+alias ghwci='watch -n 5 '\''gh run list --limit 5 --json status,conclusion,workflowDatabaseId,displayTitle -q ".[] | \"\(.displayTitle): \(.status) / \(.conclusion)\""'\'''
 
 # Ruby/Rails
 # alias rs="rails server"
