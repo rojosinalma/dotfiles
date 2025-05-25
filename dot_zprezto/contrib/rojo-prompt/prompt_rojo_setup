@@ -17,8 +17,6 @@ function prompt_rojo_precmd() {
   else
     print -rP "%F{blue}%n%F{blue}@%F{blue}%m: %F{yellow}$(prompt_rojo_pwd)"
   fi
-
-  # $(kube_ps1)
 }
 
 function prompt_rojo_setup {
@@ -40,8 +38,11 @@ function prompt_rojo_setup {
   # With Kubectl and Gcloud
   # RPROMPT='%F{blue}$(kube_ps1)$(gcloud_ps1)%F{blue}[%F{magenta}%D{%H:%M}%F{blue}]%f'
 
-  # Without
-  RPROMPT='%F{blue}$(kube_ps1)[%F{magenta}%D{%H:%M}%F{blue}]%f'
+  # Without Gcloud
+  #RPROMPT='%F{blue}$(kube_ps1)[%F{magenta}%D{%H:%M}%F{blue}]%f'
+
+  # Only kube_ps1
+  RPROMPT='%F{blue}$(kube_ps1)'
 }
 
 prompt_rojo_setup "$@"
