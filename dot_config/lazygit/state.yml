@@ -1,0 +1,34 @@
+lastupdatecheck: 0
+recentrepos:
+    - /home/rojo/42x/42x-platform-apps
+    - /home/rojo/42x/42x-main-api
+    - /home/rojo/42x/42x-white-label-app
+    - /home/rojo/42x/42x-coworkers
+    - /home/rojo/42x/42x-admin-app
+    - /home/rojo/42x/42x-k8s-example-app
+    - /home/rojo/42x/pdf-neitor
+    - /home/rojo/42x/lida
+    - /home/rojo/42x/busca-bug
+    - /home/rojo/42x/42x-infrastructure
+    - /home/rojo/dev/dotfiles
+    - /home/rojo/maya/backend
+    - /home/rojo/maya/ansible
+    - /home/rojo/42x/platform-utils
+    - /home/rojo/42x/mercado-bot-licitaciones
+    - /home/rojo/maya/frontend
+    - /home/rojo/maya/platform-utils
+    - /home/rojo/42x/scrap-sii
+    - /home/rojo/.zprezto
+    - /home/rojo/.zprezto/modules/prompt/external/powerlevel10k
+startuppopupversion: 5
+lastversion: 0.49.0
+customcommandshistory:
+    - q
+hidecommandlog: true
+ignorewhitespaceindiffview: false
+diffcontextsize: 0
+renamesimilaritythreshold: 50
+localbranchsortorder: recency
+remotebranchsortorder: alphabetical
+gitlogorder: topo-order
+gitlogshowgraph: always
