@@ -5,9 +5,4 @@ export AWS_VAULT_BACKEND="pass"
 export AWS_VAULT_PASS_PASSWORD_STORE_DIR=$HOME/.password-store/aws-vault
 
 ## Aliases
-alias aws='aws-vault exec prod -- aws'
 alias ausers="aws iam list-users | jq '.Users[].UserName'"
-
-## FUNCTIONS
-
-
