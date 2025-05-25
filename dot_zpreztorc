@@ -33,6 +33,7 @@ zstyle ':prezto:load' pmodule \
   'archive' \
   'syntax-highlighting' \
   'autosuggestions' \
+  'zsh-aws-vault' \
   'prompt' \
   'rojo-tmux'
 
@@ -45,10 +46,10 @@ autoload -Uz promptinit
 promptinit
 
 # The contrib folder is not in the fpath and the prompt module only loads functions in the fpath
-fpath=($HOME/.zprezto/contrib/rojo-prompt $fpath) 
+fpath=($HOME/.zprezto/contrib/rojo-prompt $fpath)
 zstyle ':prezto:module:prompt' theme 'rojo'
 
-# Prezto Modules 
+# Prezto Modules
 zstyle ':prezto:*:*' color 'yes' # Color output (auto set to 'no' on dumb terminals).
 zstyle ':prezto:module:ssh:load' identities 'id_rsa'
 # zstyle ':prezto:load' zmodule 'attr' 'stat'
@@ -113,7 +114,7 @@ zstyle ':prezto:module:history-substring-search:color' not-found 'grey'
 #zstyle ':prezto:module:history-substring-search' globbing-flags ''
 
 # Auto switch the Ruby version on directory change.
-zstyle ':prezto:module:ruby:chruby' auto-switch 'yes'
+#zstyle ':prezto:module:ruby:chruby' auto-switch 'yes'
 
 # Enabled safe options. This aliases cp, ln, mv and rm so that they prompt
 # before deleting or overwriting files. Set to 'no' to disable this safer
@@ -123,4 +124,4 @@ zstyle ':prezto:module:utility' safe-ops 'no'
 # zsh-autocompletions
 # zstyle ':autocomplete:*' default-context ''
 # zstyle ':autocomplete:*' min-input 1  # int
-# zstyle ':autocomplete:*' recent-dirs autojump
+zstyle ':autocomplete:*' recent-dirs autojump
