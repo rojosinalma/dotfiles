@@ -42,7 +42,9 @@ function prompt_rojo_setup {
   #RPROMPT='%F{blue}$(kube_ps1)[%F{magenta}%D{%H:%M}%F{blue}]%f'
 
   # Only kube_ps1
-  RPROMPT='%F{blue}$(kube_ps1)'
+  #RPROMPT='%F{blue}$(kube_ps1)'
+
+  RPROMPT=''
 }
 
 prompt_rojo_setup "$@"
