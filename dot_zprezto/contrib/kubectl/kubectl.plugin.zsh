@@ -10,6 +10,9 @@
 #     unset __KUBECTL_COMPLETION_FILE
 # fi
 
+# Seal util script
+alias ks='seal'
+
 # This command is used a LOT both below and in daily life
 alias k=kubectl
 
@@ -111,6 +114,7 @@ kres(){
 }
 
 # Rollout management.
+alias krr='kubectl rollout restart'
 alias kgrs='kubectl get rs'
 alias krh='kubectl rollout history'
 alias kru='kubectl rollout undo'
@@ -189,6 +193,7 @@ alias kecj='kubectl edit cronjob'
 alias kdcj='kubectl describe cronjob'
 alias kdelcj='kubectl delete cronjob'
 
+
 # Only run if the user actually has kubectl installed
 if (( ${+_comps[kubectl]} )); then
   kj() { kubectl "$@" -o json | jq; }
@@ -200,8 +205,8 @@ if (( ${+_comps[kubectl]} )); then
   compdef ky=kubectl
 fi
 
-
-# Exec function
+# --- Exec into Pods
+# Finds any pod with the given name and tries to run exec inside of it
 kexec() {
   local pod_base="$1"
   shift
