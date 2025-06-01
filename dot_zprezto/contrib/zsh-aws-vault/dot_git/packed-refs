@@ -1,0 +1,6 @@
+# pack-refs with: peeled fully-peeled sorted 
+ac44f2269f0e067fff65ea8cdac5a39f13c68655 refs/remotes/origin/feature/tests
+758b342ece1037c71bd4674f79727d6b736b4d8d refs/remotes/origin/gacopl/master
+288857c99792d648132b5f8b1227312878a769e4 refs/remotes/origin/main
+2b3ae32f43d347c33510036c9cebbd540e392797 refs/tags/0.1.0
+288857c99792d648132b5f8b1227312878a769e4 refs/tags/1.0.0
