@@ -25,6 +25,7 @@ zstyle ':prezto:load' pmodule \
   'autoenv' \
   'ssh' \
   'kubectl' \
+  'rojo-kubectl' \
   'kube-ps1' \
   'zsh-notify' \
   'homebrew' \
