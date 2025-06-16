@@ -40,7 +40,7 @@ fi
 # PATH
 #------------------
 
-# ASDF 
+# ASDF
 if [ -d ${ASDF_DIR} ]; then
   export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
   fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath) # completions
@@ -87,6 +87,10 @@ if [[ -f /usr/share/autojump/autojump.sh ]]; then
   . /usr/share/autojump/autojump.sh
 fi
 
+# Rust
+if command -v cargo > /dev/null 2>&1; then
+  . "/home/rojo/.asdf/installs/rust/stable/env"
+fi
 
 # PERSONAL EXTRAS
 #------------------
