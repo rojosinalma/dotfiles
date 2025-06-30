@@ -3,6 +3,7 @@ export AWS_DEFAULT_REGION="us-east-1"
 export AWS_DEFAULT_PROFILE="prod"
 export AWS_VAULT_BACKEND="pass"
 export AWS_VAULT_PASS_PASSWORD_STORE_DIR=$HOME/.password-store/aws-vault
+export AWS_VAULT_PL_DEFAULT_PROFILE="prod"
 
 ## Aliases
 alias ausers="aws iam list-users | jq '.Users[].UserName'"
