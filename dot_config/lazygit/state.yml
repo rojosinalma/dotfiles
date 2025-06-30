@@ -1,15 +1,15 @@
 lastupdatecheck: 0
 recentrepos:
     - /home/rojo/42x/42x-platform-apps
-    - /home/rojo/42x/42x-main-api
+    - /home/rojo/42x/42x-infrastructure
     - /home/rojo/42x/42x-white-label-app
+    - /home/rojo/42x/42x-main-api
     - /home/rojo/42x/42x-coworkers
     - /home/rojo/42x/42x-admin-app
     - /home/rojo/42x/42x-k8s-example-app
     - /home/rojo/42x/pdf-neitor
     - /home/rojo/42x/lida
     - /home/rojo/42x/busca-bug
-    - /home/rojo/42x/42x-infrastructure
     - /home/rojo/dev/dotfiles
     - /home/rojo/maya/backend
     - /home/rojo/maya/ansible
