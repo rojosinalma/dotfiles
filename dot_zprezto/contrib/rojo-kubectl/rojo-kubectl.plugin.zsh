@@ -1,5 +1,5 @@
 # Extras
-krr='kubectl rollout restart'
+alias krr='kubectl rollout restart'
 
 # Seal util script
 alias ks='seal'
