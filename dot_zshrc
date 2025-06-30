@@ -78,7 +78,6 @@ fi
 
 # aws-cli
 if command -v aws > /dev/null 2>&1; then
-  source ~/.aws_env
   complete -C aws_completer aws
 fi
 
@@ -87,10 +86,6 @@ if [[ -f /usr/share/autojump/autojump.sh ]]; then
   . /usr/share/autojump/autojump.sh
 fi
 
-# Rust
-if command -v cargo > /dev/null 2>&1; then
-  . "/home/rojo/.asdf/installs/rust/stable/env"
-fi
 
 # PERSONAL EXTRAS
 #------------------
@@ -99,6 +94,7 @@ source ~/.zsh_env
 source ~/.zsh_functions
 source ~/.zsh_aliases
 source ~/.zsh_secrets
+source ~/.aws_env
 
 ## General ZSH
 zstyle ':completion:*:*:kill:*' menu yes select
