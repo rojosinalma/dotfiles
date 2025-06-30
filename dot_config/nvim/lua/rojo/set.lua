@@ -27,7 +27,7 @@ vim.opt.hlsearch = true
 vim.opt.incsearch = true
 vim.opt.termguicolors = true
 
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 0
 vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
@@ -50,7 +50,5 @@ vim.opt.timeoutlen = 500
 
 vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-
-vim.opt.scrolloff = 10
 
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
