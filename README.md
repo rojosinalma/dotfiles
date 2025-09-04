@@ -14,7 +14,7 @@ These are my dotfiles, there's many like them but these are mine.
     git clone https://github.com/rojosinalma/dotfiles
     cd dotfiles
     chezmoi init
-    ln -s $(pwd)/dot_config/chezmoi/chezmoi.toml $HOME/.config/chezmoi/chezmoi.toml
+    chezmoi execute-template < .chezmoi.yaml.tmpl > ~/.config/chezmoi/chezmoi.yaml
     chezmoi -v apply
 ```
 
