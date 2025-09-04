@@ -1,0 +1,15 @@
+sourceDir: "/home/platform/dev/dotfiles"
+color: true
+follow: true
+verbose: true
+format: "yaml"
+encryption: "gpg"
+progress: true
+gpg:
+  recipient: "rojo@rojo.dev"
+  args: "--quiet"
+
+git:
+  autoAdd: true
+  autoCommit: true
+  autoPush: true
