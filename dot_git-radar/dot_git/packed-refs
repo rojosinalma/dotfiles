@@ -1,0 +1,12 @@
+# pack-refs with: peeled fully-peeled sorted 
+fec7e01595e8e3762ef28ea6225dbb08e0b2690c refs/remotes/origin/async-everything
+2ac25e3d1047cdf19f15bc894ff39449b83d65d4 refs/remotes/origin/master
+ce8fd0cade77a43d6a8f2cce6fa4dc6483af1c91 refs/remotes/origin/switch-untracked-symbol
+81612cb359baac0b476731aff4eb78e04050f857 refs/tags/0.1
+1134eac7bd66d099572864b894df566ebd13585d refs/tags/0.2
+4487e954438f4fc216c301ad5fb9c1a1b5c690dd refs/tags/0.3
+01a35aaf0d11774e40aa72d229132ef4937d7ab6 refs/tags/v0.3.1
+3884b1fdf423f4e8655dd47bef0ccb2ebdd68c6d refs/tags/v0.3.2
+5640131d43ae3ff1afcc23a0a606d9cea72a39e1 refs/tags/v0.4
+47addd8b811e77f3be815fea56bcaeddd89edea0 refs/tags/v0.5
+3a47557bdd10f3a025c7e3385e16a566570abcf1 refs/tags/v0.6
