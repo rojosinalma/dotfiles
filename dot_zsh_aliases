@@ -41,7 +41,7 @@ alias hostconf="sudo $EDITOR /etc/hosts"
 alias vim="$(asdf which nvim)"
 alias nvimconfig="nvim ~/.config/nvim"
 
-# CHEZMOI
+# Chezmoi edits
 alias cm="$(asdf which chezmoi)"
 alias zshaliases="cm edit --apply $HOME/.zsh_aliases"
 alias zshenv="cm edit --apply $HOME/.zsh_env"
@@ -53,6 +53,7 @@ alias promptedit="cm edit --apply $HOME/.zprezto/contrib/rojo-prompt/prompt_rojo
 alias gitconfig="cm edit --apply $HOME/.gitconfig"
 alias zsecrets="cm edit --apply $HOME/.zsh_secrets"
 alias sshconfig="cm edit --apply $HOME/.ssh/"
+alias tmuxconfif="cm edit --apply $HOME/.tmux.conf"
 
 # GH CLI Utils (keep requests every 5 seconds to avoid getting rate limited)
 alias ghwci='watch -n 5 '\''gh run list --limit 5 --json status,conclusion,workflowDatabaseId,displayTitle -q ".[] | \"\(.displayTitle): \(.status) / \(.conclusion)\""'\'''
