@@ -13,6 +13,20 @@ export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export LC_MESSAGES=en_US.UTF-8
 
+# PAGER CONFIGURATION
+# Default to less with useful options
+export PAGER='less'
+export LESS='-R -i -w -M -z-4 -F -X'
+export MANPAGER='less'
+
+# If bat is installed, use it instead
+if command -v bat > /dev/null 2>&1; then
+  export PAGER='bat'
+  export MANPAGER='bat -l man -p'
+  export BAT_THEME='base16'
+  export BAT_PAGER='less -RF'
+fi
+
 # GPG
 export GPG_TTY=$(tty)
 
