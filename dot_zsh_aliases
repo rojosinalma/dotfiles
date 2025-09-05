@@ -23,7 +23,7 @@ fi
 alias d='dirs -v'
 for index ({2..11}) alias "$index"="cd -${index}"; unset index
 
-alias zcontrib='cd $ZPREZTO-'
+alias zcontrib='cd $HOME/.zprezto/contrib'
 # Custom Setup (my aliases)
 #--------------------
 
