@@ -5,7 +5,7 @@ bindkey -e
 bindkey '^[[1;9C' forward-word
 bindkey '^[[1;9D' backward-word
 
-# Core
+# Core Setup (builtins, zsh, etc)
 #-------------------
 
 # Builtins
@@ -23,55 +23,40 @@ fi
 alias d='dirs -v'
 for index ({1..11}) alias "$index"="cd -${index}"; unset index
 
-# Various Aliases
+# Custom Setup (my aliases)
 #--------------------
-
-# My Utils
-alias agrep="alias | grep" # Find some pattern in my aliases
-
-
-
-## ASDF TOOLS
-alias cm="$(asdf which chezmoi)"
-alias vim="$(asdf which nvim)"
 
 ## TOOLS ALIASES
 alias kc="kubectl"
 alias cf="cloudflared"
 alias tf="terraform"
 alias lg="lazygit"
-# alias tg="terragrunt"
-# alias ts="terraspace"
-# alias bs="brew services"
-# alias open="xdg-open" # TODO: Just for Linux
-# alias oc="overcommit"        # https://github.com/sds/overcommit#installation
-# alias ocr="overcommit --run"
 
-
-# Source dotfiles
-alias zshsource="source $HOME/.zshrc && source $HOME/.zpreztorc"
-
-# Edit Regular Config files
-alias zshaliases="cm edit $HOME/.zsh_aliases;cm apply"
-alias zshenv="cm edit $HOME/.zsh_env;cm apply"
-alias zshopts="cm edit $HOME/.zsh_opts;cm apply"
-alias zshconfig="cm edit $HOME/.zshrc;cm apply"
-alias zshfunctions="cm edit $HOME/.zsh_functions;cm apply"
-alias prezconfig="cm edit $HOME/.zpreztorc;cm apply"
-alias preztheme="cm edit $HOME/.zprezto/contrib/rojo-prompt/prompt_rojo_setup;cm apply"
-alias gitconfig="cm edit $HOME/.gitconfig;cm apply"
-alias nvimconfig="nvim ~/.config/nvim"
-# alias yabaiconfig="cm edit $HOME/.config/yabai/executable_yabairc"
-# alias skhdconfig="cm edit $HOME/.config/skhd/executable_skhdrc"
-# alias spacebarconfig="cm edit $HOME/.config/spacebar/spacebarrc"
-
-# Edit Encrypted Config Files
-alias zsecrets="cm edit $HOME/.zsh_secrets"
-alias sshconfig="cm edit $HOME/.ssh/"
+# Utils
+alias agrep="alias | grep" # Find some pattern in my aliases
+alias zshsource="source $HOME/.zshrc && source $HOME/.zpreztorc" # Source configs
 alias hostconf="sudo $EDITOR /etc/hosts"
+
+# NVIM
+alias vim="$(asdf which nvim)"
+alias nvimconfig="nvim ~/.config/nvim"
+
+# CHEZMOI
+alias cm="$(asdf which chezmoi)"
+alias zshaliases="cm edit --apply $HOME/.zsh_aliases"
+alias zshenv="cm edit --apply $HOME/.zsh_env"
+alias zshopts="cm edit --apply $HOME/.zsh_opts"
+alias zshconfig="cm edit --apply $HOME/.zshrc"
+alias zshfunctions="cm edit --apply $HOME/.zsh_functions"
+alias prezconfig="cm edit --apply $HOME/.zpreztorc"
+alias promptedit="cm edit --apply $HOME/.zprezto/contrib/rojo-prompt/prompt_rojo_setup"
+alias gitconfig="cm edit --apply $HOME/.gitconfig"
+alias zsecrets="cm edit --apply $HOME/.zsh_secrets"
+alias sshconfig="cm edit --apply $HOME/.ssh/"
 
 # GH CLI Utils (keep requests every 5 seconds to avoid getting rate limited)
 alias ghwci='watch -n 5 '\''gh run list --limit 5 --json status,conclusion,workflowDatabaseId,displayTitle -q ".[] | \"\(.displayTitle): \(.status) / \(.conclusion)\""'\'''
+alias ghdr='gh api repos/$1/actions/runs | jq -r ".workflow_runs[] | select(.head_branch != \"docker\") | \"(.id)\"" | xargs -n1 -J % gh api repos/$1/actions/runs/% -X DELETE'
 
 # Ruby/Rails
 # alias rs="rails server"
@@ -117,20 +102,3 @@ alias dc="docker compose"
 # alias mkd="make dev"
 # alias mkdd="make dev-down"
 # alias mks="make status"
-
-# Rancher ctl
-# #alias rkctl="rancher kubectl"
-# # i.e: `rkxc <some_namespace> <some_pod_id> -- ash`
-# alias rkxc="rkctl exec -i -t -n"
-# # i.e: `rkgp <some_namespace>`
-# alias rkgp="rkctl get pods -n"
-# # i.e: `pfwd gateway kong-postgres-0 5433:5432`
-# alias pfwd="rkctl port-forward -n $1 $2 $3"
-
-# ## Github Actions
-# alias ghdr='gh api repos/$1/actions/runs | jq -r ".workflow_runs[] | select(.head_branch != \"docker\") | \"(.id)\"" | xargs -n1 -J % gh api repos/$1/actions/runs/% -X DELETE'
-#
-# ## Kubernetes
-# alias krtp="kc run test-pod --image ubuntu:latest sleep infinity"
-# alias ketp="kc exec -it test-pod -- bash"
-
