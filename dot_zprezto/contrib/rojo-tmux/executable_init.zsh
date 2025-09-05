@@ -57,5 +57,5 @@ tmux-init() {
     fi
 }
 
-# Auto-run when script is executed directly (not sourced)
-[ -t 0 ] && tmux-init
+# Auto-run when script is executed directly (not sourced) and not already in tmux
+[ -t 0 ] && [ -z "$TMUX" ] && tmux-init
