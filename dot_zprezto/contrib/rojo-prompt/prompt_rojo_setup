@@ -12,11 +12,25 @@ function prompt_rojo_pwd() {
 }
 
 function prompt_rojo_precmd() {
-  if command -v git-radar > /dev/null 2>&1; then
-    print -rP "%F{blue}%n%F{blue}@%F{blue}%m: %F{yellow}$(prompt_rojo_pwd)%F{grey}$(git-radar --zsh --fetch)"
-  else
-    print -rP "%F{blue}%n%F{blue}@%F{blue}%m: %F{yellow}$(prompt_rojo_pwd)"
+  # Build the base prompt
+  local base_prompt="%F{blue}%n%F{blue}@%F{blue}%m: %F{yellow}$(prompt_rojo_pwd)"
+
+  # Initialize prefix and suffix variables
+  local prefix=""
+  local suffix=""
+
+  # Add chezmoi prefix if in subshell
+  if [[ "$CHEZMOI_SUBSHELL" == "1" ]]; then
+    prefix="${prefix}%F{cyan}(chezmoi) "
   fi
+
+  # Add git-radar suffix if available
+  if command -v git-radar > /dev/null 2>&1; then
+    suffix="${suffix}%F{grey}$(git-radar --zsh --fetch)"
+  fi
+
+  # Combine and print the final prompt
+  print -rP "${prefix}${base_prompt}${suffix}"
 }
 
 function prompt_rojo_setup {
