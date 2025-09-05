@@ -21,8 +21,9 @@ fi
 
 # Remap dirs (used to override prezto module)
 alias d='dirs -v'
-for index ({1..11}) alias "$index"="cd -${index}"; unset index
+for index ({2..11}) alias "$index"="cd -${index}"; unset index
 
+alias zcontrib='cd $ZPREZTO-'
 # Custom Setup (my aliases)
 #--------------------
 
