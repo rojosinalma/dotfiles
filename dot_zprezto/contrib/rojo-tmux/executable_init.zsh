@@ -1,30 +1,61 @@
 #!/bin/bash
-[ -t 0 ] || exit
 
-# Check if already inside a tmux session
-if [ -z "$TMUX" ]; then
-    # Ensure "main" and "alt" sessions exist
-    tmux has-session -t main 2>/dev/null || tmux new-session -d -s main
-    tmux has-session -t alt 2>/dev/null || tmux new-session -d -s alt
+tmux-init() {
+    # Check if already inside a tmux session
+    if [ -z "$TMUX" ]; then
+        # Ensure "main" session exists
+        tmux has-session -t main 2>/dev/null || tmux new-session -d -s main
 
-    # Prompt user to choose a session
-    echo "Choose a tmux session to attach to:"
-    echo "1) main"
-    echo "2) alt"
-    echo -n "Enter your choice (1/2): "  # Use echo -n for prompt without a newline
-    read choice  # Read input without using -p option
+        # Check if main session has any attached clients
+        main_clients=$(tmux list-clients -t main 2>/dev/null | wc -l)
 
-    case $choice in
-        1)
-
+        if [ "$main_clients" -eq 0 ]; then
+            # No one is using main session, attach directly
             tmux attach-session -t main
-            ;;
-        2)
-            tmux attach-session -t alt
-            ;;
-        *)
-            echo "Invalid choice. Please enter 1 or 2."
+        else
+            # Main session is occupied, show prompt
+            while true; do
+                echo "Main session is already in use. Choose an option:"
+                echo "1) main (occupied)"
+                echo "2) Create new alt session"
+                echo "0) Exit (or type 'quit')"
+                echo -n "Enter your choice: "
+                read -r choice
 
-            ;;
-    esac
-fi
+                case $choice in
+                    1)
+                        tmux attach-session -t main
+                        break
+                        ;;
+                    2)
+                        # Find next available alt-# session name
+                        session_num=1
+                        while tmux has-session -t "alt-$session_num" 2>/dev/null; do
+                            session_num=$((session_num + 1))
+                        done
+                        session_name="alt-$session_num"
+                        tmux new-session -d -s "$session_name"
+                        tmux attach-session -t "$session_name"
+                        break
+                        ;;
+                    0|quit)
+                        echo "Exiting..."
+                        return 0
+                        ;;
+                    "")
+                        # Empty input, just continue the loop to re-prompt
+                        continue
+                        ;;
+                    *)
+                        echo "Invalid choice. Please enter 1, 2, 0, or 'quit'."
+                        ;;
+                esac
+            done
+        fi
+    else
+        echo "Already inside a tmux session"
+    fi
+}
+
+# Auto-run when script is executed directly (not sourced)
+[ -t 0 ] && tmux-init
