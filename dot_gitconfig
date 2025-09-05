@@ -37,3 +37,9 @@
 
 [init]
   defaultBranch = main
+
+[delta]
+  dark = true
+  line-numbers = true
+  side-by-side = true
+  navigate = true
