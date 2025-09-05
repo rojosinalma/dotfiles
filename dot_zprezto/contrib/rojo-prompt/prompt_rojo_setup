@@ -26,7 +26,7 @@ function prompt_rojo_precmd() {
 
   # Add git-radar suffix if available
   if command -v git-radar > /dev/null 2>&1; then
-    suffix="${suffix}$(git-radar --zsh --fetch)"
+    suffix="${suffix}%F{white}$(git-radar --zsh --fetch)"
   fi
 
   # Combine and print the final prompt
