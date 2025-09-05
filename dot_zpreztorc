@@ -94,8 +94,8 @@ zstyle ':prezto:module:editor' key-bindings 'vi'
 zstyle ':prezto:module:editor' dot-expansion 'yes'
 
 ## Tmux
-zstyle ':prezto:module:tmux:auto-start' local 'yes'
-zstyle ':prezto:module:tmux:auto-start' remote 'yes'
+zstyle ':prezto:module:tmux:auto-start' local 'no'
+zstyle ':prezto:module:tmux:auto-start' remote 'no'
 zstyle ':prezto:module:tmux:iterm' integrate 'yes'
 zstyle ':prezto:module:tmux:session' name 'main'
 
