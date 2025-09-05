@@ -6,12 +6,8 @@ zstyle ':completion:*:cd:*'     ignore-parents parent pwd
 
 ## Prezto
 
-# Custom modules folder.
-#zstyle ':prezto:load' pmodule-dirs $HOME/.zprezto-contrib
-
 # Set the Prezto modules to load (browse modules).
 # Order matters.
-
 zstyle ':prezto:load' pmodule \
   'environment' \
   'terminal' \
@@ -38,17 +34,15 @@ zstyle ':prezto:load' pmodule \
   'prompt' \
   'rojo-tmux'
 
+# Disabled
 # 'zsh-autocomplete' \
-source $HOME/.zprezto/contrib/gcloud-ps1/gcloud-ps1.sh
-
 
 ## PROMPT SETUP
 autoload -Uz promptinit
 promptinit
-
-# The contrib folder is not in the fpath and the prompt module only loads functions in the fpath
-fpath=($HOME/.zprezto/contrib/rojo-prompt $fpath)
+fpath=($HOME/.zprezto/contrib/rojo-prompt $fpath) # The contrib folder is not in the fpath and the prompt module only loads functions in the fpath
 zstyle ':prezto:module:prompt' theme 'rojo'
+source $HOME/.zprezto/contrib/gcloud-ps1/gcloud-ps1.sh
 
 # Prezto Modules
 zstyle ':prezto:*:*' color 'yes' # Color output (auto set to 'no' on dumb terminals).
@@ -114,13 +108,11 @@ zstyle ':prezto:module:history-substring-search:color' not-found 'grey'
 # Set the search globbing flags.
 #zstyle ':prezto:module:history-substring-search' globbing-flags ''
 
-# Auto switch the Ruby version on directory change.
-#zstyle ':prezto:module:ruby:chruby' auto-switch 'yes'
-
-# Enabled safe options. This aliases cp, ln, mv and rm so that they prompt
-# before deleting or overwriting files. Set to 'no' to disable this safer
-# behavior.
+# Utility
 zstyle ':prezto:module:utility' safe-ops 'no'
+zstyle ':prezto:module:utility:diff' color 'yes'
+zstyle ':prezto:module:utility:wdiff' color 'yes'
+zstyle ':prezto:module:utility:make' color 'yes'
 
 # zsh-autocompletions
 # zstyle ':autocomplete:*' default-context ''
