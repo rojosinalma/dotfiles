@@ -114,3 +114,7 @@ export AWS_REGION=us-east-1  # or your preferred region
 # Using inference profile ID
 export ANTHROPIC_MODEL='us.anthropic.claude-opus-4-1-20250805-v1:0'
 export ANTHROPIC_SMALL_FAST_MODEL='anthropic.claude-opus-4-20250514-v1:0'
+
+# Recommended output token settings for Bedrock
+export CLAUDE_CODE_MAX_OUTPUT_TOKENS=4096
+export MAX_THINKING_TOKENS=1024
