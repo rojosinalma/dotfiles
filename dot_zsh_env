@@ -107,3 +107,6 @@ KUBE_PS1_SYMBOL_USE_IMG=false # ☸️ , Unicode \u2638 as the prompt symbol
 # Jira
 export JIRA_API_TOKEN=fagarnovoa
 
+# Claude
+export CLAUDE_CODE_USE_BEDROCK=1
+export AWS_REGION=us-east-1  # or your preferred region
