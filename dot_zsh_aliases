@@ -104,3 +104,7 @@ alias dc="docker compose"
 # alias mkd="make dev"
 # alias mkdd="make dev-down"
 # alias mks="make status"
+
+# Claude
+export CLAUDE_CODE_USE_BEDROCK=1
+export AWS_REGION=us-east-1  # or your preferred region
