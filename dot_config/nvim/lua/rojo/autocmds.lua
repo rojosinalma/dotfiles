@@ -46,3 +46,11 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
+-- Auto-reload files when they change externally
+vim.api.nvim_create_autocmd({'FocusGained', 'BufEnter', 'CursorHold'}, {
+  desc = 'Check for file changes and reload if modified externally',
+  group = vim.api.nvim_create_augroup('auto-reload', { clear = true }),
+  pattern = '*',
+  command = 'checktime'
+})
+
