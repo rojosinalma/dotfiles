@@ -51,4 +51,7 @@ vim.opt.timeoutlen = 500
 vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
+-- Enable automatic reading of files when they change on disk
+vim.opt.autoread = true
+
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
