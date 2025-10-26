@@ -86,7 +86,8 @@ alias dex="docker ps -a -f status=exited" # List exited containers.
 alias dexrm='docker rm $(docker ps -a -f status=exited -q)' # Stop exited containers.
 alias drmf='docker stop $(dpsaq) && docker rm $(dpsaq)' # Stop and Remove all containers
 alias dc="docker compose"
-alias dsize="docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Size}}" | sort -k3 -h -r"
+alias dcd="docker compose -f compose.dev.yaml"
+alias dsize='docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Size}}" | sort -k3 -h -r'
 
 # Skaffold
 #alias ska='skaffold'
