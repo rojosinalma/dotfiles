@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Set PATH to ensure gh is found
+export PATH="/usr/local/bin:/usr/bin:/bin:$HOME/.local/bin"
+
+# Backup existing keys
+cp ~/.ssh/authorized_keys ~/.ssh/authorized_keys.backup
+
+# Fetch and append GitHub keys
+/usr/bin/gh api /user/keys | jq -r '.[].key' > /tmp/github_keys.tmp
+
+# Only update if we got keys successfully
+if [ -s /tmp/github_keys.tmp ]; then
+    # Remove old GitHub keys and add new ones
+    # Or just replace the whole file - depends on your setup
+    cp /tmp/github_keys.tmp ~/.ssh/authorized_keys
+    chmod 600 ~/.ssh/authorized_keys
+fi
+
+rm -f /tmp/github_keys.tmp
