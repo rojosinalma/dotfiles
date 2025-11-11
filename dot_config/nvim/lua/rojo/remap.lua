@@ -21,17 +21,68 @@ vim.keymap.set("n", "<A-2>", "<cmd>BufferLineGoToBuffer 2<CR>", { desc = "Go to 
 vim.keymap.set("n", "<A-3>", "<cmd>BufferLineGoToBuffer 3<CR>", { desc = "Go to buffer 3" })
 vim.keymap.set("n", "<A-4>", "<cmd>BufferLineGoToBuffer 4<CR>", { desc = "Go to buffer 4" })
 
--- resize normal mode
-vim.keymap.set("n", "<C-Down>", ":resize -2<CR>")          -- Ctrl + Up: Decrease window height
-vim.keymap.set("n", "<C-Up>", ":resize +2<CR>")        -- Ctrl + Down: Increase window height
-vim.keymap.set("n", "<C-Left>", ":vertical resize +2<CR>") -- Ctrl + Left: Widen window
-vim.keymap.set("n", "<C-Right>", ":vertical resize -2<CR>") -- Ctrl + Right: Narrow window
+-- resize normal mode (screen-relative, not window-relative)
+vim.keymap.set("n", "<C-Down>", ":resize -2<CR>")          -- Ctrl + Down: Decrease window height
+vim.keymap.set("n", "<C-Up>", ":resize +2<CR>")            -- Ctrl + Up: Increase window height
 
--- resize terminal mode
-vim.keymap.set("t", "<C-Down>", "<cmd>resize -2<CR>")          -- Ctrl + Up: Decrease terminal height
-vim.keymap.set("t", "<C-Up>", "<cmd>resize +2<CR>")        -- Ctrl + Down: Increase terminal height
-vim.keymap.set("t", "<C-Left>", "<cmd>vertical resize +2<CR>") -- Ctrl + Left: Widen terminal
-vim.keymap.set("t", "<C-Right>", "<cmd>vertical resize -2<CR>") -- Ctrl + Right: Narrow terminal
+-- Use wincmd for consistent left/right behavior
+vim.keymap.set("n", "<C-Left>", function()
+  local winnr = vim.fn.winnr()
+  local total_wins = vim.fn.winnr('$')
+  -- If there's only one window, do nothing
+  if total_wins == 1 then return end
+
+  -- Check if we're the leftmost window by comparing with window to the left
+  if vim.fn.winnr('h') == winnr then
+    -- We're the leftmost window, so shrink to move divider left
+    vim.cmd("vertical resize -2")
+  else
+    -- We're not leftmost, so expand to push divider left
+    vim.cmd("vertical resize +2")
+  end
+end, { desc = "Move divider left" })
+
+vim.keymap.set("n", "<C-Right>", function()
+  local winnr = vim.fn.winnr()
+  local total_wins = vim.fn.winnr('$')
+  if total_wins == 1 then return end
+
+  if vim.fn.winnr('h') == winnr then
+    -- We're the leftmost window, so expand to move divider right
+    vim.cmd("vertical resize +2")
+  else
+    -- We're not leftmost, so shrink to let divider move right
+    vim.cmd("vertical resize -2")
+  end
+end, { desc = "Move divider right" })
+
+-- resize terminal mode (screen-relative, not window-relative)
+vim.keymap.set("t", "<C-Down>", "<cmd>resize -2<CR>")          -- Ctrl + Down: Decrease terminal height
+vim.keymap.set("t", "<C-Up>", "<cmd>resize +2<CR>")            -- Ctrl + Up: Increase terminal height
+
+vim.keymap.set("t", "<C-Left>", function()
+  local winnr = vim.fn.winnr()
+  local total_wins = vim.fn.winnr('$')
+  if total_wins == 1 then return end
+
+  if vim.fn.winnr('h') == winnr then
+    vim.cmd("vertical resize -2")
+  else
+    vim.cmd("vertical resize +2")
+  end
+end, { desc = "Move divider left" })
+
+vim.keymap.set("t", "<C-Right>", function()
+  local winnr = vim.fn.winnr()
+  local total_wins = vim.fn.winnr('$')
+  if total_wins == 1 then return end
+
+  if vim.fn.winnr('h') == winnr then
+    vim.cmd("vertical resize +2")
+  else
+    vim.cmd("vertical resize -2")
+  end
+end, { desc = "Move divider right" })
 
 -- nvimtree
 vim.keymap.set("n", "<C-b>", vim.cmd.NvimTreeToggle)
