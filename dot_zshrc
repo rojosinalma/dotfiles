@@ -95,6 +95,7 @@ source ~/.zsh_functions
 source ~/.zsh_aliases
 source ~/.zsh_secrets
 source ~/.aws_env
+source ~/.claude_env
 
 ## General ZSH
 zstyle ':completion:*:*:kill:*' menu yes select
