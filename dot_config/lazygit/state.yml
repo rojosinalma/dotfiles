@@ -1,5 +1,6 @@
 lastupdatecheck: 0
 recentrepos:
+    - /home/rojo/dev/dota-stats
     - /home/rojo/.local/share/chezmoi
     - /home/rojo/dev/Playground/cord
 startuppopupversion: 5
