@@ -12,11 +12,6 @@ function prompt_rojo_pwd() {
 }
 
 function prompt_rojo_precmd() {
-  # Tmux shell integration - mark prompt start
-  if [[ -n "$TMUX" ]]; then
-    print -n "\e]133;A\e\\"
-  fi
-
   # Build the base prompt
   local base_prompt="%F{blue}%n%F{blue}@%F{blue}%m: %F{yellow}$(prompt_rojo_pwd)"
 
@@ -34,7 +29,7 @@ function prompt_rojo_precmd() {
     suffix="${suffix}%F{white}$(git-radar --zsh --fetch)"
   fi
 
-  # Combine and print the final prompt
+  # Combine and print the final prompt (add marker at the start)
   print -rP "${prefix}${base_prompt}${suffix}"
 }
 
