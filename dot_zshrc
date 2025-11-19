@@ -37,7 +37,7 @@ if [ -d "/opt/homebrew" ]; then
   test -e ${HOME}/.iterm2_shell_integration.zsh && source ${HOME}/.iterm2_shell_integration.zsh
 fi
 
-# PATH
+# PATH SETTING
 #------------------
 
 # ASDF
@@ -86,8 +86,7 @@ if [[ -f /usr/share/autojump/autojump.sh ]]; then
   . /usr/share/autojump/autojump.sh
 fi
 
-
-# PERSONAL EXTRAS
+# PERSONAL FILES
 #------------------
 source ~/.zsh_opts
 source ~/.zsh_env
