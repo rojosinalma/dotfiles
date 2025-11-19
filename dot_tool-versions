@@ -28,7 +28,7 @@ awscli 2.26.5
 rust stable
 gcloud 437.0.1
 chezmoi 2.62.2
-lazydocker 0.23.1
+lazydocker 0.24.1
 cloudflared 2024.2.1
 tmux 3.5a
 fzf 0.61.2
