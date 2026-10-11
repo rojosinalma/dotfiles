@@ -20,7 +20,7 @@ case "$tier" in
     bwdir="$HOME/.config/Bitwarden CLI"
     [ -d "$bwdir" ] || { echo "no $bwdir (bw login first)"; exit 1; }
     docker run --rm -v "$PWD:/src:ro" -v "$bwdir:/bwcli:ro" \
-      -e BW_SESSION -e GPG_PASSPHRASE="${GPG_PASSPHRASE:-}" \
+      -e BW_SESSION -e GPG_PASSPHRASE="${GPG_PASSPHRASE:-}" -e DOTFILES_SKIP_SSH_KEY_UPLOAD=1 \
       "$IMAGE" /src/test/run-tier2.sh
     ;;
   *) echo "usage: bin/test [tier1|tier2]"; exit 2 ;;

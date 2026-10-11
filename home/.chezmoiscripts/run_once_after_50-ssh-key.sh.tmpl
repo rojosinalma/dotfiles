@@ -14,6 +14,7 @@ if [ ! -f "$KEY" ]; then
   cat "$KEY.pub"
 fi
 
+[ "${DOTFILES_SKIP_SSH_KEY_UPLOAD:-0}" = 1 ] && exit 0
 if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
   fp="$(ssh-keygen -lf "$KEY.pub" | awk '{print $2}')"
   if ! gh ssh-key list 2>/dev/null | grep -qF "$fp"; then

@@ -3,7 +3,7 @@
 # the gpg key is imported, bin/secrets writes the secret files, and a signed commit works.
 set -u
 . /src/test/lib.sh
-export DOTFILES_SKIP_ASDF_INSTALL=1
+export DOTFILES_SKIP_ASDF_INSTALL=1 DOTFILES_SKIP_SSH_KEY_UPLOAD=1
 
 reset_home
 mkdir -p "$HOME/.config/Bitwarden CLI" && cp /bwcli/data.json "$HOME/.config/Bitwarden CLI/"
