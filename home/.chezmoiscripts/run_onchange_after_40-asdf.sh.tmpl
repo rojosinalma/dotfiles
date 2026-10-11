@@ -1,0 +1,26 @@
+{{- /* Adds the asdf plugins named in ~/.tool-versions and installs the versions.
+       Re-runs when the rendered .tool-versions changes (hash below).
+       DOTFILES_SKIP_ASDF_INSTALL=1 adds the plugins but skips the (slow) installs. */ -}}
+#!/bin/sh
+# tool-versions: {{ includeTemplate "dot_tool-versions.tmpl" . | sha256sum }}
+set -eu
+log() { printf '[asdf] %s\n' "$*"; }
+
+command -v asdf >/dev/null 2>&1 || { log "asdf not installed, skipping"; exit 0; }
+[ -f "$HOME/.tool-versions" ] || exit 0
+
+installed="$(asdf plugin list 2>/dev/null || true)"
+grep -v '^\s*#' "$HOME/.tool-versions" | awk 'NF {print $1}' | while read -r plugin; do
+  if ! printf '%s\n' "$installed" | grep -qx "$plugin"; then
+    log "adding plugin $plugin"
+    asdf plugin add "$plugin" || log "could not add plugin $plugin"
+  fi
+done
+
+if [ "${DOTFILES_SKIP_ASDF_INSTALL:-0}" = 1 ]; then
+  log "DOTFILES_SKIP_ASDF_INSTALL=1, not installing versions"
+  exit 0
+fi
+
+log "asdf install (this compiles ruby/python on first run)"
+cd "$HOME" && asdf install

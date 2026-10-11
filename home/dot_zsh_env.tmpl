@@ -1,0 +1,66 @@
+# ~/.zsh_env — managed by chezmoi (`zshenv`). PATH is set in .zshrc.
+
+# Editor
+if command -v nvim >/dev/null 2>&1; then
+  export EDITOR="nvim"
+else
+  export EDITOR="vim"
+fi
+export VISUAL="$EDITOR"
+
+# Locale
+export LC_CTYPE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export LC_MESSAGES=en_US.UTF-8
+
+# Pager: less, or bat when installed
+export PAGER='less'
+export LESS='-R -i -w -M -z-4 -F -X'
+export MANPAGER='less'
+if command -v bat >/dev/null 2>&1; then
+  export PAGER='bat'
+  export MANPAGER='bat -l man -p'
+  export BAT_THEME='base16'
+  export BAT_PAGER='less -RF'
+fi
+
+# GPG
+export GPG_TTY=$(tty)
+
+# Git
+export GIT_SSH_COMMAND="ssh -T"
+
+# FZF
+export FZF_TMUX_OPTS="-p 80%"
+export FZF_CTRL_R_OPTS="--reverse --preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
+
+# Git Radar (https://github.com/michaeldfallen/git-radar, cloned by chezmoi into ~/.git-radar)
+export PATH=$PATH:$HOME/.git-radar
+export GIT_RADAR_FORMAT="${GIT_RADAR_FORMAT:-" %{$fg_bold[white]%}git:(%{$reset_color%}%{remote: }%{branch}%{ :local}%{$fg_bold[white]%})%{$reset_color%}%{ :stash}%{ :changes}"}"
+export GIT_RADAR_COLOR_BRANCH='%F{cyan}'
+export GIT_RADAR_COLOR_LOCAL_AHEAD
+export GIT_RADAR_COLOR_LOCAL_BEHIND
+export GIT_RADAR_COLOR_LOCAL_DIVERGED
+export GIT_RADAR_COLOR_REMOTE_AHEAD
+export GIT_RADAR_COLOR_REMOTE_BEHIND
+export GIT_RADAR_COLOR_REMOTE_DIVERGED
+export GIT_RADAR_COLOR_REMOTE_NOT_UPSTREAM
+export GIT_RADAR_COLOR_CHANGES_STAGED
+export GIT_RADAR_COLOR_CHANGES_UNSTAGED
+export GIT_RADAR_COLOR_CHANGES_CONFLICTED
+export GIT_RADAR_COLOR_CHANGES_UNTRACKED
+export GIT_RADAR_MAIN_BRANCH="origin/main"
+export GIT_RADAR_FETCH_TIME=30
+{{ if .work }}
+# Kube PS1
+KUBE_PS1_BINARY=kubectl       # Default Kubernetes binary
+KUBE_PS1_DIVIDER=": "         # Separator between context and namespace
+KUBE_PS1_NS_ENABLE=true       # Display the namespace. If set to false, this will also disable KUBE_PS1_DIVIDER
+KUBE_PS1_PREFIX=[             # Prompt opening character
+KUBE_PS1_SEPARATOR=|          # Separator between symbol and context name
+KUBE_PS1_SUFFIX=%F{blue}]     # Prompt closing character
+KUBE_PS1_SYMBOL_DEFAULT=⎈	    # Default prompt symbol. Unicode \u2388
+KUBE_PS1_SYMBOL_ENABLE=false  # Display the prompt Symbol. If set to false, this will also disable KUBE_PS1_SEPARATOR
+KUBE_PS1_SYMBOL_PADDING=true  # Adds a space (padding) after the symbol to prevent clobbering prompt characters
+KUBE_PS1_SYMBOL_USE_IMG=false # ☸️ , Unicode \u2638 as the prompt symbol
+{{- end }}

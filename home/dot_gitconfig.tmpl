@@ -1,0 +1,44 @@
+# ~/.gitconfig — managed by chezmoi (`gitconfig`)
+[user]
+  name = Rojo
+  email = rojo@rojo.dev
+  signingkey = 523CE7AD
+
+[commit]
+  gpgsign = true
+
+[gpg]
+  program = gpg
+
+[core]
+  excludesfile = ~/.gitignore
+  quotepath = false
+  editor = {{ if lookPath "nvim" }}nvim{{ else }}vim{{ end }}
+  autocrlf = input
+{{- if lookPath "delta" }}
+  pager = delta
+
+[interactive]
+  diffFilter = delta --color-only
+{{- end }}
+
+[pull]
+  rebase = true
+
+[branch]
+  autosetuprebase = always
+
+[color]
+  ui = true
+
+[push]
+  default = simple
+
+[init]
+  defaultBranch = main
+
+[delta]
+  dark = true
+  line-numbers = false
+  side-by-side = true
+  navigate = true

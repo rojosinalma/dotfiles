@@ -1,0 +1,24 @@
+# Shared assertions for the tiers. Sourced, not executed.
+pass=0 fail=0
+ok()   { pass=$((pass + 1)); printf '  \033[32mok\033[0m   %s\n' "$*"; }
+nok()  { fail=$((fail + 1)); printf '  \033[31mFAIL\033[0m %s\n' "$*"; }
+check() { # check <description> <command...>
+  desc="$1"; shift
+  if "$@" >/tmp/check.out 2>&1; then ok "$desc"; else nok "$desc"; sed 's/^/       /' /tmp/check.out | head -20; fi
+}
+
+# Resets the home directory to a clean state between runs (keeps the chezmoi binary).
+reset_home() {
+  find "$HOME" -mindepth 1 -maxdepth 1 ! -name .local -exec rm -rf {} +
+  rm -rf "$HOME/.local/share/chezmoi" "$HOME/.local/state" "$HOME/.config"
+}
+
+# Common asserts after an apply
+assert_shell() {
+  check "zsh -il -c true exits 0 with empty stderr" sh -c 'err=$(zsh -il -c true 2>&1 >/dev/null); [ -z "$err" ] || { echo "$err"; exit 1; }'
+  check "PROMPT is set in an interactive zsh"       sh -c '[ -n "$(zsh -ic "echo \$PROMPT" 2>/dev/null)" ]'
+  check "git user.signingkey = 523CE7AD"            sh -c '[ "$(git config --get user.signingkey)" = 523CE7AD ]'
+  check "tmux config loads"                         sh -c 'tmux -L test -f "$HOME/.tmux.conf" start-server \; kill-server'
+  check "ssh config parses (Include config.rojo absent is fine)" ssh -G -F "$HOME/.ssh/config" localhost
+  check "chezmoi verify"                            chezmoi verify
+}

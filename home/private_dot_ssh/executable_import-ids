@@ -1,0 +1,23 @@
+#!/bin/bash
+# Pull my GitHub SSH public keys into ~/.ssh/authorized_keys.github (cron, every 5 min, installed by chezmoi).
+# Only useful where sshd lists that file in AuthorizedKeysFile. Needs an authenticated gh (bin/secrets).
+
+export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin"
+
+GITHUB_KEYS="$HOME/.ssh/authorized_keys.github"
+TMP="$HOME/.ssh/github_keys.tmp"
+
+gh api /user/keys 2>/dev/null | jq -r '.[].key' > "$TMP"
+
+if [ -s "$TMP" ]; then
+  if cmp -s "$TMP" "$GITHUB_KEYS"; then
+    rm -f "$TMP"
+  else
+    mv "$TMP" "$GITHUB_KEYS"
+    chmod 600 "$GITHUB_KEYS"
+    echo "$(date -Is) authorized_keys.github updated"
+  fi
+else
+  rm -f "$TMP"
+  echo "$(date -Is) GitHub fetch returned no keys, skipping update"
+fi

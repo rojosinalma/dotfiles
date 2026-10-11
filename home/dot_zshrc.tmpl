@@ -1,0 +1,67 @@
+# ~/.zshrc — managed by chezmoi (edit with `zshconfig`, source: {{ .chezmoi.sourceFile }})
+
+# PATH
+#------------------
+typeset -U path PATH fpath
+export PATH="$HOME/.local/bin:$HOME/.bin:$PATH"
+
+export BUN_INSTALL="$HOME/.bun"
+[ -d "$BUN_INSTALL/bin" ] && export PATH="$BUN_INSTALL/bin:$PATH"
+[ -d "$HOME/.docker/bin" ] && export PATH="$PATH:$HOME/.docker/bin"
+
+{{ if eq .chezmoi.os "darwin" -}}
+# Homebrew (before prezto so compinit sees brew's completions)
+if [ -d /opt/homebrew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+  fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
+  export PATH="$PATH:/Applications/Sublime Text.app/Contents/SharedSupport/bin:/Applications/Sublime Merge.app/Contents/SharedSupport/bin"
+  [ -e "$HOME/.iterm2_shell_integration.zsh" ] && source "$HOME/.iterm2_shell_integration.zsh"
+fi
+
+{{ end -}}
+# asdf (shims + completions, before prezto's compinit)
+if [ -d "${ASDF_DATA_DIR:-$HOME/.asdf}" ]; then
+  export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+  fpath=("${ASDF_DATA_DIR:-$HOME/.asdf}/completions" $fpath)
+fi
+
+# Prezto (its completion module runs compinit — do not call it again here)
+#------------------
+if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+fi
+
+set +o clobber
+
+# Tool integrations (each only when the tool is present)
+#------------------
+if command -v gh >/dev/null 2>&1; then
+  eval "$(gh completion -s zsh)"
+fi
+
+if command -v aws >/dev/null 2>&1; then
+  autoload -U +X bashcompinit && bashcompinit
+  complete -C aws_completer aws
+fi
+
+[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
+
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh --cmd j)"
+fi
+
+if command -v fzf >/dev/null 2>&1; then
+  if fzf --zsh >/dev/null 2>&1; then
+    source <(fzf --zsh)
+  elif [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]; then
+    source /usr/share/doc/fzf/examples/key-bindings.zsh
+  fi
+fi
+
+# Personal files (secrets and env files are optional and never in git)
+#------------------
+for _f in .zsh_opts .zsh_env .zsh_functions .zsh_aliases \
+          .zsh_secrets .aws_env .bedrock_env .opencode_env .claude_env; do
+  [ -f "$HOME/$_f" ] && source "$HOME/$_f"
+done
+unset _f

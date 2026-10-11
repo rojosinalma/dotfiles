@@ -1,0 +1,19 @@
+# ~/.ssh/config — managed by chezmoi (`sshconfig`). Host entries live in config.rojo (from Bitwarden, bin/secrets).
+Include config.rojo
+
+## Defaults
+Host *
+{{- if eq .chezmoi.os "darwin" }}
+  IgnoreUnknown UseKeychain
+  UseKeychain yes
+{{- end }}
+  AddKeysToAgent yes
+  ControlMaster auto
+  ControlPath /tmp/%r@%h:%p
+  ControlPersist 10m
+  ForwardAgent yes
+  Port 22
+  RequestTTY yes
+  ServerAliveCountMax 30
+  ServerAliveInterval 60
+  TCPKeepAlive yes

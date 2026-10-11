@@ -1,0 +1,40 @@
+{{- /* Imports the signing key 523CE7AD from Bitwarden (item dotfiles/gpg-523CE7AD, attachments
+       secret.asc + ownertrust.txt). Runs on every apply but is a no-op once the key is present;
+       never fails the apply. DOTFILES_NO_SECRETS=1 skips it (tests, hosts without the vault). */ -}}
+#!/bin/sh
+set -u
+KEY=523CE7AD
+ITEM="dotfiles/gpg-${KEY}"
+
+log()  { printf '[gpg] %s\n' "$*"; }
+have() { command -v "$1" >/dev/null 2>&1; }
+
+[ "${DOTFILES_NO_SECRETS:-0}" = 1 ] && exit 0
+have gpg || { log "gpg not installed, skipping"; exit 0; }
+gpg --list-secret-keys "$KEY" >/dev/null 2>&1 && exit 0
+
+if ! have bw || ! have jq; then
+  log "bw/jq missing: install them and re-apply to import the signing key"
+  exit 0
+fi
+if [ "$(bw status 2>/dev/null | jq -r .status)" != "unlocked" ]; then
+  log "Bitwarden is locked. To import the signing key:"
+  log "  export BW_SESSION=\$(bw unlock --raw) && chezmoi apply"
+  exit 0
+fi
+
+id="$(bw get item "$ITEM" 2>/dev/null | jq -r .id)"
+if [ -z "$id" ] || [ "$id" = null ]; then
+  log "Bitwarden item '$ITEM' not found, skipping"
+  exit 0
+fi
+
+mkdir -p "$HOME/.gnupg" && chmod 700 "$HOME/.gnupg"
+log "importing $KEY from Bitwarden"
+if bw get attachment secret.asc --itemid "$id" --raw | gpg --quiet --batch --import; then
+  bw get attachment ownertrust.txt --itemid "$id" --raw | gpg --quiet --batch --import-ownertrust || true
+  log "imported"
+else
+  log "import failed (is secret.asc attached to '$ITEM'?)"
+fi
+exit 0

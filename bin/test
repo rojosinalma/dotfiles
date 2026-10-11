@@ -1,0 +1,27 @@
+#!/bin/sh
+# Runs the dotfiles test tiers in a throwaway ubuntu:26.04 container (user rojo, uid 1000, sudo).
+#   bin/test            tier 1 (all role × work combinations, no vault)
+#   bin/test tier1
+#   bin/test tier2      needs BW_SESSION in the environment and a logged-in ~/.config/Bitwarden CLI
+#                       optional: GPG_PASSPHRASE for the signed-commit assert
+set -eu
+cd "$(dirname "$0")/.."
+tier="${1:-tier1}"
+IMAGE=dotfiles-test
+
+docker build -q -t "$IMAGE" test >/dev/null
+
+case "$tier" in
+  tier1)
+    docker run --rm -v "$PWD:/src:ro" "$IMAGE" /src/test/run-tier1.sh
+    ;;
+  tier2)
+    : "${BW_SESSION:?set BW_SESSION (bw unlock --raw)}"
+    bwdir="$HOME/.config/Bitwarden CLI"
+    [ -d "$bwdir" ] || { echo "no $bwdir (bw login first)"; exit 1; }
+    docker run --rm -v "$PWD:/src:ro" -v "$bwdir:/bwcli:ro" \
+      -e BW_SESSION -e GPG_PASSPHRASE="${GPG_PASSPHRASE:-}" \
+      "$IMAGE" /src/test/run-tier2.sh
+    ;;
+  *) echo "usage: bin/test [tier1|tier2]"; exit 2 ;;
+esac

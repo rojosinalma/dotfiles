@@ -1,0 +1,21 @@
+{{- /* Clones prezto (zsh framework) and tpm (tmux plugin manager) when missing, then installs
+       the tmux plugins listed in ~/.tmux.conf. Idempotent and cheap once everything exists. */ -}}
+#!/bin/sh
+set -eu
+log() { printf '[prezto-tpm] %s\n' "$*"; }
+
+if [ ! -d "$HOME/.zprezto" ]; then
+  log "cloning prezto"
+  git clone -q --recursive https://github.com/sorin-ionescu/prezto.git "$HOME/.zprezto"
+fi
+
+TPM="$HOME/.config/tmux/plugins/tpm"
+if [ ! -d "$TPM" ]; then
+  log "cloning tpm"
+  git clone -q https://github.com/tmux-plugins/tpm "$TPM"
+fi
+
+if command -v tmux >/dev/null 2>&1; then
+  export TMUX_PLUGIN_MANAGER_PATH="$HOME/.config/tmux/plugins/"
+  "$TPM/bin/install_plugins" | grep -v '^$' | sed 's/^/[prezto-tpm] /' || true
+fi

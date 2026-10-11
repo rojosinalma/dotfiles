@@ -1,0 +1,23 @@
+{{- /* Creates ~/.ssh/id_ed25519 if this host has no key yet (never overwrites one) and, when gh is
+       authenticated, registers the public key on GitHub. bin/secrets repeats the GitHub step. */ -}}
+#!/bin/sh
+set -eu
+log() { printf '[ssh-key] %s\n' "$*"; }
+
+KEY="$HOME/.ssh/id_ed25519"
+mkdir -p "$HOME/.ssh" && chmod 700 "$HOME/.ssh"
+
+if [ ! -f "$KEY" ]; then
+  log "generating $KEY"
+  ssh-keygen -q -t ed25519 -N "" -C "rojo@$(hostname -s)" -f "$KEY"
+  log "new public key (add it where this host must log in):"
+  cat "$KEY.pub"
+fi
+
+if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
+  fp="$(ssh-keygen -lf "$KEY.pub" | awk '{print $2}')"
+  if ! gh ssh-key list 2>/dev/null | grep -qF "$fp"; then
+    log "adding the key to GitHub as $(hostname -s)"
+    gh ssh-key add "$KEY.pub" --title "$(hostname -s)" || log "gh ssh-key add failed (token needs admin:public_key)"
+  fi
+fi

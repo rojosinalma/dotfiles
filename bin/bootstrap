@@ -1,0 +1,94 @@
+#!/bin/sh
+# One-shot bootstrap of a new host:
+#   sh -c "$(curl -fsSL https://raw.githubusercontent.com/rojosinalma/dotfiles/master/bin/bootstrap)"
+# Installs git, chezmoi and the Bitwarden CLI, unlocks the vault, applies the dotfiles
+# (chezmoi asks for role/work the first time), then pulls the secret files from Bitwarden.
+#
+# Env knobs: DOTFILES_REPO (default https://github.com/rojosinalma/dotfiles.git)
+#            DOTFILES_NO_SECRETS=1  skip Bitwarden entirely (no vault on this host)
+#            CHEZMOI_ARGS           extra args for chezmoi init, e.g. "--promptChoice role=server --promptBool work=false"
+set -eu
+
+REPO="${DOTFILES_REPO:-https://github.com/rojosinalma/dotfiles.git}"
+BIN="$HOME/.local/bin"
+export PATH="$BIN:$PATH"
+
+log()  { printf '\033[1;34m[bootstrap]\033[0m %s\n' "$*"; }
+have() { command -v "$1" >/dev/null 2>&1; }
+
+mkdir -p "$BIN"
+os="$(uname -s)"
+
+case "$os" in
+  Darwin)
+    if ! have brew; then
+      log "installing Homebrew"
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+    fi
+    have git     || brew install git
+    have chezmoi || brew install chezmoi
+    have bw      || brew install bitwarden-cli
+    have jq      || brew install jq
+    ;;
+  Linux)
+    if have apt-get; then
+      need=""
+      for p in git curl unzip jq ca-certificates; do have "$p" || need="$need $p"; done
+      have update-ca-certificates || need="$need ca-certificates"
+      if [ -n "$need" ]; then
+        log "apt-get install$need"
+        # shellcheck disable=SC2086
+        sudo apt-get update -qq && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq $need
+      fi
+    fi
+    if ! have chezmoi; then
+      log "installing chezmoi to $BIN"
+      sh -c "$(curl -fsSL https://get.chezmoi.io)" -- -b "$BIN"
+    fi
+    if ! have bw && [ "${DOTFILES_NO_SECRETS:-0}" != 1 ]; then
+      log "installing the Bitwarden CLI to $BIN"
+      tmp="$(mktemp -d)"
+      curl -fsSL -o "$tmp/bw.zip" "https://vault.bitwarden.com/download/?app=cli&platform=linux"
+      unzip -oq "$tmp/bw.zip" -d "$tmp" && install -m 755 "$tmp/bw" "$BIN/bw"
+      rm -rf "$tmp"
+    fi
+    ;;
+  *) log "unsupported OS: $os"; exit 1 ;;
+esac
+
+# Bitwarden: login + unlock, so the gpg key import and bin/secrets can read the vault
+if [ "${DOTFILES_NO_SECRETS:-0}" != 1 ]; then
+  status="$(bw status 2>/dev/null | jq -r .status || echo unauthenticated)"
+  if [ "$status" = unauthenticated ]; then
+    log "Bitwarden login"
+    bw login
+    status=locked
+  fi
+  if [ "$status" != unlocked ]; then
+    log "Bitwarden unlock"
+    BW_SESSION="$(bw unlock --raw)"
+    export BW_SESSION
+  fi
+fi
+
+log "chezmoi init --apply $REPO"
+# shellcheck disable=SC2086
+chezmoi init --apply ${CHEZMOI_ARGS:-} "$REPO"
+
+src="$(chezmoi execute-template '{{ .chezmoi.workingTree }}')"
+if [ "${DOTFILES_NO_SECRETS:-0}" != 1 ]; then
+  log "pulling secrets from Bitwarden"
+  "$src/bin/secrets" || log "some secrets are missing — rerun $src/bin/secrets later"
+fi
+
+echo
+log "done. Next steps:"
+if [ -f "$HOME/.ssh/id_ed25519.pub" ]; then
+  echo "  - this host's ssh public key: $(cat "$HOME/.ssh/id_ed25519.pub")"
+fi
+zsh_bin="$(command -v zsh || true)"
+if [ -n "$zsh_bin" ] && [ "${SHELL:-}" != "$zsh_bin" ]; then
+  echo "  - make zsh the login shell:  chsh -s $zsh_bin"
+fi
+echo "  - open a new shell (zsh -l) and run 'chezmoi doctor' if anything looks off"

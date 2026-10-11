@@ -1,0 +1,10 @@
+#!/bin/sh
+# Refuse to commit anything that looks like a secret. Uses gitleaks when installed (binary or docker).
+if command -v gitleaks >/dev/null 2>&1; then
+  exec gitleaks protect --staged --no-banner --redact
+elif command -v docker >/dev/null 2>&1; then
+  exec docker run --rm -v "$(git rev-parse --show-toplevel):/repo" -w /repo \
+    ghcr.io/gitleaks/gitleaks:latest protect --staged --no-banner --redact
+else
+  echo "pre-commit: gitleaks not available, skipping secret scan" >&2
+fi

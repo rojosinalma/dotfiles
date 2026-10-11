@@ -1,0 +1,21 @@
+{{- /* chezmoi config template: rendered into ~/.config/chezmoi/chezmoi.yaml by `chezmoi init`.
+       role: server (headless box) | desktop (GUI + full toolset). work: kubectl/k9s/cloud CLIs + kube prompt.
+       Asked once and reused on later inits; non-interactive: --promptChoice role=server --promptBool work=false.
+       (The prompt text must equal the key for those flags to match.) */ -}}
+{{- $role := promptChoiceOnce . "role" "role" (list "server" "desktop") "server" -}}
+{{- $work := promptBoolOnce . "work" "work" false -}}
+sourceDir: {{ .chezmoi.workingTree | quote }}
+format: yaml
+color: auto
+
+data:
+  role: {{ $role | quote }}
+  work: {{ $work }}
+
+git:
+  autoAdd: false
+  autoCommit: false
+  autoPush: false
+
+add:
+  secrets: error

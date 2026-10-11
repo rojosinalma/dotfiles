@@ -1,0 +1,35 @@
+# Never managed (docs live in the repo root, outside .chezmoiroot anyway)
+README.md
+LICENSE*
+
+# Secrets are written by bin/secrets from Bitwarden, never by chezmoi
+.zsh_secrets
+.aws_env
+.bedrock_env
+.npmrc
+.ssh/config.rojo
+.ssh/id_*
+.ssh/authorized_keys*
+.ssh/known_hosts*
+.gnupg/*
+!.gnupg/gpg-agent.conf
+
+{{ if eq .role "server" -}}
+# Server role: no GUI terminals, no editor/UI configs, no desktop gem set
+Brewfile
+.config/alacritty
+.config/kitty
+.config/iterm2
+.config/nvim
+.config/lazygit
+.config/lazydocker
+.config/yamllint
+.config/bat
+.default-gems
+{{- end }}
+
+{{ if ne .chezmoi.os "darwin" -}}
+# macOS only
+Brewfile
+.config/iterm2
+{{- end }}

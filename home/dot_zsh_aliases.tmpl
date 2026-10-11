@@ -1,0 +1,82 @@
+<%- /* chezmoi:template:left-delimiter=<% right-delimiter=%> */ -%>
+# ~/.zsh_aliases — managed by chezmoi (`zshaliases`). Docker aliases use {{ }}, so this template uses ERB-style delimiters (see line 1).
+
+# Binds (https://stackoverflow.com/questions/6205157#10485061)
+#-------------------
+bindkey -e
+bindkey '^[[1;9C' forward-word
+bindkey '^[[1;9D' backward-word
+
+# Core
+#-------------------
+alias c="clear"
+alias l="ls -la"
+alias lsd="ls -d */"
+<%- if eq .chezmoi.os "linux" %>
+alias motd="sudo run-parts /etc/update-motd.d"
+<%- end %>
+
+# eza for colorful ls (interactive shells only; scripts, cron and opencode `!` get plain ls)
+if [[ -o interactive ]] && command -v eza >/dev/null 2>&1; then
+  alias ls="eza --icons -1 --group-directories-first -g --git --git-repos -o"
+fi
+
+# Directory stack (overrides prezto's directory module)
+alias d='dirs -v'
+for index ({2..11}) alias "$index"="cd -${index}"; unset index
+
+# Tools
+#-------------------
+<%- if .work %>
+alias kc="kubectl"
+alias cf="cloudflared"
+<%- end %>
+alias lg="lazygit"
+alias agrep="alias | grep"                                     # find a pattern in my aliases
+alias zshsource="source $HOME/.zshrc && source $HOME/.zpreztorc"
+alias hostconf="sudo $EDITOR /etc/hosts"
+
+# Editor
+if command -v nvim >/dev/null 2>&1; then
+  alias vim="nvim"
+  alias nvimconfig="nvim ~/.config/nvim"
+fi
+
+# Dotfiles (chezmoi edit --apply writes the source and the target in one go)
+if command -v chezmoi >/dev/null 2>&1; then
+  alias cm="chezmoi"
+  alias zshaliases="chezmoi edit --apply $HOME/.zsh_aliases"
+  alias zshenv="chezmoi edit --apply $HOME/.zsh_env"
+  alias zshopts="chezmoi edit --apply $HOME/.zsh_opts"
+  alias zshconfig="chezmoi edit --apply $HOME/.zshrc"
+  alias zshfunctions="chezmoi edit --apply $HOME/.zsh_functions"
+  alias prezconfig="chezmoi edit --apply $HOME/.zpreztorc"
+  alias promptedit="chezmoi edit --apply $HOME/.zsh/contrib/rojo-prompt/prompt_rojo_setup"
+  alias gitconfig="chezmoi edit --apply $HOME/.gitconfig"
+  alias sshconfig="chezmoi edit --apply $HOME/.ssh/config"
+  alias tmuxconfig="chezmoi edit --apply $HOME/.tmux.conf"
+fi
+# Secrets are not chezmoi-managed: edit the file, or pull everything from Bitwarden
+alias zsecrets='$EDITOR ~/.zsh_secrets'
+alias dotsecrets='<% .chezmoi.workingTree %>/bin/secrets'
+
+# GH CLI (poll every 5 s to stay under the rate limit)
+alias ghwci='watch -n 5 '\''gh run list --limit 5 --json status,conclusion,workflowDatabaseId,displayTitle -q ".[] | \"\(.displayTitle): \(.status) / \(.conclusion)\""'\'''
+
+# Docker
+alias dimg="docker images"                                                                      # images
+alias drmi='docker rmi $(docker images -q)'                                                     # remove all images
+alias dpsa='docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Networks}}\t{{.Image}}"'
+alias dpsap='docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Networks}}\t{{.Ports}}"'
+alias dpsaq="docker ps -aq"                                                                     # ids only (used by other aliases)
+alias dstop='docker stop $(dpsaq)'                                                              # stop all containers
+alias drma='docker rm $(dpsaq)'                                                                 # remove all containers
+alias dclean="docker images -qf dangling=true | xargs docker rmi"                              # remove dangling images
+alias dprune="docker system prune -a"                                                           # prune everything unused
+alias dex="docker ps -a -f status=exited"                                                       # exited containers
+alias dexrm='docker rm $(docker ps -a -f status=exited -q)'                                     # remove exited containers
+alias drmf='docker stop $(dpsaq) && docker rm $(dpsaq)'                                         # stop and remove all
+alias dc="docker compose"
+alias dcd="docker compose -f compose.dev.yaml"
+alias dcr="docker compose down && docker compose up -d"
+alias dsize='docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Size}}" | sort -k3 -h -r'

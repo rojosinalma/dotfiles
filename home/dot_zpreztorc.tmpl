@@ -1,0 +1,104 @@
+## Prezto — managed by chezmoi (`prezconfig`)
+
+# Custom modules live outside the prezto clone so chezmoi can manage them
+zstyle ':prezto:load' pmodule-dirs "$HOME/.zsh/contrib"
+zstyle ':prezto:load' pmodule-allow-overrides 'yes'
+
+# Modules to load. Order matters.
+zstyle ':prezto:load' pmodule \
+  'environment' \
+  'terminal' \
+  'editor' \
+  'history' \
+  'directory' \
+  'spectrum' \
+  'utility' \
+  'completion' \
+  'history-substring-search' \
+  'autoenv' \
+  'ssh' \
+  'docker' \
+{{- if .work }}
+  'kubectl' \
+  'rojo-kubectl' \
+  'kube-ps1' \
+{{- end }}
+  'zsh-notify' \
+{{- if eq .chezmoi.os "darwin" }}
+  'homebrew' \
+  'osx' \
+{{- end }}
+  'rojo-git' \
+  'archive' \
+  'syntax-highlighting' \
+  'autosuggestions' \
+{{- if .work }}
+  'zsh-aws-vault' \
+{{- end }}
+  'prompt' \
+  'rojo-tmux'
+
+## Prompt
+autoload -Uz promptinit
+promptinit
+fpath=($HOME/.zsh/contrib/rojo-prompt $fpath) # prompt module only loads themes found in fpath
+zstyle ':prezto:module:prompt' theme 'rojo'
+{{- if .work }}
+source $HOME/.zsh/contrib/gcloud-ps1/gcloud-ps1.sh
+{{- end }}
+
+## General
+zstyle ':prezto:*:*' color 'yes'
+zstyle ':prezto:module:ssh:load' identities 'id_ed25519'
+
+## Completions
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+zstyle ':completion:*:default' list-colors ''
+zstyle ':completion:*' completer _complete _match _approximate
+zstyle ':completion:*:match:*' original only
+zstyle ':completion:*:approximate:*' max-errors 1 numeric
+zstyle ':completion:*:functions' ignored-patterns '_*'
+zstyle ':completion:*:cd:*' ignore-parents parent pwd
+zstyle ':completion:*:*:kill:*' menu yes select
+zstyle ':completion:*:kill:*' force-list always
+
+## Syntax highlighting
+zstyle ':prezto:module:syntax-highlighting' color 'yes'
+zstyle ':prezto:module:syntax-highlighting' highlighters \
+  'main' \
+  'brackets' \
+  'pattern' \
+  'cursor' \
+  'root' \
+  'line'
+zstyle ':prezto:module:syntax-highlighting' styles \
+  'builtin' 'fg=green' \
+  'command' 'fg=green' \
+  'function' 'fg=green'
+
+## Terminal
+zstyle ':prezto:module:terminal' auto-title 'yes'
+zstyle ':prezto:module:terminal:window-title' format '%n@%m: %s'
+zstyle ':prezto:module:terminal:tab-title' format '%m: %s'
+
+## Editor
+zstyle ':prezto:module:editor' key-bindings 'emacs'
+zstyle ':prezto:module:editor' dot-expansion 'yes'
+
+## Tmux
+zstyle ':prezto:module:tmux:auto-start' local 'no'
+zstyle ':prezto:module:tmux:auto-start' remote 'no'
+zstyle ':prezto:module:tmux:iterm' integrate 'yes'
+zstyle ':prezto:module:tmux:session' name 'main'
+
+## History substring search
+zstyle ':prezto:module:history-substring-search:color' found 'green'
+zstyle ':prezto:module:history-substring-search:color' not-found 'grey'
+
+## Utility
+zstyle ':prezto:module:utility' safe-ops 'no'
+setopt rm_star_silent
+zstyle ':prezto:module:utility:diff' color 'yes'
+zstyle ':prezto:module:utility:wdiff' color 'yes'
+zstyle ':prezto:module:utility:make' color 'yes'

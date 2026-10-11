@@ -1,0 +1,43 @@
+{{- /* asdf runtimes. Server: languages only. Desktop: + CLI tooling. work adds the k8s/cloud set. */ -}}
+ruby 3.4.3
+nodejs 23.11.0
+python 3.12.4
+golang 1.24.2
+rust stable
+{{- if eq .role "desktop" }}
+bitwarden 2026.9.1
+neovim 0.11.0
+lazydocker 0.24.1
+lazygit 0.49.0
+tmux 3.5a
+fzf 0.61.2
+bat 0.25.0
+eza 0.21.1
+zoxide 0.9.7
+delta 0.18.2
+yq 4.45.4
+pipx 1.7.1
+bun 1.4.2
+{{- end }}
+{{- if .work }}
+terraform 1.7.4
+terragrunt 0.48.0
+skaffold 1.37.0
+kustomize 4.5.2
+eksctl 0.207.0
+kubeval 0.16.0
+kubectl 1.32.3
+kubectx 0.9.4
+kubeseal 0.29.0
+krew 0.4.3
+helm 3.17.3
+k9s 0.50.4
+teleport-ent 9.0.0
+awscli 2.26.5
+aws-vault 7.2.0
+gcloud 437.0.1
+cloudflared 2024.2.1
+pulumi 3.25.0
+ansible-base 2.10.17
+glab 1.48.0
+{{- end }}

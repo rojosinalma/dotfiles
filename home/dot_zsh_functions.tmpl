@@ -1,0 +1,34 @@
+# ~/.zsh_functions — managed by chezmoi (`zshfunctions`)
+
+{{ if .work -}}
+# Kubectl exec
+kex() {
+  kubectl exec -it $1 -- sh -c "clear; (bash || ash || sh)"
+}
+
+{{ end -}}
+# fzf-tmux with the default popup options
+fzf-tmux() {
+  command fzf-tmux $FZF_TMUX_OPTS
+}
+
+# nala in place of apt (also through sudo)
+if command -v nala >/dev/null 2>&1; then
+  apt() {
+    command nala "$@"
+  }
+
+  sudo() {
+    if [ "$1" = "apt" ]; then
+      shift
+      command sudo nala "$@"
+    else
+      command sudo "$@"
+    fi
+  }
+fi
+
+# cht.sh
+cht() {
+  command curl cht.sh/"$@"
+}
