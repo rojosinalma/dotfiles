@@ -30,7 +30,8 @@ setopt PUSHD_IGNORE_DUPS
 setopt RM_STAR_WAIT
 
 # use magic (this is default, but it can't hurt!)
-setopt ZLE
+# ZLE can only be enabled in interactive shells; guard to silence the warning in `zsh -c`
+[[ -o interactive ]] && setopt ZLE
 
 # describe (?)
 setopt NO_HUP

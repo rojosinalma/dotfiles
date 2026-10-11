@@ -14,8 +14,8 @@ alias l="ls -la"
 alias lsd="ls -d */"
 alias motd="sudo run-parts /etc/update-motd.d"
 
-# EZA for colorful ls
-if command -v eza > /dev/null 2>&1; then
+# EZA for colorful ls (interactive shells only; opencode `!`, cron, scripts get plain ls)
+if [[ -o interactive ]] && command -v eza > /dev/null 2>&1; then
   alias ls="eza --icons -1 --group-directories-first -g --git --git-repos -o"
 fi
 
