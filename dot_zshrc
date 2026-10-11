@@ -86,6 +86,11 @@ if [[ -f /usr/share/autojump/autojump.sh ]]; then
   . /usr/share/autojump/autojump.sh
 fi
 
+# Claude
+if [[ -f ~/.claude_env ]]; then
+  . ~/.claude_env
+fi
+
 # PERSONAL FILES
 #------------------
 source ~/.zsh_opts
@@ -94,7 +99,6 @@ source ~/.zsh_functions
 source ~/.zsh_aliases
 source ~/.zsh_secrets
 source ~/.aws_env
-source ~/.claude_env
 
 ## General ZSH
 zstyle ':completion:*:*:kill:*' menu yes select
