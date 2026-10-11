@@ -16,8 +16,8 @@ fi
 
 [ "${DOTFILES_SKIP_SSH_KEY_UPLOAD:-0}" = 1 ] && exit 0
 if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
-  fp="$(ssh-keygen -lf "$KEY.pub" | awk '{print $2}')"
-  if ! gh ssh-key list 2>/dev/null | grep -qF "$fp"; then
+  keybody="$(awk '{print $2}' "$KEY.pub")"   # gh ssh-key list prints key bodies, not fingerprints
+  if ! gh ssh-key list 2>/dev/null | grep -qF "$keybody"; then
     log "adding the key to GitHub as $(hostname -s)"
     gh ssh-key add "$KEY.pub" --title "$(hostname -s)" || log "gh ssh-key add failed (token needs admin:public_key)"
   fi
