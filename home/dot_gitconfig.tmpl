@@ -50,3 +50,14 @@
   line-numbers = false
   side-by-side = true
   navigate = true
+{{- if lookPath "gh" }}
+
+# What `gh auth setup-git` would write; kept here so chezmoi and gh don't fight over this file.
+[credential "https://github.com"]
+  helper =
+  helper = !{{ lookPath "gh" }} auth git-credential
+
+[credential "https://gist.github.com"]
+  helper =
+  helper = !{{ lookPath "gh" }} auth git-credential
+{{- end }}
