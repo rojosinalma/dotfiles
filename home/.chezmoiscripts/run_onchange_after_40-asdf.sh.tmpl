@@ -9,11 +9,21 @@ log() { printf '[asdf] %s\n' "$*"; }
 command -v asdf >/dev/null 2>&1 || { log "asdf not installed, skipping"; exit 0; }
 [ -f "$HOME/.tool-versions" ] || exit 0
 
+# Plugins missing from (or broken in) the asdf registry get an explicit URL
+plugin_url() {
+  case "$1" in
+    lazydocker) echo https://github.com/comdotlinux/asdf-lazydocker.git ;;
+    zoxide)     echo https://github.com/nyrst/asdf-zoxide.git ;;
+    *)          echo "" ;;
+  esac
+}
+
 installed="$(asdf plugin list 2>/dev/null || true)"
 grep -v '^\s*#' "$HOME/.tool-versions" | awk 'NF {print $1}' | while read -r plugin; do
   if ! printf '%s\n' "$installed" | grep -qx "$plugin"; then
     log "adding plugin $plugin"
-    asdf plugin add "$plugin" || log "could not add plugin $plugin"
+    # shellcheck disable=SC2046
+    GIT_TERMINAL_PROMPT=0 asdf plugin add "$plugin" $(plugin_url "$plugin") || log "could not add plugin $plugin"
   fi
 done
 

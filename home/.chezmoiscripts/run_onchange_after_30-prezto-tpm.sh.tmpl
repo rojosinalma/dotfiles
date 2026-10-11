@@ -1,6 +1,7 @@
 {{- /* Clones prezto (zsh framework) and tpm (tmux plugin manager) when missing, then installs
-       the tmux plugins listed in ~/.tmux.conf. Idempotent and cheap once everything exists. */ -}}
+       the tmux plugins listed in ~/.tmux.conf. Re-runs when the rendered .tmux.conf changes. */ -}}
 #!/bin/sh
+# tmux.conf: {{ includeTemplate "dot_tmux.conf.tmpl" . | sha256sum }}
 set -eu
 log() { printf '[prezto-tpm] %s\n' "$*"; }
 

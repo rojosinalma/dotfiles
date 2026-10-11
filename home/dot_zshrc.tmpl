@@ -50,7 +50,7 @@ if command -v zoxide >/dev/null 2>&1; then
   eval "$(zoxide init zsh --cmd j)"
 fi
 
-if command -v fzf >/dev/null 2>&1; then
+if command -v fzf >/dev/null 2>&1 && [[ -t 0 ]]; then  # key bindings need a terminal
   if fzf --zsh >/dev/null 2>&1; then
     source <(fzf --zsh)
   elif [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]; then

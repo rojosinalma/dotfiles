@@ -15,7 +15,8 @@ reset_home() {
 
 # Common asserts after an apply
 assert_shell() {
-  check "zsh -il -c true exits 0 with empty stderr" sh -c 'err=$(zsh -il -c true 2>&1 >/dev/null); [ -z "$err" ] || { echo "$err"; exit 1; }'
+  check "zsh -il -c true exits 0 with empty stderr (no tty)" sh -c 'err=$(zsh -il -c true 2>&1 >/dev/null); [ -z "$err" ] || { echo "$err"; exit 1; }'
+  check "zsh -il -c true is silent on a pty"              sh -c 'out=$(TERM=xterm-256color TMUX=test script -qec "zsh -il -c true" /dev/null | tr -d "\r\n"); [ -z "$out" ] || { echo "$out"; exit 1; }'
   check "PROMPT is set in an interactive zsh"       sh -c '[ -n "$(zsh -ic "echo \$PROMPT" 2>/dev/null)" ]'
   check "git user.signingkey = 523CE7AD"            sh -c '[ "$(git config --get user.signingkey)" = 523CE7AD ]'
   check "tmux config loads"                         sh -c 'tmux -L test -f "$HOME/.tmux.conf" start-server \; kill-server'

@@ -1,6 +1,7 @@
 {{- /* Imports the signing key 523CE7AD from Bitwarden (item dotfiles/gpg-523CE7AD, attachments
-       secret.asc + ownertrust.txt). Runs on every apply but is a no-op once the key is present;
-       never fails the apply. DOTFILES_NO_SECRETS=1 skips it (tests, hosts without the vault). */ -}}
+       secret.asc + ownertrust.txt) on the first apply, when bin/bootstrap has unlocked the vault.
+       Never fails the apply; if the vault was locked, bin/secrets does the same import later.
+       DOTFILES_NO_SECRETS=1 skips it (tests, hosts without the vault). */ -}}
 #!/bin/sh
 set -u
 KEY=523CE7AD
