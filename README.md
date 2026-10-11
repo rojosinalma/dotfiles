@@ -11,26 +11,34 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/rojosinalma/dotfiles/maste
 
 `bin/bootstrap` installs git, chezmoi and the Bitwarden CLI, logs in and unlocks the vault, runs
 `chezmoi init --apply` (asks for `role` and `work` the first time) and then `bin/secrets`. Without a
-vault on the host:
+vault on the host (a small box, e.g. a DietPi node):
 
 ```sh
-DOTFILES_NO_SECRETS=1 CHEZMOI_ARGS="--promptChoice role=server --promptBool work=false" \
+DOTFILES_NO_SECRETS=1 CHEZMOI_ARGS="--promptChoice role=minimal --promptBool work=false" \
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/rojosinalma/dotfiles/master/bin/bootstrap)"
 ```
 
-Afterwards: `chsh -s $(command -v zsh)`.
+The login shell is switched to zsh by chezmoi itself when sudo works without a password; otherwise
+the bootstrap ends with the `chsh` line to run.
 
 ## Roles and data
 
 Two prompts, stored in `~/.config/chezmoi/chezmoi.yaml` (`data.role`, `data.work`):
 
-| | `server` | `desktop` |
-|---|---|---|
-| shell, tmux, git, ssh config, prezto modules | yes | yes |
-| asdf runtimes (ruby, nodejs, python, golang, rust) | yes | yes |
-| asdf CLI tools (neovim, lazygit, bat, eza, fzf, …) | apt only | yes |
-| nvim/lazygit/lazydocker/bat/yamllint/alacritty/kitty configs | no | yes |
-| Brewfile (macOS) | no | yes |
+| | `minimal` | `server` | `desktop` |
+|---|---|---|---|
+| shell, tmux, git, ssh config, prezto modules, apt CLI tools (eza, bat, fzf, …) | yes | yes | yes |
+| asdf runtimes (ruby, nodejs, python, golang, rust) + build deps | no | yes | yes |
+| asdf CLI tools (neovim, lazygit, bat, eza, fzf, …) | no | apt only | yes |
+| git-radar in the prompt, `~/.ssh/import-ids` + cron, Bitwarden CLI, lazygit | no | yes | yes |
+| ssh key: generated if missing / uploaded to GitHub | yes / no | yes / yes | yes / yes |
+| nvim/lazygit/lazydocker/bat/yamllint/alacritty/kitty configs | no | no | yes |
+| Brewfile (macOS) | no | no | yes |
+
+`~/.gitconfig` turns on commit signing (`commit.gpgsign`, `user.signingkey 523CE7AD`) only when
+that secret key is in the host's gpg keyring; after importing it (`bin/secrets`), run `chezmoi apply`
+once to re-render the file. The `import-ids` cron is only added where sshd reads
+`~/.ssh/authorized_keys.github` (`AuthorizedKeysFile` in `sshd_config` or a `sshd_config.d` drop-in).
 
 `work: true` adds the k8s/cloud set: kubectl, k9s, helm, awscli, gcloud, … in `.tool-versions`,
 the kube-ps1/kubectl prezto modules, `kc`/`cf` aliases, `kex`, kube-tmux.
@@ -44,12 +52,13 @@ Change an answer: `chezmoi init --promptChoice role=desktop --promptBool work=tr
 home/                     the managed tree (chezmoi source state)
   .chezmoi.yaml.tmpl      config template: prompts, data, autoCommit/autoPush off, add.secrets=error
   .chezmoiignore.tmpl     role/os ignores + the secret targets, which chezmoi must never manage
-  .chezmoiexternal.toml   git-radar (git), catppuccin/tmux v2.1.3 (archive)
-  .chezmoiscripts/        10 packages (apt + gh/chezmoi/bw/asdf/lazygit binaries, import-ids cron)
+  .chezmoiexternal.toml.tmpl  git-radar (git, not for minimal), catppuccin/tmux v2.1.3 (archive)
+  .chezmoiscripts/        10 packages (apt + gh/chezmoi/bw/asdf/lazygit binaries, import-ids cron if sshd reads the file)
                           20 gpg key import from Bitwarden (run_once, first apply)
                           30 prezto + tpm clone and plugin install (onchange: .tmux.conf)
-                          40 asdf plugins + install (onchange: .tool-versions)
+                          40 asdf plugins + install (onchange: .tool-versions; empty for minimal)
                           50 ssh key generation + upload to GitHub (run_once)
+                          60 chsh to zsh when it is not the login shell yet (needs passwordless sudo)
   dot_zsh/contrib/        my prezto modules (loaded via pmodule-dirs, outside the prezto clone)
 bin/bootstrap             new-host one-liner (see above)
 bin/secrets               Bitwarden -> ~/.zsh_secrets ~/.aws_env ~/.bedrock_env ~/.npmrc ~/.ssh/config.rojo, gh login, gpg key
@@ -92,5 +101,7 @@ bin/test            # tier 1: ubuntu:26.04 container, every role × work, no vau
 bin/test tier2      # + BW_SESSION: gpg import, bin/secrets, gh auth (GPG_PASSPHRASE enables the signed-commit check)
 ```
 
-Tier 1 asserts a clean `zsh -il` (with and without a tty), a prompt, `git config user.signingkey`,
-a loading `.tmux.conf`, a parsing `~/.ssh/config` and `chezmoi verify`.
+Tier 1 (roles minimal, server, desktop; `work` both ways for the last two) asserts a clean `zsh -il`
+(with and without a tty), a prompt, the git identity (no signing: the container has no key), a loading
+`.tmux.conf`, a parsing `~/.ssh/config`, the login shell switched to zsh and `chezmoi verify`. Tier 2
+asserts `commit.gpgsign = true` after the key import.

@@ -14,8 +14,8 @@ LICENSE*
 .gnupg/*
 !.gnupg/gpg-agent.conf
 
-{{ if eq .role "server" -}}
-# Server role: no GUI terminals, no editor/UI configs, no desktop gem set
+{{ if ne .role "desktop" -}}
+# Server/minimal roles: no GUI terminals, no editor/UI configs, no desktop gem set
 Brewfile
 .config/alacritty
 .config/kitty
@@ -26,6 +26,12 @@ Brewfile
 .config/yamllint
 .config/bat
 .default-gems
+{{- end }}
+
+{{ if eq .role "minimal" -}}
+# Minimal role: no asdf, no GitHub key sync
+.tool-versions
+.ssh/import-ids
 {{- end }}
 
 {{ if ne .chezmoi.os "darwin" -}}

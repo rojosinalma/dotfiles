@@ -1,9 +1,12 @@
 # External content pulled by chezmoi apply (refreshed weekly). Nothing vendored in the repo.
 
+{{ if ne .role "minimal" -}}
+# git-radar for the prompt (the prompt degrades silently when it is absent; minimal skips it)
 [".git-radar"]
     type = "git-repo"
     url = "https://github.com/michaeldfallen/git-radar.git"
     refreshPeriod = "168h"
+{{- end }}
 
 # Pinned catppuccin theme for tmux; the other plugins are installed by tpm (see .tmux.conf).
 [".config/tmux/plugins/catppuccin/tmux"]

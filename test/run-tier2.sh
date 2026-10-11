@@ -18,6 +18,8 @@ grep '^\[gpg\]' /tmp/apply.log | sed 's/^/       /'
 assert_shell
 
 check "gpg secret key 523CE7AD imported" gpg --list-secret-keys 523CE7AD
+check "commit.gpgsign = true with the key present" sh -c '[ "$(git config --get commit.gpgsign)" = true ]'
+check "user.signingkey = 523CE7AD"       sh -c '[ "$(git config --get user.signingkey)" = 523CE7AD ]'
 
 if /src/bin/secrets >/tmp/secrets.log 2>&1; then ok "bin/secrets"; else nok "bin/secrets (missing items?)"; fi
 sed 's/^/       /' /tmp/secrets.log

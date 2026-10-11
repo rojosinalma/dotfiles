@@ -7,6 +7,10 @@
 # Env knobs: DOTFILES_REPO (default https://github.com/rojosinalma/dotfiles.git)
 #            DOTFILES_NO_SECRETS=1  skip Bitwarden entirely (no vault on this host)
 #            CHEZMOI_ARGS           extra args for chezmoi init, e.g. "--promptChoice role=server --promptBool work=false"
+#                                   role: minimal (shell/tmux/git, apt tools only, no asdf/import-ids) | server | desktop
+#
+# Small box without a vault (e.g. DietPi node):
+#   DOTFILES_NO_SECRETS=1 CHEZMOI_ARGS="--promptChoice role=minimal --promptBool work=false" sh -c "$(curl -fsSL …/bin/bootstrap)"
 set -eu
 
 REPO="${DOTFILES_REPO:-https://github.com/rojosinalma/dotfiles.git}"
@@ -88,7 +92,8 @@ if [ -f "$HOME/.ssh/id_ed25519.pub" ]; then
   echo "  - this host's ssh public key: $(cat "$HOME/.ssh/id_ed25519.pub")"
 fi
 zsh_bin="$(command -v zsh || true)"
-if [ -n "$zsh_bin" ] && [ "${SHELL:-}" != "$zsh_bin" ]; then
-  echo "  - make zsh the login shell:  chsh -s $zsh_bin"
+login_shell="$(getent passwd "$(id -un)" 2>/dev/null | cut -d: -f7)"
+if [ -n "$zsh_bin" ] && [ "$login_shell" != "$zsh_bin" ]; then
+  echo "  - zsh is not the login shell yet (chezmoi could not chsh without sudo):  chsh -s $zsh_bin"
 fi
-echo "  - open a new shell (zsh -l) and run 'chezmoi doctor' if anything looks off"
+echo "  - log in again (the login shell is zsh now) and run 'chezmoi doctor' if anything looks off"

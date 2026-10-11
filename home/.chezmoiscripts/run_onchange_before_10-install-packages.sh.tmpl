@@ -1,12 +1,16 @@
 {{- /* Installs the base toolset. Re-runs when the package list (hash below) changes.
        Linux: apt (Debian family) + a few GitHub-release binaries into ~/.local/bin.
+       minimal: the shell/CLI set only (no build deps, no lazygit/nala, no bw/asdf, no import-ids cron).
        macOS: brew bundle on desktops. */ -}}
 {{- $apt := list
-      "zsh" "git" "curl" "wget" "unzip" "ca-certificates" "gnupg" "jq" "tmux" "cron" "openssh-client"
+      "zsh" "git" "curl" "wget" "unzip" "ca-certificates" "gnupg" "jq" "tmux" "openssh-client"
       "fzf" "eza" "bat" "zoxide" "git-delta" "ripgrep" "fd-find" "neovim" "tig"
-      "htop" "btop" "ncdu" "nala"
+      "htop" "btop" "ncdu" -}}
+{{- if ne .role "minimal" -}}
+{{-   $apt = concat $apt (list "cron" "nala"
       "build-essential" "libssl-dev" "libyaml-dev" "zlib1g-dev" "libffi-dev" "libreadline-dev"
-      "libbz2-dev" "libsqlite3-dev" "liblzma-dev" "libncurses-dev" "pkg-config" -}}
+      "libbz2-dev" "libsqlite3-dev" "liblzma-dev" "libncurses-dev" "pkg-config") -}}
+{{- end -}}
 #!/bin/sh
 # packages: {{ $apt | join " " | sha256sum }}
 set -eu
@@ -45,16 +49,18 @@ fi
 log "apt-get update"
 sudo apt-get update -qq
 
-# Only ask for packages this release actually has (lazygit is not in 24.04, see below)
 want="{{ $apt | join " " }} gh"
+{{ if ne .role "minimal" -}}
+# Only ask for packages this release actually has (lazygit is not in 24.04, see below)
 for p in lazygit; do
   if apt-cache show "$p" >/dev/null 2>&1; then want="$want $p"; fi
 done
+{{ end -}}
 log "apt-get install"
 # shellcheck disable=SC2086
 sudo apt-get install -y -qq --no-install-recommends $want
 
-# Ubuntu renames two binaries; give them their upstream names
+# Debian/Ubuntu rename two binaries; give them their upstream names
 have bat || { have batcat && ln -sf "$(command -v batcat)" "$BIN/bat"; }
 have fd  || { have fdfind && ln -sf "$(command -v fdfind)" "$BIN/fd"; }
 
@@ -65,17 +71,18 @@ case "$arch" in
   *) goarch="$arch" ;;
 esac
 
+if ! have chezmoi; then
+  log "installing chezmoi"
+  sh -c "$(curl -fsSL https://get.chezmoi.io)" -- -b "$BIN"
+fi
+
+{{ if ne .role "minimal" -}}
 if ! have lazygit; then
   log "installing lazygit from GitHub releases"
   ver="$(curl -fsSL https://api.github.com/repos/jesseduffield/lazygit/releases/latest | jq -r '.tag_name | ltrimstr("v")')"
   lgarch="x86_64"; [ "$goarch" = arm64 ] && lgarch="arm64"
   curl -fsSL "https://github.com/jesseduffield/lazygit/releases/download/v${ver}/lazygit_${ver}_linux_${lgarch}.tar.gz" \
     | tar -xz -C "$BIN" lazygit
-fi
-
-if ! have chezmoi; then
-  log "installing chezmoi"
-  sh -c "$(curl -fsSL https://get.chezmoi.io)" -- -b "$BIN"
 fi
 
 if ! have bw; then
@@ -93,11 +100,22 @@ if ! have asdf; then
     | tar -xz -C "$BIN" asdf
 fi
 
-# Sync my GitHub keys into ~/.ssh/authorized_keys.github every 5 minutes
+# Sync my GitHub keys into ~/.ssh/authorized_keys.github every 5 minutes, but only where sshd
+# actually reads that file (AuthorizedKeysFile in sshd_config or a sshd_config.d drop-in)
+sshd_reads_github_keys() {
+  sudo -n sshd -T 2>/dev/null | grep -q 'authorized_keys\.github' && return 0
+  grep -rqs 'authorized_keys\.github' /etc/ssh/sshd_config /etc/ssh/sshd_config.d 2>/dev/null
+}
 if ! crontab -l 2>/dev/null | grep -qF '.ssh/import-ids'; then
-  log "adding the import-ids crontab entry"
-  { crontab -l 2>/dev/null || true; echo "*/5 * * * * $HOME/.ssh/import-ids >> $HOME/.ssh/import-ids.log 2>&1"; } | crontab -
+  if sshd_reads_github_keys; then
+    log "adding the import-ids crontab entry"
+    { crontab -l 2>/dev/null || true; echo "*/5 * * * * $HOME/.ssh/import-ids >> $HOME/.ssh/import-ids.log 2>&1"; } | crontab -
+  else
+    log "sshd does not read ~/.ssh/authorized_keys.github here, not adding the import-ids cron"
+    log "  (add 'AuthorizedKeysFile .ssh/authorized_keys .ssh/authorized_keys.github' to sshd_config.d and re-apply)"
+  fi
 fi
+{{ end -}}
 
 {{ else if eq .chezmoi.os "darwin" -}}
 if ! have brew; then

@@ -1,0 +1,22 @@
+{{- /* Makes zsh the login shell when it is not yet, without asking: needs zsh installed and
+       passwordless sudo (otherwise it prints the chsh command to run by hand). Idempotent. */ -}}
+#!/bin/sh
+set -u
+log() { printf '[login-shell] %s\n' "$*"; }
+
+user="$(id -un)"
+zsh_bin="$(command -v zsh 2>/dev/null || true)"
+[ -n "$zsh_bin" ] || { log "zsh is not installed, leaving the login shell alone"; exit 0; }
+
+current="$(getent passwd "$user" | cut -d: -f7)"
+case "$current" in
+  */zsh) exit 0 ;;
+esac
+
+if sudo -n true 2>/dev/null; then
+  log "changing the login shell of $user from ${current:-?} to $zsh_bin"
+  sudo -n chsh -s "$zsh_bin" "$user" || log "chsh failed; run: sudo chsh -s $zsh_bin $user"
+else
+  log "sudo needs a password here; make zsh the login shell yourself:  chsh -s $zsh_bin"
+fi
+exit 0

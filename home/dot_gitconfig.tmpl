@@ -1,7 +1,14 @@
 # ~/.gitconfig — managed by chezmoi (`gitconfig`)
+{{- /* Signing is on only where the secret key is in the keyring: after importing it on a host,
+       `chezmoi apply` re-renders this file and turns gpgsign on. */ -}}
+{{- $signing := false }}
+{{- if lookPath "gpg" }}
+{{-   $signing = eq (output "sh" "-c" "gpg --list-secret-keys 523CE7AD >/dev/null 2>&1 && echo yes || echo no" | trim) "yes" }}
+{{- end }}
 [user]
   name = Rojo
   email = rojo@rojo.dev
+{{- if $signing }}
   signingkey = 523CE7AD
 
 [commit]
@@ -9,6 +16,7 @@
 
 [gpg]
   program = gpg
+{{- end }}
 
 [core]
   excludesfile = ~/.gitignore
