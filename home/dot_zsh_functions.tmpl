@@ -32,3 +32,50 @@ fi
 cht() {
   command curl cht.sh/"$@"
 }
+
+# Nested tmux: hide the local status bar while this pane runs ssh/mosh, so a remote tmux shows
+# only its own bar (the tmux hooks in ~/.tmux.conf handle window/pane switches; this handles
+# the command starting and ending). $3 is the alias-expanded command line.
+if [ -n "$TMUX" ]; then
+  _tmux_ssh_bar_preexec() {
+    [[ $3 == (ssh|mosh)(\ *|) ]] || return 0
+    _tmux_ssh_bar_hidden=1
+    tmux set -q status off
+  }
+  _tmux_ssh_bar_precmd() {
+    [[ -n $_tmux_ssh_bar_hidden ]] || return 0
+    unset _tmux_ssh_bar_hidden
+    tmux set -q status on
+  }
+  autoload -Uz add-zsh-hook
+  add-zsh-hook preexec _tmux_ssh_bar_preexec
+  add-zsh-hook precmd  _tmux_ssh_bar_precmd
+fi
+
+# Bitwarden: unlock the vault (login first if needed) and export BW_SESSION into this shell
+bwunlock() {
+  command -v bw >/dev/null 2>&1 || { echo "bw is not installed" >&2; return 1; }
+  local status
+  status="$(bw status 2>/dev/null | jq -r .status)"
+  case "$status" in
+    unauthenticated) bw login || return 1 ;;
+    unlocked) echo "vault already unlocked"; [ -n "$BW_SESSION" ] && return 0 ;;
+  esac
+  local session
+  session="$(bw unlock --raw)" || return 1
+  export BW_SESSION="$session"
+  echo "vault unlocked, BW_SESSION exported"
+}
+
+# gpg: refresh the cached passphrase of the signing key in gpg-agent (prompts once, then cached
+# for the agent's ttl); gpglock drops the cache so the next signature asks again
+gpgunlock() {
+  local key
+  key="$(git config --get user.signingkey)" || { echo "no user.signingkey in git config" >&2; return 1; }
+  gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
+  echo | gpg --quiet --sign --local-user "$key" --output /dev/null - \
+    && echo "gpg passphrase cached for $key"
+}
+gpglock() {
+  gpg-connect-agent reloadagent /bye >/dev/null && echo "gpg passphrase cache cleared"
+}

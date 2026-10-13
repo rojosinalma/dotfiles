@@ -77,6 +77,10 @@ bind p paste-buffer
 #--- Status bar
 set -g status-interval 5
 set -g status-position top
+# Hide this bar while the active pane runs ssh/mosh, so a nested remote tmux shows only its own
+# (window/pane switches here; ssh start/exit is caught by the zsh hooks in ~/.zsh_functions)
+set-hook -g session-window-changed 'if -F "#{||:#{m:ssh*,#{pane_current_command}},#{m:mosh*,#{pane_current_command}}}" "set status off" "set status on"'
+set-hook -g window-pane-changed    'if -F "#{||:#{m:ssh*,#{pane_current_command}},#{m:mosh*,#{pane_current_command}}}" "set status off" "set status on"'
 set -g status-left ""
 set -g status-right ""
 set -g status-right-length 200
