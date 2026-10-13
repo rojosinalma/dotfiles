@@ -241,5 +241,8 @@ set -g @tmux-autoreload-quiet 1
 set-option -g @plugin 'b0o/tmux-autoreload'
 
 #--- Pane border overrides (must be after TPM)
-set -g pane-border-status top
+# Border line only when a window has 2+ panes (a single pane would show a second "bar" under
+# the status line, visible when nested over ssh)
+set -g pane-border-status off
+set-hook -g window-layout-changed 'if -F "#{==:#{window_panes},1}" "set -w pane-border-status off" "set -w pane-border-status top"'
 set -g pane-border-format "#[align=left] #{pane_index}: #{?pane_title,#{pane_title},#{b:pane_current_path}} "
