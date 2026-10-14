@@ -7,7 +7,13 @@ Host *
   IgnoreUnknown UseKeychain
   UseKeychain yes
 {{- end }}
+{{- if eq .chezmoi.os "darwin" }}
   AddKeysToAgent yes
+{{- else }}
+  # no: on Linux the agent is gpg-agent's ssh emulation; adding a key needs pinentry, which a
+  # headless session (opencode, cron) has none of, so ssh hangs after "Server accepts key".
+  AddKeysToAgent no
+{{- end }}
   ControlMaster auto
   ControlPath /tmp/%r@%h:%p
   ControlPersist 10m
