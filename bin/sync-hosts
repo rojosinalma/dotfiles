@@ -1,0 +1,50 @@
+#!/bin/sh
+# Updates the dotfiles on every other host listed in ./hosts: `chezmoi update --force` (pull + apply)
+# then `chezmoi verify`, all hosts in parallel. Run by .githooks/pre-push after a push to origin, or
+# by hand (optionally with an explicit host list: bin/sync-hosts host-a host-b).
+#
+# Prints one line per host; exits 1 if any host failed, 0 otherwise (unreachable hosts are reported,
+# not fatal: they catch up on their next ssh login, see .zshrc).
+set -u
+cd "$(dirname "$0")/.."
+
+self="$(hostname -s)"
+if [ $# -gt 0 ]; then
+  hosts="$*"
+else
+  hosts="$(sed 's/#.*//' hosts | tr -s ' \n' '\n' | grep -v '^$' | grep -vx "$self")"
+fi
+[ -n "$hosts" ] || { echo "sync-hosts: no hosts to update"; exit 0; }
+
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+
+# Remote PATH is set explicitly: ssh runs a non-login shell and chezmoi lives in ~/.local/bin.
+remote_cmd='export PATH="$HOME/.local/bin:$HOME/.asdf/shims:$PATH"
+command -v chezmoi >/dev/null 2>&1 || { echo "chezmoi not installed"; exit 3; }
+out="$(chezmoi update --force 2>&1)" || { printf "%s\n" "$out" | tail -3; exit 1; }
+chezmoi verify >/dev/null 2>&1 || { echo "verify failed after update"; exit 1; }
+chezmoi git -- rev-parse --short HEAD'
+
+for h in $hosts; do
+  (
+    if ! ssh -T -o BatchMode=yes -o ConnectTimeout=8 "$h" true >/dev/null 2>&1; then
+      echo "unreachable" > "$tmp/$h.out"; echo 2 > "$tmp/$h.rc"; exit
+    fi
+    ssh -T -o BatchMode=yes -o ConnectTimeout=8 "$h" "$remote_cmd" > "$tmp/$h.out" 2>&1
+    echo $? > "$tmp/$h.rc"
+  ) &
+done
+wait
+
+failed=0
+for h in $hosts; do
+  rc="$(cat "$tmp/$h.rc" 2>/dev/null || echo 1)"
+  out="$(tr '\n' ' ' < "$tmp/$h.out" 2>/dev/null)"
+  case "$rc" in
+    0) printf '[sync-hosts] %-10s ok      %s\n' "$h" "$out" ;;
+    2) printf '[sync-hosts] %-10s skipped unreachable\n' "$h" ;;
+    *) printf '[sync-hosts] %-10s FAILED  %s\n' "$h" "$out"; failed=1 ;;
+  esac
+done
+exit $failed

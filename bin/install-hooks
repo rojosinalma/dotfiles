@@ -1,11 +1,14 @@
 #!/bin/sh
-# Installs the pre-commit secret scan: pre-commit framework when available, else the plain git hook.
+# Installs the git hooks: pre-commit secret scan (pre-commit framework when available, else the plain
+# .githooks/pre-commit) and the pre-push fan-out to the other dotfiles hosts (.githooks/pre-push).
 set -eu
 cd "$(dirname "$0")/.."
+chmod +x .githooks/* bin/*
 if command -v pre-commit >/dev/null 2>&1; then
   pre-commit install
-  echo "pre-commit installed (.pre-commit-config.yaml)"
+  ln -sfn ../../.githooks/pre-push .git/hooks/pre-push
+  echo "pre-commit installed (.pre-commit-config.yaml); pre-push -> .githooks/pre-push"
 else
   git config core.hooksPath .githooks
-  echo "core.hooksPath = .githooks (gitleaks protect --staged when gitleaks is installed)"
+  echo "core.hooksPath = .githooks (gitleaks protect --staged when gitleaks is installed; pre-push fan-out)"
 fi

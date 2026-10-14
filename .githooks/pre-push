@@ -1,0 +1,18 @@
+#!/bin/sh
+# Fan the push out to the other dotfiles hosts (bin/sync-hosts). git has no post-push hook, so this
+# pushes the refs to the remote itself first (the outer push then finds everything up to date) and
+# runs the fan-out once the remote has them. Guarded against recursing into itself.
+remote="$1"
+[ -n "${DOTFILES_PRE_PUSH_INNER:-}" ] && exit 0
+[ "$remote" = "origin" ] || exit 0
+
+refspecs=""
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$local_sha" in *[!0]*) refspecs="$refspecs $local_ref:$remote_ref" ;; esac  # skip deletes
+done
+[ -n "$refspecs" ] || exit 0
+
+# shellcheck disable=SC2086
+DOTFILES_PRE_PUSH_INNER=1 git push "$remote" $refspecs || exit 1
+"$(git rev-parse --show-toplevel)/bin/sync-hosts"  # report only: the refs are already on the remote
+exit 0

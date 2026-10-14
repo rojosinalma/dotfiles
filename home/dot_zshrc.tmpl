@@ -25,6 +25,23 @@ if [ -d "${ASDF_DATA_DIR:-$HOME/.asdf}" ]; then
   fpath=("${ASDF_DATA_DIR:-$HOME/.asdf}/completions" $fpath)
 fi
 
+# Dotfiles catch-up on ssh logins (hosts that were off when bin/sync-hosts ran): if the clone at
+# the chezmoi working tree is behind origin, pull and apply. At most once per hour, 3 s cap.
+#------------------
+if [[ -n $SSH_CONNECTION && -z $TMUX && -t 0 ]] && command -v chezmoi >/dev/null 2>&1; then
+  _dot_root="{{ .chezmoi.workingTree }}"
+  _dot_stamp="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles-check"
+  if [[ -d $_dot_root/.git && -z "$(find "$_dot_stamp" -mmin -60 2>/dev/null)" ]]; then
+    mkdir -p "${_dot_stamp:h}" && : >| "$_dot_stamp"
+    _dot_remote="$(timeout 3 git -C "$_dot_root" ls-remote -q origin refs/heads/master 2>/dev/null | cut -f1)"
+    if [[ -n $_dot_remote ]] && ! git -C "$_dot_root" merge-base --is-ancestor "$_dot_remote" HEAD 2>/dev/null; then
+      echo "dotfiles: behind origin, updating"
+      chezmoi update --force 2>&1 | grep -v "Already installed"
+    fi
+  fi
+  unset _dot_root _dot_stamp _dot_remote
+fi
+
 # Prezto (its completion module runs compinit — do not call it again here)
 #------------------
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
