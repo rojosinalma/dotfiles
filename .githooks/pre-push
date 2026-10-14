@@ -12,7 +12,9 @@ done
 case "$sha" in ""|0000000000000000000000000000000000000000) exit 0 ;; esac
 
 root="$(git rev-parse --show-toplevel)"
-out=/dev/tty; [ -w /dev/tty ] || out="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles-sync.log"
+out="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles-sync.log"
+mkdir -p "$(dirname "$out")"
+( : >/dev/tty ) 2>/dev/null && out=/dev/tty  # -w /dev/tty is true even with no controlling terminal
 
 waiter='
   root="$1" sha="$2"
