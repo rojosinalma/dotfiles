@@ -1,18 +1,31 @@
 #!/bin/sh
-# Fan the push out to the other dotfiles hosts (bin/sync-hosts). git has no post-push hook, so this
-# pushes the refs to the remote itself first (the outer push then finds everything up to date) and
-# runs the fan-out once the remote has them. Guarded against recursing into itself.
+# Fan the push out to the other dotfiles hosts (bin/sync-hosts). git has no post-push hook and this
+# one runs *before* the refs land, so it detaches a waiter that polls origin until master is at the
+# pushed commit (30 s cap) and then runs the fan-out, printing to the terminal.
 remote="$1"
-[ -n "${DOTFILES_PRE_PUSH_INNER:-}" ] && exit 0
 [ "$remote" = "origin" ] || exit 0
 
-refspecs=""
+sha=""
 while read -r local_ref local_sha remote_ref remote_sha; do
-  case "$local_sha" in *[!0]*) refspecs="$refspecs $local_ref:$remote_ref" ;; esac  # skip deletes
+  [ "$remote_ref" = "refs/heads/master" ] && sha="$local_sha"
 done
-[ -n "$refspecs" ] || exit 0
+case "$sha" in ""|0000000000000000000000000000000000000000) exit 0 ;; esac
 
-# shellcheck disable=SC2086
-DOTFILES_PRE_PUSH_INNER=1 git push "$remote" $refspecs || exit 1
-"$(git rev-parse --show-toplevel)/bin/sync-hosts"  # report only: the refs are already on the remote
+root="$(git rev-parse --show-toplevel)"
+out=/dev/tty; [ -w /dev/tty ] || out="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles-sync.log"
+
+waiter='
+  root="$1" sha="$2"
+  i=0
+  while [ $i -lt 30 ]; do
+    [ "$(git -C "$root" ls-remote -q origin refs/heads/master 2>/dev/null | cut -f1)" = "$sha" ] && exec "$root/bin/sync-hosts"
+    sleep 1; i=$((i + 1))
+  done
+  echo "[sync-hosts] origin did not reach $sha within 30 s, hosts not updated (run bin/sync-hosts)"
+'
+if command -v setsid >/dev/null 2>&1; then
+  setsid -f sh -c "$waiter" sh "$root" "$sha" </dev/null >"$out" 2>&1
+else
+  (nohup sh -c "$waiter" sh "$root" "$sha" </dev/null >"$out" 2>&1 &)
+fi
 exit 0
