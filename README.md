@@ -91,6 +91,12 @@ chezmoi diff && chezmoi apply
 chezmoi cd && git commit -am "..." && git push   # nothing auto-commits
 ```
 
+`git push` from the source clone updates every other host in `hosts` a few seconds later
+(`.githooks/pre-push` → `bin/sync-hosts`: `chezmoi update --force` + `chezmoi verify` over ssh, one
+line per host; `bin/install-hooks` wires it). A host that was off catches up on its next ssh login:
+`.zshrc` compares the clone with origin (at most hourly, 3 s cap) and runs `chezmoi update --force`
+when it is behind. `bin/sync-hosts [host…]` also runs by hand.
+
 Scripts re-run when their inputs change (`.tool-versions`, `.tmux.conf`, the package list);
 `DOTFILES_SKIP_ASDF_INSTALL=1 chezmoi apply` skips the slow `asdf install`.
 
