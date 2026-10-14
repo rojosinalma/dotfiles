@@ -1,7 +1,8 @@
 #!/bin/sh
 # Fan the push out to the other dotfiles hosts (bin/sync-hosts). git has no post-push hook and this
 # one runs *before* the refs land, so it detaches a waiter that polls origin until master is at the
-# pushed commit (30 s cap) and then runs the fan-out, printing to the terminal.
+# pushed commit (30 s cap) and then runs the fan-out, printing to the terminal. The host list is
+# decrypted from hosts.asc before detaching: the waiter has no tty for a gpg pinentry.
 remote="$1"
 [ "$remote" = "origin" ] || exit 0
 
@@ -12,22 +13,28 @@ done
 case "$sha" in ""|0000000000000000000000000000000000000000) exit 0 ;; esac
 
 root="$(git rev-parse --show-toplevel)"
+all="$("$root/bin/hosts" list)" || {
+  echo "[sync-hosts] cannot read hosts.asc, hosts not updated"
+  exit 0
+}
+hosts="$(printf '%s\n' "$all" | grep -vx "$(hostname -s)" | tr '\n' ' ')"
+[ -n "${hosts% }" ] || exit 0  # empty would make sync-hosts decrypt again, without a tty
 out="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles-sync.log"
 mkdir -p "$(dirname "$out")"
 ( : >/dev/tty ) 2>/dev/null && out=/dev/tty  # -w /dev/tty is true even with no controlling terminal
 
 waiter='
-  root="$1" sha="$2"
+  root="$1" sha="$2" hosts="$3"
   i=0
   while [ $i -lt 30 ]; do
-    [ "$(git -C "$root" ls-remote -q origin refs/heads/master 2>/dev/null | cut -f1)" = "$sha" ] && exec "$root/bin/sync-hosts"
+    [ "$(git -C "$root" ls-remote -q origin refs/heads/master 2>/dev/null | cut -f1)" = "$sha" ] && exec "$root/bin/sync-hosts" $hosts
     sleep 1; i=$((i + 1))
   done
   echo "[sync-hosts] origin did not reach $sha within 30 s, hosts not updated (run bin/sync-hosts)"
 '
 if command -v setsid >/dev/null 2>&1; then
-  setsid -f sh -c "$waiter" sh "$root" "$sha" </dev/null >"$out" 2>&1
+  setsid -f sh -c "$waiter" sh "$root" "$sha" "$hosts" </dev/null >"$out" 2>&1
 else
-  (nohup sh -c "$waiter" sh "$root" "$sha" </dev/null >"$out" 2>&1 &)
+  (nohup sh -c "$waiter" sh "$root" "$sha" "$hosts" </dev/null >"$out" 2>&1 &)
 fi
 exit 0

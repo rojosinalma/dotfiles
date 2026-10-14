@@ -21,6 +21,21 @@ DOTFILES_NO_SECRETS=1 CHEZMOI_ARGS="--promptChoice role=minimal --promptBool wor
 The login shell is switched to zsh by chezmoi itself when sudo works without a password; otherwise
 the bootstrap ends with the `chsh` line to run.
 
+The host then registers itself (`bin/register-host`): it appends its entry to `hosts.asc` (public
+key only), commits `hosts: register <name>` and pushes, so the next push from silver fans out to it
+too. The push uses gh (logged in by `bin/secrets`) or an ssh agent; on a host without a vault,
+bootstrap from an `ssh -A` session so the forwarded agent can push. `DOTFILES_HOST_ALIAS` sets the
+name (default `hostname -s`), `DOTFILES_NO_REGISTER=1` skips it. When no push is possible the commit
+is undone and the bootstrap prints the line to run on silver instead:
+
+```sh
+~/dev/dotfiles/bin/hosts add <name> --user <user> --role <role> && cd ~/dev/dotfiles \
+  && git commit -qam "hosts: register <name>" && git push
+```
+
+The name must be an ssh alias in silver's `~/.ssh/config.rojo` (`Host <name>`, Bitwarden note
+`dotfiles/ssh_config_rojo`), or `bin/sync-hosts` cannot reach the host.
+
 ## Roles and data
 
 Two prompts, stored in `~/.config/chezmoi/chezmoi.yaml` (`data.role`, `data.work`):
@@ -91,7 +106,7 @@ chezmoi diff && chezmoi apply
 chezmoi cd && git commit -am "..." && git push   # nothing auto-commits
 ```
 
-`git push` from the source clone updates every other host in `hosts` a few seconds later
+`git push` from the source clone updates every other host registered in `hosts.asc` a few seconds later
 (`.githooks/pre-push` → `bin/sync-hosts`: `chezmoi update --force` + `chezmoi verify` over ssh, one
 line per host; `bin/install-hooks` wires it). A host that was off catches up on its next ssh login:
 `.zshrc` compares the clone with origin (at most hourly, 3 s cap) and runs `chezmoi update --force`

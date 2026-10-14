@@ -1,7 +1,8 @@
 #!/bin/sh
-# Updates the dotfiles on every other host listed in ./hosts: `chezmoi update --force` (pull + apply)
-# then `chezmoi verify`, all hosts in parallel. Run by .githooks/pre-push after a push to origin, or
-# by hand (optionally with an explicit host list: bin/sync-hosts host-a host-b).
+# Updates the dotfiles on every other host registered in ./hosts.asc (bin/hosts list):
+# `chezmoi update --force` (pull + apply) then `chezmoi verify`, all hosts in parallel. Run by
+# .githooks/pre-push after a push to origin, or by hand (optionally with an explicit host list:
+# bin/sync-hosts host-a host-b).
 #
 # Prints one line per host; exits 1 if any host failed, 0 otherwise (unreachable hosts are reported,
 # not fatal: they catch up on their next ssh login, see .zshrc).
@@ -12,7 +13,8 @@ self="$(hostname -s)"
 if [ $# -gt 0 ]; then
   hosts="$*"
 else
-  hosts="$(sed 's/#.*//' hosts | tr -s ' \n' '\n' | grep -v '^$' | grep -vx "$self")"
+  all="$(bin/hosts list)" || exit 2
+  hosts="$(printf '%s\n' "$all" | grep -vx "$self")"
 fi
 [ -n "$hosts" ] || { echo "sync-hosts: no hosts to update"; exit 0; }
 
@@ -28,10 +30,10 @@ chezmoi git -- rev-parse --short HEAD'
 
 for h in $hosts; do
   (
-    if ! ssh -T -o BatchMode=yes -o ConnectTimeout=8 "$h" true >/dev/null 2>&1; then
+    if ! ssh -T -o IdentityAgent=none -o BatchMode=yes -o ConnectTimeout=8 "$h" true >/dev/null 2>&1; then
       echo "unreachable" > "$tmp/$h.out"; echo 2 > "$tmp/$h.rc"; exit
     fi
-    ssh -T -o BatchMode=yes -o ConnectTimeout=8 "$h" "$remote_cmd" > "$tmp/$h.out" 2>&1
+    ssh -T -o IdentityAgent=none -o BatchMode=yes -o ConnectTimeout=8 "$h" "$remote_cmd" > "$tmp/$h.out" 2>&1
     echo $? > "$tmp/$h.rc"
   ) &
 done

@@ -8,6 +8,12 @@
 #            DOTFILES_NO_SECRETS=1  skip Bitwarden entirely (no vault on this host)
 #            CHEZMOI_ARGS           extra args for chezmoi init, e.g. "--promptChoice role=server --promptBool work=false"
 #                                   role: minimal (shell/tmux/git, apt tools only, no asdf/import-ids) | server | desktop
+#            DOTFILES_HOST_ALIAS    name registered in hosts.asc (default: hostname -s); must match silver's ssh alias
+#            DOTFILES_NO_REGISTER=1 do not register this host in hosts.asc (bin/register-host)
+#
+# The host registers itself in hosts.asc and pushes that, so silver's fan-out reaches it. The push uses
+# gh (logged in by bin/secrets) or an ssh agent; on a host without secrets, bootstrap from an
+# `ssh -A` session so the forwarded agent can push.
 #
 # Small box without a vault (e.g. DietPi node):
 #   DOTFILES_NO_SECRETS=1 CHEZMOI_ARGS="--promptChoice role=minimal --promptBool work=false" sh -c "$(curl -fsSL …/bin/bootstrap)"
@@ -34,12 +40,14 @@ case "$os" in
     have chezmoi || brew install chezmoi
     have bw      || brew install bitwarden-cli
     have jq      || brew install jq
+    have gpg     || brew install gnupg
     ;;
   Linux)
     if have apt-get; then
       need=""
       for p in git curl unzip jq ca-certificates; do have "$p" || need="$need $p"; done
       have update-ca-certificates || need="$need ca-certificates"
+      have gpg || need="$need gnupg"
       if [ -n "$need" ]; then
         log "apt-get install$need"
         # shellcheck disable=SC2086
@@ -86,6 +94,9 @@ if [ "${DOTFILES_NO_SECRETS:-0}" != 1 ]; then
   "$src/bin/secrets" || log "some secrets are missing — rerun $src/bin/secrets later"
 fi
 
+log "registering this host in hosts.asc"
+"$src/bin/register-host" || log "host registration failed — run $src/bin/register-host later"
+
 echo
 log "done. Next steps:"
 if [ -f "$HOME/.ssh/id_ed25519.pub" ]; then
@@ -96,4 +107,5 @@ login_shell="$(getent passwd "$(id -un)" 2>/dev/null | cut -d: -f7)"
 if [ -n "$zsh_bin" ] && [ "$login_shell" != "$zsh_bin" ]; then
   echo "  - zsh is not the login shell yet (chezmoi could not chsh without sudo):  chsh -s $zsh_bin"
 fi
+echo "  - silver's ~/.ssh/config.rojo needs 'Host ${DOTFILES_HOST_ALIAS:-$(hostname -s)}' for the fan-out (bin/sync-hosts) to reach this host"
 echo "  - log in again (the login shell is zsh now) and run 'chezmoi doctor' if anything looks off"

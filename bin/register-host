@@ -1,0 +1,119 @@
+#!/bin/sh
+# Registers this host in hosts.asc (via bin/hosts add), commits and pushes it to origin master, so
+# silver's fan-out (bin/sync-hosts) reaches it from then on. Idempotent; run by bin/bootstrap.
+#
+#   bin/register-host [--dry-run]   --dry-run: show what would be committed/pushed, restore hosts.asc
+#
+# Env: DOTFILES_HOST_ALIAS   name to register (default: hostname -s); must be silver's ssh alias
+#      DOTFILES_NO_REGISTER=1  do nothing
+#
+# Push order: origin as is, then the other transport (https <-> ssh). Without any GitHub credential
+# the commit is undone and the one-liner to run on silver instead is printed (exit 0).
+set -u
+
+SSH_URL=git@github.com:rojosinalma/dotfiles.git
+HTTPS_URL=https://github.com/rojosinalma/dotfiles.git
+BRANCH=master
+
+log()  { printf '[register] %s\n' "$*"; }
+have() { command -v "$1" >/dev/null 2>&1; }
+first_error() { printf '%s\n' "$1" | awk '/^(fatal|error|ERROR|remote):/ { print; found = 1; exit } END { if (!found) print "no details" }'; }
+
+dry=0
+case "${1:-}" in
+  "") ;;
+  --dry-run) dry=1 ;;
+  *) echo "usage: $0 [--dry-run]" >&2; exit 1 ;;
+esac
+
+if [ "${DOTFILES_NO_REGISTER:-0}" = 1 ]; then
+  log "skipped (DOTFILES_NO_REGISTER)"
+  exit 0
+fi
+
+cd "$(dirname "$0")/.." || exit 1
+
+for t in git gpg; do have "$t" || { log "$t is not installed"; exit 1; }; done
+[ -f hosts.asc ] || { log "hosts.asc missing in $(pwd)"; exit 1; }
+
+name="${DOTFILES_HOST_ALIAS:-$(hostname -s)}"
+user="$(id -un)"
+role="$(chezmoi execute-template '{{ .role }}' 2>/dev/null)" || role=""
+case "$role" in ""|"<no value>") role=unknown ;; esac
+msg="hosts: register $name"
+
+export GIT_TERMINAL_PROMPT=0
+export GIT_SSH_COMMAND="ssh -o BatchMode=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=accept-new"
+
+if [ $dry -eq 1 ]; then
+  log "dry run: would run git pull -q --rebase --autostash origin $BRANCH"
+else
+  err="$(git pull -q --rebase --autostash origin "$BRANCH" 2>&1)" ||
+    log "git pull --rebase failed ($(first_error "$err")), continuing with the local clone"
+fi
+
+# Without the private key bin/hosts cannot see existing entries and would append a duplicate.
+if ! bin/hosts list >/dev/null 2>&1 && git log --format=%s | grep -qx "$msg"; then
+  log "$name already registered (commit '$msg' found)"
+  exit 0
+fi
+
+backup="$(mktemp)" || exit 1
+cp -p hosts.asc "$backup"
+restore() { cp -p "$backup" hosts.asc; rm -f "$backup"; }
+[ $dry -eq 1 ] && trap 'restore' EXIT INT TERM
+
+out="$(bin/hosts add "$name" --user "$user" --role "$role" 2>&1)" || { log "bin/hosts add failed: $out"; exit 1; }
+[ -n "$out" ] && printf '%s\n' "$out" | sed 's/^/[register] /'
+if cmp -s "$backup" hosts.asc; then
+  log "$name already registered"
+  exit 0
+fi
+
+remote="$(git remote get-url origin 2>/dev/null || true)"
+case "$remote" in
+  https://*) alt="$SSH_URL" ;;
+  git@*|ssh://*) alt="$HTTPS_URL" ;;
+  *) alt="" ;;
+esac
+
+if [ $dry -eq 1 ]; then
+  log "dry run: would commit hosts.asc as '$msg'"
+  log "dry run: would push to origin ($remote)${alt:+, then $alt}"
+  log "dry run: hosts.asc restored, nothing committed"
+  exit 0
+fi
+trap - EXIT INT TERM
+rm -f "$backup"
+
+set -- -c commit.gpgsign=false
+git config user.name  >/dev/null || set -- "$@" -c "user.name=Dotfiles Bootstrap"
+git config user.email >/dev/null || set -- "$@" -c "user.email=dotfiles@rojo.dev"
+git add hosts.asc || exit 1
+git "$@" commit -q -m "$msg" -- hosts.asc || { log "git commit failed"; exit 1; }
+
+# push_to <url or remote>: 0 pushed, 1 failed; one pull --rebase + retry on a non-fast-forward
+push_to() {
+  err="$(git push -q "$1" "$BRANCH" 2>&1)" && return 0
+  case "$err" in
+    *non-fast-forward*|*"fetch first"*|*rejected*)
+      log "push to $1 rejected (remote moved), rebasing once"
+      if git pull -q --rebase --autostash origin "$BRANCH" >/dev/null 2>&1; then
+        git push -q "$1" "$BRANCH" 2>/dev/null && return 0
+      else
+        git rebase --abort 2>/dev/null
+      fi
+      ;;
+  esac
+  log "push to $1 failed: $(first_error "$err")"
+  return 1
+}
+
+if push_to origin || { [ -n "$alt" ] && push_to "$alt"; }; then
+  log "registered $name and pushed hosts.asc"
+  exit 0
+fi
+
+git reset -q --keep HEAD~1 || log "could not undo the local commit; run: git reset --keep HEAD~1"
+log "could not push (no GitHub credential on this host). On silver run:  ~/dev/dotfiles/bin/hosts add $name --user $user --role $role && cd ~/dev/dotfiles && git commit -qam \"$msg\" && git push"
+exit 0
