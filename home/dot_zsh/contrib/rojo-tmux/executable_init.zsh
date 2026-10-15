@@ -57,5 +57,11 @@ tmux-init() {
     fi
 }
 
-# Auto-run when script is executed directly (not sourced) and not already in tmux
-[ -t 0 ] && [ -z "$TMUX" ] && tmux-init
+# Auto-run when script is executed directly (not sourced), not already in tmux, and not logging in
+# from inside another tmux (TERM tmux-*/screen-*): auto-attaching there nests two tmuxes, and two
+# hosts each auto-attaching a session that holds the ssh into the other loop forever (2026-10-15).
+# Nested logins get a hint instead and attach explicitly with tmux-init.
+case "$TERM" in
+  tmux*|screen*) [ -t 0 ] && [ -z "$TMUX" ] && echo "nested tmux login (TERM=$TERM): run tmux-init to attach" ;;
+  *) [ -t 0 ] && [ -z "$TMUX" ] && tmux-init ;;
+esac

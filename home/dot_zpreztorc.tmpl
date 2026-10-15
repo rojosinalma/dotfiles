@@ -16,7 +16,9 @@ zstyle ':prezto:load' pmodule \
   'completion' \
   'history-substring-search' \
   'autoenv' \
+{{- if ne .chezmoi.os "linux" }}
   'ssh' \
+{{- end }}
   'docker' \
 {{- if .work }}
   'kubectl' \
@@ -49,9 +51,10 @@ source $HOME/.zsh/contrib/gcloud-ps1/gcloud-ps1.sh
 
 ## General
 zstyle ':prezto:*:*' color 'yes'
-# No ssh identities: id_ed25519 is unencrypted on every host, so ssh-add gains nothing — and when
-# SSH_AUTH_SOCK is gpg-agent's ssh emulation (Ubuntu's gpg-agent-ssh.socket, or forwarded from such
-# a shell) ssh-add makes gpg-agent ask for a storage passphrase via pinentry.
+# No prezto ssh module on Linux: id_ed25519 is unencrypted on every host, so its ssh-add (run even
+# with no identities configured) gains nothing — and when SSH_AUTH_SOCK is gpg-agent's ssh emulation
+# (Ubuntu's gpg-agent-ssh.socket, or forwarded from such a shell) it makes gpg-agent ask for a
+# storage passphrase via pinentry.
 
 ## Completions
 zstyle ':completion:*' use-cache on
