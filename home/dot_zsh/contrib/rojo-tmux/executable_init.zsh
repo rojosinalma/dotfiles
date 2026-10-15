@@ -1,5 +1,33 @@
 #!/bin/bash
 
+# True when a pane of session $1 runs an ssh whose target is the host this login came from
+# ($SSH_CLIENT): attaching would make the two tmuxes render each other forever (silver<->tiny,
+# 2026-10-15: one connection pushed 18 GB in two hours).
+_tmux_session_loops_back() {
+    local session=$1 client_ip=${SSH_CLIENT%% *} pane child target
+    [ -n "$client_ip" ] || return 1
+    for pane in $(tmux list-panes -s -t "$session" -F '#{pane_pid}' 2>/dev/null); do
+        for child in $pane $(pgrep -P "$pane" -x ssh 2>/dev/null); do
+            [ "$(ps -o comm= -p "$child" 2>/dev/null)" = "ssh" ] || continue
+            target=$(ssh -G $(ps -o args= -p "$child" | cut -d' ' -f2-) 2>/dev/null | awk '$1=="hostname"{print $2; exit}')
+            [ -n "$target" ] || continue
+            [ "$target" = "$client_ip" ] && return 0
+            getent ahosts "$target" 2>/dev/null | grep -q "^$client_ip " && return 0
+        done
+    done
+    return 1
+}
+
+# Creates and attaches the next free alt-N session.
+_tmux_new_alt() {
+    local session_num=1
+    while tmux has-session -t "alt-$session_num" 2>/dev/null; do
+        session_num=$((session_num + 1))
+    done
+    tmux new-session -d -s "alt-$session_num"
+    tmux attach-session -t "alt-$session_num"
+}
+
 tmux-init() {
     # Check if already inside a tmux session
     if [ -z "$TMUX" ]; then
@@ -9,7 +37,11 @@ tmux-init() {
         # Check if main session has any attached clients
         main_clients=$(tmux list-clients -t main 2>/dev/null | wc -l)
 
-        if [ "$main_clients" -eq 0 ]; then
+        if _tmux_session_loops_back main; then
+            echo "main holds an ssh back to ${SSH_CLIENT%% *} (attaching would loop) - landing in a new alt session;"
+            echo "close that pane and run tmux-init to use main"
+            _tmux_new_alt
+        elif [ "$main_clients" -eq 0 ]; then
             # No one is using main session, attach directly
             tmux attach-session -t main
         else
@@ -28,14 +60,7 @@ tmux-init() {
                         break
                         ;;
                     2)
-                        # Find next available alt-# session name
-                        session_num=1
-                        while tmux has-session -t "alt-$session_num" 2>/dev/null; do
-                            session_num=$((session_num + 1))
-                        done
-                        session_name="alt-$session_num"
-                        tmux new-session -d -s "$session_name"
-                        tmux attach-session -t "$session_name"
+                        _tmux_new_alt
                         break
                         ;;
                     0|quit)
@@ -57,11 +82,5 @@ tmux-init() {
     fi
 }
 
-# Auto-run when script is executed directly (not sourced), not already in tmux, and not logging in
-# from inside another tmux (TERM tmux-*/screen-*): auto-attaching there nests two tmuxes, and two
-# hosts each auto-attaching a session that holds the ssh into the other loop forever (2026-10-15).
-# Nested logins get a hint instead and attach explicitly with tmux-init.
-case "$TERM" in
-  tmux*|screen*) [ -t 0 ] && [ -z "$TMUX" ] && echo "nested tmux login (TERM=$TERM): run tmux-init to attach" ;;
-  *) [ -t 0 ] && [ -z "$TMUX" ] && tmux-init ;;
-esac
+# Auto-run when script is executed directly (not sourced) and not already in tmux
+[ -t 0 ] && [ -z "$TMUX" ] && tmux-init
