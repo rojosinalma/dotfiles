@@ -1,0 +1,31 @@
+{{- /* Linux only: masks gpg-agent's ssh-agent emulation (gpg-agent-ssh.socket) in the user systemd
+       manager and drops the SSH_AUTH_SOCK it exported there, so shells started by user services
+       (ttyd, opencode) get prezto's ssh-agent like every other shell. Ubuntu enables the socket in
+       global scope, so a plain disable comes back at the next login — hence mask. gpg-agent itself
+       (signing, passphrase cache, gpg-agent.socket) is untouched. Skips hosts without a user manager.
+       Unmask by hand if gpg-agent should ever serve SSH keys: systemctl --user unmask gpg-agent-ssh.socket */ -}}
+{{- if eq .chezmoi.os "linux" -}}
+#!/bin/sh
+set -u
+log() { printf '[gpg-agent-ssh] %s\n' "$*"; }
+
+command -v systemctl >/dev/null 2>&1 || exit 0
+systemctl --user show-environment >/dev/null 2>&1 || exit 0
+
+state="$(systemctl --user is-enabled gpg-agent-ssh.socket 2>/dev/null || true)"
+case "$state" in
+  masked|masked-runtime|"") ;;
+  *)
+    log "masking gpg-agent-ssh.socket (was $state); gpg-agent.socket and the passphrase cache stay"
+    systemctl --user mask --now gpg-agent-ssh.socket || log "mask failed"
+    ;;
+esac
+
+case "$(systemctl --user show-environment 2>/dev/null | grep '^SSH_AUTH_SOCK=' || true)" in
+  *gnupg/S.gpg-agent.ssh)
+    log "dropping gpg-agent's SSH_AUTH_SOCK from the user manager environment"
+    systemctl --user unset-environment SSH_AUTH_SOCK || true
+    ;;
+esac
+exit 0
+{{- end }}
