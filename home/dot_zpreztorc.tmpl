@@ -49,7 +49,9 @@ source $HOME/.zsh/contrib/gcloud-ps1/gcloud-ps1.sh
 
 ## General
 zstyle ':prezto:*:*' color 'yes'
-zstyle ':prezto:module:ssh:load' identities 'id_ed25519'
+# No ssh identities: id_ed25519 is unencrypted on every host, so ssh-add gains nothing — and when
+# SSH_AUTH_SOCK is gpg-agent's ssh emulation (Ubuntu's gpg-agent-ssh.socket, or forwarded from such
+# a shell) ssh-add makes gpg-agent ask for a storage passphrase via pinentry.
 
 ## Completions
 zstyle ':completion:*' use-cache on
