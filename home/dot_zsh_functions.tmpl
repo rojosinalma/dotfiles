@@ -55,9 +55,9 @@ fi
 # Bitwarden: unlock the vault (login first if needed) and export BW_SESSION into this shell
 bwunlock() {
   command -v bw >/dev/null 2>&1 || { echo "bw is not installed" >&2; return 1; }
-  local status
-  status="$(bw status 2>/dev/null | jq -r .status)"
-  case "$status" in
+  local vault_state
+  vault_state="$(bw status 2>/dev/null | jq -r .status)"
+  case "$vault_state" in
     unauthenticated) bw login || return 1 ;;
     unlocked) echo "vault already unlocked"; [ -n "$BW_SESSION" ] && return 0 ;;
   esac
