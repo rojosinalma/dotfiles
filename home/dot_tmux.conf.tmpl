@@ -237,7 +237,7 @@ set -g @treemux-tree-nvim-init-file '~/.config/tmux/treemux/configs/treemux_init
 set -g @plugin 'tmux-plugins/tmux-cpu'
 set -g @plugin 'xamut/tmux-weather'
 set -g @plugin 'tmux-plugins/tmux-yank'
-{{- if .work }}
+{{- if eq .role "work" }}
 set -g @plugin 'jonmosco/kube-tmux'
 {{- end }}
 

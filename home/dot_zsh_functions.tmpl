@@ -1,6 +1,6 @@
 # ~/.zsh_functions — managed by chezmoi (`zshfunctions`)
 
-{{ if .work -}}
+{{ if eq .role "work" -}}
 # Kubectl exec
 kex() {
   kubectl exec -it $1 -- sh -c "clear; (bash || ash || sh)"

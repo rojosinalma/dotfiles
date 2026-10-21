@@ -1,0 +1,96 @@
+{{- /* Carbonyl (Chromium in the terminal) for browser flows started from the CLI (OAuth logins, gh,
+       xdg-open) on hosts without a desktop: server tag, Linux amd64/arm64. .zsh_env sets BROWSER.
+       Version and zip sha256 are pinned (upstream: github.com/fathyb/carbonyl); bump them together.
+       Installs into ~/.local/share/carbonyl/carbonyl-<ver>/ (older versions removed), links
+       ~/.local/bin/carbonyl, apt-installs its libraries and, where AppArmor restricts unprivileged
+       user namespaces (Ubuntu 23.10+), loads a profile granting them to this binary only, so Chromium
+       keeps its sandbox (never --no-sandbox: this Chromium build gets no security fixes).
+       DOTFILES_SKIP_CARBONYL=1 skips it (tests). */ -}}
+{{- $sha := dict
+      "amd64" "46a902ea29bb32f773fb4ee341423705b92345a810422b8df93eaea6a1ec7ad2"
+      "arm64" "5b75c99138cdabe454935e2c60994adce0bd4571f16e4eecfdf867c59a1197be" -}}
+{{- if and (has "server" .tags) (eq .chezmoi.os "linux") (hasKey $sha .chezmoi.arch) -}}
+#!/bin/sh
+set -eu
+log()  { printf '[carbonyl] %s\n' "$*"; }
+have() { command -v "$1" >/dev/null 2>&1; }
+
+if [ "${DOTFILES_SKIP_CARBONYL:-0}" = 1 ]; then
+  log "skipped (DOTFILES_SKIP_CARBONYL)"
+  exit 0
+fi
+
+VER=0.0.3
+SHA={{ index $sha .chezmoi.arch }}
+URL="https://github.com/fathyb/carbonyl/releases/download/v$VER/carbonyl.linux-{{ .chezmoi.arch }}.zip"
+ROOT="$HOME/.local/share/carbonyl"
+DIR="$ROOT/carbonyl-$VER"
+BIN="$HOME/.local/bin"
+mkdir -p "$ROOT" "$BIN"
+
+if [ ! -x "$DIR/carbonyl" ]; then
+  log "downloading Carbonyl $VER"
+  tmp="$(mktemp -d)"
+  trap 'rm -rf "$tmp"' EXIT
+  curl -fsSL -o "$tmp/carbonyl.zip" "$URL"
+  if ! echo "$SHA  $tmp/carbonyl.zip" | sha256sum -c --status; then
+    log "sha256 mismatch for $URL, not installing"
+    exit 1
+  fi
+  unzip -oq "$tmp/carbonyl.zip" -d "$tmp"
+  rm -rf "$DIR"
+  mv "$tmp/carbonyl-$VER" "$DIR"
+fi
+ln -sfn "$DIR/carbonyl" "$BIN/carbonyl"
+for d in "$ROOT"/carbonyl-*; do
+  [ "$d" = "$DIR" ] || rm -rf "$d"
+done
+
+# Shared libraries Chromium needs that a headless box may lack (ALSA is libasound2t64 since the 64-bit time_t move)
+if have apt-get; then
+  asound=libasound2t64
+  apt-cache show "$asound" >/dev/null 2>&1 || asound=libasound2
+  missing=""
+  for p in libnss3 libexpat1 libfontconfig1 "$asound"; do
+    dpkg -s "$p" >/dev/null 2>&1 || missing="$missing $p"
+  done
+  if [ -n "$missing" ]; then
+    if sudo -n true 2>/dev/null; then
+      log "apt-get install$missing"
+      # shellcheck disable=SC2086
+      sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends $missing
+    else
+      log "sudo needs a password here; run this yourself and re-apply:"
+      log "  sudo apt-get install -y$missing"
+    fi
+  fi
+fi
+
+# Chromium's sandbox needs unprivileged user namespaces; Ubuntu's AppArmor only grants them per profile
+if [ "$(cat /proc/sys/kernel/apparmor_restrict_unprivileged_userns 2>/dev/null || echo 0)" = 1 ]; then
+  profile="/etc/apparmor.d/carbonyl-$(id -un)"
+  want="abi <abi/4.0>,
+include <tunables/global>
+
+profile carbonyl-$(id -un) $DIR/carbonyl flags=(unconfined) {
+  userns,
+
+  include if exists <local/carbonyl-$(id -un)>
+}"
+  if [ "$(cat "$profile" 2>/dev/null)" != "$want" ]; then
+    if ! command -v apparmor_parser >/dev/null 2>&1 && [ ! -x /usr/sbin/apparmor_parser ] && [ ! -x /sbin/apparmor_parser ]; then
+      log "apparmor_parser not installed; Carbonyl may stop with 'No usable sandbox'"
+    elif sudo -n true 2>/dev/null; then
+      log "loading the AppArmor profile $profile (user namespaces for the Chromium sandbox)"
+      printf '%s\n' "$want" | sudo tee "$profile" >/dev/null
+      sudo apparmor_parser -r "$profile" || log "apparmor_parser failed; Carbonyl may stop with 'No usable sandbox'"
+    else
+      log "sudo needs a password here; without the AppArmor profile Carbonyl stops with 'No usable sandbox'."
+      log "  write the profile below to $profile, then: sudo apparmor_parser -r $profile"
+      printf '%s\n' "$want" | sed 's/^/[carbonyl]   /'
+    fi
+  fi
+fi
+
+log "$("$BIN/carbonyl" --version 2>&1 | head -1)"
+{{- end }}

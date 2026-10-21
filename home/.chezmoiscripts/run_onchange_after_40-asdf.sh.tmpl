@@ -1,8 +1,8 @@
 {{- /* Adds the asdf plugins named in ~/.tool-versions and installs the versions.
        Re-runs when the rendered .tool-versions changes (hash below).
        DOTFILES_SKIP_ASDF_INSTALL=1 adds the plugins but skips the (slow) installs.
-       The minimal role has no asdf: the script renders empty and chezmoi skips it. */ -}}
-{{- if ne .role "minimal" -}}
+       The minimal tag has no asdf: the script renders empty and chezmoi skips it. */ -}}
+{{- if not (has "minimal" .tags) -}}
 #!/bin/sh
 # tool-versions: {{ includeTemplate "dot_tool-versions.tmpl" . | sha256sum }}
 set -eu

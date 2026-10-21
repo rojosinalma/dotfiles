@@ -1,12 +1,12 @@
 {{- /* Installs the base toolset. Re-runs when the package list (hash below) changes.
        Linux: apt (Debian family) + a few GitHub-release binaries into ~/.local/bin.
-       minimal: the shell/CLI set only (no build deps, no lazygit/nala, no bw/asdf, no import-ids cron).
-       macOS: brew bundle on desktops. */ -}}
+       minimal tag: the shell/CLI set only (no build deps, no lazygit/nala, no bw/asdf, no import-ids cron).
+       macOS: brew bundle on gui hosts. */ -}}
 {{- $apt := list
       "zsh" "git" "curl" "wget" "unzip" "ca-certificates" "gnupg" "jq" "tmux" "openssh-client"
       "fzf" "eza" "bat" "zoxide" "git-delta" "ripgrep" "fd-find" "neovim" "tig"
       "htop" "btop" "ncdu" -}}
-{{- if ne .role "minimal" -}}
+{{- if not (has "minimal" .tags) -}}
 {{-   $apt = concat $apt (list "cron" "nala"
       "build-essential" "libssl-dev" "libyaml-dev" "zlib1g-dev" "libffi-dev" "libreadline-dev"
       "libbz2-dev" "libsqlite3-dev" "liblzma-dev" "libncurses-dev" "pkg-config") -}}
@@ -50,7 +50,7 @@ log "apt-get update"
 sudo apt-get update -qq
 
 want="{{ $apt | join " " }} gh"
-{{ if ne .role "minimal" -}}
+{{ if not (has "minimal" .tags) -}}
 # Only ask for packages this release actually has (lazygit is not in 24.04, see below)
 for p in lazygit; do
   if apt-cache show "$p" >/dev/null 2>&1; then want="$want $p"; fi
@@ -76,7 +76,7 @@ if ! have chezmoi; then
   sh -c "$(curl -fsSL https://get.chezmoi.io)" -- -b "$BIN"
 fi
 
-{{ if ne .role "minimal" -}}
+{{ if not (has "minimal" .tags) -}}
 if ! have lazygit; then
   log "installing lazygit from GitHub releases"
   ver="$(curl -fsSL https://api.github.com/repos/jesseduffield/lazygit/releases/latest | jq -r '.tag_name | ltrimstr("v")')"
@@ -122,13 +122,13 @@ if ! have brew; then
   log "Homebrew is missing: https://brew.sh — install it and re-apply"
   exit 0
 fi
-{{ if eq .role "desktop" -}}
+{{ if has "gui" .tags -}}
 if [ -f "$HOME/Brewfile" ]; then
   log "brew bundle"
   brew bundle --file "$HOME/Brewfile" --no-upgrade
 fi
 {{ else -}}
-log "server role on macOS: installing the CLI basics only"
+log "no gui tag on macOS: installing the CLI basics only"
 brew install zsh git curl tmux gnupg jq fzf eza bat zoxide git-delta ripgrep fd neovim lazygit tig htop btop ncdu chezmoi bitwarden-cli asdf gh
 {{ end -}}
 {{ end -}}

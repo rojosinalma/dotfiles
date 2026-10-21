@@ -1,19 +1,52 @@
 {{- /* chezmoi config template: rendered into ~/.config/chezmoi/chezmoi.yaml by `chezmoi init`.
-       role: minimal (small box: shell/tmux/git only, apt tools, no asdf, no import-ids, no Bitwarden)
-           | server (headless box: + asdf runtimes, import-ids cron, git-radar)
-           | desktop (GUI + full toolset).
-       work: kubectl/k9s/cloud CLIs + kube prompt.
-       Asked once and reused on later inits; non-interactive: --promptChoice role=server --promptBool work=false.
-       (The prompt text must equal the key for those flags to match.) */ -}}
-{{- $role := promptChoiceOnce . "role" "role" (list "minimal" "server" "desktop") "server" -}}
-{{- $work := promptBoolOnce . "work" "work" false -}}
+       role: what the host is for, exactly one of
+           homelab (home servers) | work (adds kubectl/k9s/cloud CLIs + kube prompt) | desktop (personal workstation).
+       tags: how the host is set up, any of
+           server  no desktop session (gets Carbonyl as BROWSER)  | gui  has a desktop session
+           minimal small box: shell/tmux/git, apt tools only     | dev  full dev toolset (asdf CLI tools, editor configs)
+         exactly one of server/gui; minimal and dev exclude each other; neither = the standard set.
+       OS and CPU are never tags: templates read .chezmoi.os / .chezmoi.arch.
+       Asked once and reused on later inits. Non-interactive (multichoice values are /-separated):
+         chezmoi init --promptChoice role=homelab --promptMultichoice tags=server/dev
+       Change the answers of an existing host: add --prompt (forces the *Once prompts).
+       A config from before the role/tags split (role minimal|server|desktop, work bool) is converted
+       without prompting, so `chezmoi update --init` works unattended on every host. */ -}}
+{{- $roles := list "homelab" "work" "desktop" -}}
+{{- $allTags := list "server" "gui" "minimal" "dev" -}}
+{{- $hasSession := false -}}
+{{- if or (eq .chezmoi.os "darwin") (stat "/usr/share/xsessions") (stat "/usr/share/wayland-sessions") -}}
+{{-   $hasSession = true -}}
+{{- end -}}
+{{- $role := "" -}}
+{{- $tags := list -}}
+{{- if and (hasKey . "role") (not (hasKey . "tags")) (has (toString .role) (list "minimal" "server" "desktop")) -}}
+{{-   $role = ternary "work" "homelab" (and (hasKey . "work") (eq (toString .work) "true")) -}}
+{{-   $tags = list (ternary "gui" "server" (and (eq .role "desktop") $hasSession)) -}}
+{{-   if eq .role "minimal" }}{{ $tags = append $tags "minimal" }}{{ end -}}
+{{-   if eq .role "desktop" }}{{ $tags = append $tags "dev" }}{{ end -}}
+{{- else -}}
+{{-   $role = promptChoiceOnce . "role" "role" $roles "homelab" -}}
+{{-   $tags = promptMultichoiceOnce . "tags" "tags" $allTags (list (ternary "gui" "server" $hasSession)) -}}
+{{- end -}}
+{{- if not (has $role $roles) -}}
+{{-   fail (printf "role %q is not one of %s" $role (join "|" $roles)) -}}
+{{- end -}}
+{{- range $tags -}}
+{{-   if not (has . $allTags) }}{{ fail (printf "tag %q is not one of %s" . (join "|" $allTags)) }}{{ end -}}
+{{- end -}}
+{{- if eq (has "server" $tags) (has "gui" $tags) -}}
+{{-   fail (printf "tags %s: set exactly one of server or gui" (join "/" $tags)) -}}
+{{- end -}}
+{{- if and (has "minimal" $tags) (has "dev" $tags) -}}
+{{-   fail "tags minimal and dev exclude each other" -}}
+{{- end -}}
 sourceDir: {{ .chezmoi.workingTree | quote }}
 format: yaml
 color: auto
 
 data:
   role: {{ $role | quote }}
-  work: {{ $work }}
+  tags: {{ $tags | toJson }}
 
 git:
   autoAdd: false

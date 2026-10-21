@@ -51,7 +51,13 @@ export GIT_RADAR_COLOR_CHANGES_CONFLICTED
 export GIT_RADAR_COLOR_CHANGES_UNTRACKED
 export GIT_RADAR_MAIN_BRANCH="origin/main"
 export GIT_RADAR_FETCH_TIME=30
-{{ if .work }}
+{{ if has "server" .tags }}
+# Browser flows from the CLI (OAuth logins, gh, xdg-open): Carbonyl in the terminal when no display is set
+if [[ -z $DISPLAY && -z $WAYLAND_DISPLAY ]] && command -v carbonyl >/dev/null 2>&1; then
+  export BROWSER=carbonyl
+fi
+{{- end }}
+{{ if eq .role "work" }}
 # Kube PS1
 KUBE_PS1_BINARY=kubectl       # Default Kubernetes binary
 KUBE_PS1_DIVIDER=": "         # Separator between context and namespace

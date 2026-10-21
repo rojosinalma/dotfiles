@@ -1,12 +1,14 @@
 #!/bin/sh
 # Registry of the hosts holding a clone of these dotfiles, kept gpg-encrypted in ./hosts.asc: one
 # ASCII-armored PGP message per host, appended one after another, each decrypting to one line
-#   name=<ssh alias> user=<unix user> role=<server|desktop|minimal> registered=<YYYY-MM-DD>
-# Encryption only needs the public key in keys/rojo.asc; reading needs the private key 523CE7AD.
+#   name=<ssh alias> user=<unix user> role=<homelab|work|desktop> tags=<a/b> registered=<YYYY-MM-DD>
+# (role and tags as in home/.chezmoi.yaml.tmpl). Encryption only needs the public key in
+# keys/rojo.asc; reading, set and remove need the private key 523CE7AD.
 #
-#   bin/hosts list [-l]                          ssh aliases (sorted, unique); -l: full entry lines
-#   bin/hosts add <name> [--user U] [--role R]   append an entry (exit 0 if already registered)
-#   bin/hosts remove <name>                      drop an entry (exit 1 if not found)
+#   bin/hosts list [-l]                                     ssh aliases (sorted, unique); -l: full entry lines
+#   bin/hosts add <name> [--user U] [--role R] [--tags T]   append an entry (exit 0 if already registered)
+#   bin/hosts set <name> [--user U] [--role R] [--tags T]   change fields of an entry (exit 1 if not found)
+#   bin/hosts remove <name>                                 drop an entry (exit 1 if not found)
 set -u
 cd "$(dirname "$0")/.."
 
@@ -14,7 +16,7 @@ registry=hosts.asc
 pubkey=keys/rojo.asc
 
 die() { echo "hosts: $*" >&2; exit 1; }
-usage() { sed -n '7,9p' "$0" | sed 's/^# */usage: /' >&2; exit 1; }
+usage() { sed -n '8,11p' "$0" | sed 's/^# */usage: /' >&2; exit 1; }
 
 encrypt() {
   gpg --encrypt --armor --batch --quiet --trust-model always --recipient-file "$pubkey"
@@ -53,22 +55,45 @@ cmd_list() {
   fi
 }
 
-cmd_add() {
-  [ $# -ge 1 ] || usage
-  name="$1"; shift
-  user="$(id -un)" role=""
+# Reads --user/--role/--tags into user, role, tags (left as they are when not given).
+parse_fields() {
   while [ $# -gt 0 ]; do
     case "$1" in
       --user) [ $# -ge 2 ] || usage; user="$2"; shift 2 ;;
       --role) [ $# -ge 2 ] || usage; role="$2"; shift 2 ;;
+      --tags) [ $# -ge 2 ] || usage; tags="$2"; shift 2 ;;
       *) usage ;;
     esac
   done
+  case "$tags" in *[!a-z/]*) die "tags are /-separated words: $tags" ;; esac
+}
+
+# This host's chezmoi data value, or unknown
+chezmoi_value() {
+  v="$(chezmoi execute-template "$1" 2>/dev/null)" || v=""
+  case "$v" in ""|"<no value>") v=unknown ;; esac
+  printf '%s' "$v"
+}
+
+# Re-encrypts the registry from the entry lines on stdin
+rewrite() {
+  new="$registry.new.$$"
+  : > "$new"
+  while IFS= read -r line; do
+    [ -n "$line" ] || continue
+    printf '%s\n' "$line" | encrypt >> "$new" || { rm -f "$new"; die "encryption failed"; }
+  done
+  mv "$new" "$registry"
+}
+
+cmd_add() {
+  [ $# -ge 1 ] || usage
+  name="$1"; shift
+  user="$(id -un)" role="" tags=""
+  parse_fields "$@"
   case "$name" in ""|*[!A-Za-z0-9._-]*) die "invalid host name: $name" ;; esac
-  if [ -z "$role" ]; then
-    role="$(chezmoi execute-template '{{ .role }}' 2>/dev/null)" || role=""
-    case "$role" in ""|"<no value>") role=unknown ;; esac
-  fi
+  [ -n "$role" ] || role="$(chezmoi_value '{{ .role }}')"
+  [ -n "$tags" ] || tags="$(chezmoi_value '{{ .tags | join "/" }}')"
   [ -s "$pubkey" ] || die "public key $pubkey missing"
 
   if all="$(entries 2>/dev/null)"; then
@@ -77,10 +102,24 @@ cmd_add() {
       return 0
     fi
   fi
-  line="name=$name user=$user role=$role registered=$(date +%Y-%m-%d)"
+  line="name=$name user=$user role=$role tags=$tags registered=$(date +%Y-%m-%d)"
   block="$(printf '%s\n' "$line" | encrypt)" || die "encryption failed"
   printf '%s\n' "$block" >> "$registry"
   echo "hosts: added $line"
+}
+
+cmd_set() {
+  [ $# -ge 2 ] || usage
+  name="$1"; shift
+  all="$(entries)" || exit 2
+  old="$(printf '%s\n' "$all" | awk -v n="$name" '{ for (i = 1; i <= NF; i++) if ($i == "name=" n) { print; exit } }')"
+  [ -n "$old" ] || die "$name not registered"
+  user="$(printf '%s\n' "$old" | field user)" role="$(printf '%s\n' "$old" | field role)"
+  tags="$(printf '%s\n' "$old" | field tags)" registered="$(printf '%s\n' "$old" | field registered)"
+  parse_fields "$@"
+  line="name=$name user=$user role=$role tags=$tags registered=$registered"
+  printf '%s\n' "$all" | awk -v n="$name" -v l="$line" '{ for (i = 1; i <= NF; i++) if ($i == "name=" n) { print l; next } } NF { print }' | rewrite
+  echo "hosts: set $line"
 }
 
 cmd_remove() {
@@ -89,20 +128,14 @@ cmd_remove() {
   all="$(entries)" || exit 2
   rest="$(printf '%s\n' "$all" | awk -v n="$name" '{ keep = 1; for (i = 1; i <= NF; i++) if ($i == "name=" n) keep = 0 } keep && NF')"
   [ "$rest" != "$all" ] || die "$name not registered"
-  new="$registry.new.$$"
-  : > "$new"
-  if [ -n "$rest" ]; then
-    printf '%s\n' "$rest" | while IFS= read -r line; do
-      printf '%s\n' "$line" | encrypt >> "$new" || exit 1
-    done || { rm -f "$new"; die "encryption failed"; }
-  fi
-  mv "$new" "$registry"
+  printf '%s\n' "$rest" | rewrite
   echo "hosts: removed $name"
 }
 
 case "${1:-}" in
   list) shift; cmd_list "$@" ;;
   add) shift; cmd_add "$@" ;;
+  set) shift; cmd_set "$@" ;;
   remove) shift; cmd_remove "$@" ;;
   *) usage ;;
 esac

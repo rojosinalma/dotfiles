@@ -3,13 +3,13 @@
 # the gpg key is imported, bin/secrets writes the secret files, and a signed commit works.
 set -u
 . /src/test/lib.sh
-export DOTFILES_SKIP_ASDF_INSTALL=1 DOTFILES_SKIP_SSH_KEY_UPLOAD=1
+export DOTFILES_SKIP_ASDF_INSTALL=1 DOTFILES_SKIP_SSH_KEY_UPLOAD=1 DOTFILES_SKIP_CARBONYL=1
 
 reset_home
 mkdir -p "$HOME/.config/Bitwarden CLI" && cp /bwcli/data.json "$HOME/.config/Bitwarden CLI/"
 
-echo "=== tier2 role=server work=false (vault unlocked)"
-if chezmoi init --apply --source /src --promptChoice role=server --promptBool work=false >/tmp/apply.log 2>&1; then
+echo "=== tier2 role=homelab tags=server (vault unlocked)"
+if chezmoi init --apply --source /src --promptChoice role=homelab --promptMultichoice tags=server >/tmp/apply.log 2>&1; then
   ok "chezmoi init --apply"
 else
   nok "chezmoi init --apply"; tail -40 /tmp/apply.log | sed 's/^/       /'

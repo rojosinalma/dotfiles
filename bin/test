@@ -1,6 +1,6 @@
 #!/bin/sh
 # Runs the dotfiles test tiers in a throwaway ubuntu:26.04 container (user rojo, uid 1000, sudo).
-#   bin/test            tier 1 (all role × work combinations, no vault)
+#   bin/test            tier 1 (role/tags combinations, legacy conversion, Carbonyl; no vault)
 #   bin/test tier1
 #   bin/test tier2      needs BW_SESSION in the environment and a logged-in ~/.config/Bitwarden CLI
 #                       optional: GPG_PASSPHRASE for the signed-commit assert

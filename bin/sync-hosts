@@ -1,8 +1,8 @@
 #!/bin/sh
 # Updates the dotfiles on every other host registered in ./hosts.asc (bin/hosts list):
-# `chezmoi update --force` (pull + apply) then `chezmoi verify`, all hosts in parallel. Run by
-# .githooks/pre-push after a push to origin, or by hand (optionally with an explicit host list:
-# bin/sync-hosts host-a host-b).
+# `chezmoi update --init --force` (pull, re-render the config from its template, apply) then
+# `chezmoi verify`, all hosts in parallel. Run by .githooks/pre-push after a push to origin, or by
+# hand (optionally with an explicit host list: bin/sync-hosts host-a host-b).
 #
 # Prints one line per host; exits 1 if any host failed, 0 otherwise (unreachable hosts are reported,
 # not fatal: they catch up on their next ssh login, see .zshrc).
@@ -24,7 +24,7 @@ trap 'rm -rf "$tmp"' EXIT
 # Remote PATH is set explicitly: ssh runs a non-login shell and chezmoi lives in ~/.local/bin.
 remote_cmd='export PATH="$HOME/.local/bin:$HOME/.asdf/shims:$PATH"
 command -v chezmoi >/dev/null 2>&1 || { echo "chezmoi not installed"; exit 3; }
-out="$(chezmoi update --force 2>&1)" || { printf "%s\n" "$out" | tail -3; exit 1; }
+out="$(chezmoi update --init --force 2>&1)" || { printf "%s\n" "$out" | tail -3; exit 1; }
 chezmoi verify >/dev/null 2>&1 || { echo "verify failed after update"; exit 1; }
 chezmoi git -- rev-parse --short HEAD'
 

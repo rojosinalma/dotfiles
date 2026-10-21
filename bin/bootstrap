@@ -2,12 +2,13 @@
 # One-shot bootstrap of a new host:
 #   sh -c "$(curl -fsSL https://raw.githubusercontent.com/rojosinalma/dotfiles/master/bin/bootstrap)"
 # Installs git, chezmoi and the Bitwarden CLI, unlocks the vault, applies the dotfiles
-# (chezmoi asks for role/work the first time), then pulls the secret files from Bitwarden.
+# (chezmoi asks for role/tags the first time), then pulls the secret files from Bitwarden.
 #
 # Env knobs: DOTFILES_REPO (default https://github.com/rojosinalma/dotfiles.git)
 #            DOTFILES_NO_SECRETS=1  skip Bitwarden entirely (no vault on this host)
-#            CHEZMOI_ARGS           extra args for chezmoi init, e.g. "--promptChoice role=server --promptBool work=false"
-#                                   role: minimal (shell/tmux/git, apt tools only, no asdf/import-ids) | server | desktop
+#            CHEZMOI_ARGS           extra args for chezmoi init, e.g. "--promptChoice role=homelab --promptMultichoice tags=server/dev"
+#                                   role: homelab | work | desktop; tags (/-separated): server|gui, minimal|dev
+#                                   (see home/.chezmoi.yaml.tmpl)
 #            DOTFILES_HOST_ALIAS    name registered in hosts.asc (default: hostname -s); must match silver's ssh alias
 #            DOTFILES_NO_REGISTER=1 do not register this host in hosts.asc (bin/register-host)
 #
@@ -16,7 +17,7 @@
 # `ssh -A` session so the forwarded agent can push.
 #
 # Small box without a vault (e.g. DietPi node):
-#   DOTFILES_NO_SECRETS=1 CHEZMOI_ARGS="--promptChoice role=minimal --promptBool work=false" sh -c "$(curl -fsSL …/bin/bootstrap)"
+#   DOTFILES_NO_SECRETS=1 CHEZMOI_ARGS="--promptChoice role=homelab --promptMultichoice tags=server/minimal" sh -c "$(curl -fsSL …/bin/bootstrap)"
 set -eu
 
 REPO="${DOTFILES_REPO:-https://github.com/rojosinalma/dotfiles.git}"

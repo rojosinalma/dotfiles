@@ -1,10 +1,10 @@
-{{- /* asdf runtimes. Server: languages only. Desktop: + CLI tooling. work adds the k8s/cloud set. */ -}}
+{{- /* asdf runtimes. Languages on every non-minimal host; the dev tag adds CLI tooling; role work adds the k8s/cloud set. */ -}}
 ruby 3.4.3
 nodejs 23.11.0
 python 3.12.4
 golang 1.24.2
 rust stable
-{{- if eq .role "desktop" }}
+{{- if has "dev" .tags }}
 bitwarden 2026.9.1
 neovim 0.11.0
 lazydocker 0.24.1
@@ -17,9 +17,9 @@ zoxide 0.9.7
 delta 0.18.2
 yq 4.45.4
 pipx 1.7.1
-bun 1.4.2
+bun 1.4.3
 {{- end }}
-{{- if .work }}
+{{- if eq .role "work" }}
 terraform 1.7.4
 terragrunt 0.48.0
 skaffold 1.37.0

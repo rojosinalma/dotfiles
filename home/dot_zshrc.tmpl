@@ -36,7 +36,7 @@ if [[ -n $SSH_CONNECTION && -z $TMUX && -t 0 ]] && command -v chezmoi >/dev/null
     _dot_remote="$(timeout 3 git -C "$_dot_root" ls-remote -q origin refs/heads/master 2>/dev/null | cut -f1)"
     if [[ -n $_dot_remote ]] && ! git -C "$_dot_root" merge-base --is-ancestor "$_dot_remote" HEAD 2>/dev/null; then
       echo "dotfiles: behind origin, updating"
-      chezmoi update --force 2>&1 | grep -v "Already installed"
+      chezmoi update --init --force 2>&1 | grep -v "Already installed"
     fi
   fi
   unset _dot_root _dot_stamp _dot_remote

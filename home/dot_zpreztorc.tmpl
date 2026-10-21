@@ -20,7 +20,7 @@ zstyle ':prezto:load' pmodule \
   'ssh' \
 {{- end }}
   'docker' \
-{{- if .work }}
+{{- if eq .role "work" }}
   'kubectl' \
   'rojo-kubectl' \
   'kube-ps1' \
@@ -34,7 +34,7 @@ zstyle ':prezto:load' pmodule \
   'archive' \
   'syntax-highlighting' \
   'autosuggestions' \
-{{- if .work }}
+{{- if eq .role "work" }}
   'zsh-aws-vault' \
 {{- end }}
   'prompt' \
@@ -45,7 +45,7 @@ autoload -Uz promptinit
 promptinit
 fpath=($HOME/.zsh/contrib/rojo-prompt $fpath) # prompt module only loads themes found in fpath
 zstyle ':prezto:module:prompt' theme 'rojo'
-{{- if .work }}
+{{- if eq .role "work" }}
 source $HOME/.zsh/contrib/gcloud-ps1/gcloud-ps1.sh
 {{- end }}
 

@@ -1,6 +1,6 @@
 # External content pulled by chezmoi apply (refreshed weekly). Nothing vendored in the repo.
 
-{{ if ne .role "minimal" -}}
+{{ if not (has "minimal" .tags) -}}
 # git-radar for the prompt (the prompt degrades silently when it is absent; minimal skips it)
 [".git-radar"]
     type = "git-repo"

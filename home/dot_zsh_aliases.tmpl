@@ -27,7 +27,7 @@ for index ({2..11}) alias "$index"="cd -${index}"; unset index
 
 # Tools
 #-------------------
-<%- if .work %>
+<%- if eq .role "work" %>
 alias kc="kubectl"
 alias cf="cloudflared"
 <%- end %>

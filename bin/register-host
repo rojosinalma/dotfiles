@@ -40,6 +40,8 @@ name="${DOTFILES_HOST_ALIAS:-$(hostname -s)}"
 user="$(id -un)"
 role="$(chezmoi execute-template '{{ .role }}' 2>/dev/null)" || role=""
 case "$role" in ""|"<no value>") role=unknown ;; esac
+tags="$(chezmoi execute-template '{{ .tags | join "/" }}' 2>/dev/null)" || tags=""
+case "$tags" in ""|"<no value>") tags=unknown ;; esac
 msg="hosts: register $name"
 
 export GIT_TERMINAL_PROMPT=0
@@ -63,7 +65,7 @@ cp -p hosts.asc "$backup"
 restore() { cp -p "$backup" hosts.asc; rm -f "$backup"; }
 [ $dry -eq 1 ] && trap 'restore' EXIT INT TERM
 
-out="$(bin/hosts add "$name" --user "$user" --role "$role" 2>&1)" || { log "bin/hosts add failed: $out"; exit 1; }
+out="$(bin/hosts add "$name" --user "$user" --role "$role" --tags "$tags" 2>&1)" || { log "bin/hosts add failed: $out"; exit 1; }
 [ -n "$out" ] && printf '%s\n' "$out" | sed 's/^/[register] /'
 if cmp -s "$backup" hosts.asc; then
   log "$name already registered"
@@ -115,5 +117,5 @@ if push_to origin || { [ -n "$alt" ] && push_to "$alt"; }; then
 fi
 
 git reset -q --keep HEAD~1 || log "could not undo the local commit; run: git reset --keep HEAD~1"
-log "could not push (no GitHub credential on this host). On silver run:  ~/dev/dotfiles/bin/hosts add $name --user $user --role $role && cd ~/dev/dotfiles && git commit -qam \"$msg\" && git push"
+log "could not push (no GitHub credential on this host). On silver run:  ~/dev/dotfiles/bin/hosts add $name --user $user --role $role --tags $tags && cd ~/dev/dotfiles && git commit -qam \"$msg\" && git push"
 exit 0

@@ -14,12 +14,16 @@ LICENSE*
 .gnupg/*
 !.gnupg/gpg-agent.conf
 
-{{ if ne .role "desktop" -}}
-# Server/minimal roles: no GUI terminals, no editor/UI configs, no desktop gem set
+{{ if not (has "gui" .tags) -}}
+# No desktop session: no GUI terminals, no Brewfile
 Brewfile
 .config/alacritty
 .config/kitty
 .config/iterm2
+{{- end }}
+
+{{ if not (has "dev" .tags) -}}
+# No dev tag: no editor/UI configs, no desktop gem set
 .config/nvim
 .config/lazygit
 .config/lazydocker
@@ -28,8 +32,8 @@ Brewfile
 .default-gems
 {{- end }}
 
-{{ if eq .role "minimal" -}}
-# Minimal role: no asdf, no GitHub key sync
+{{ if has "minimal" .tags -}}
+# Minimal tag: no asdf, no GitHub key sync
 .tool-versions
 .ssh/import-ids
 {{- end }}
