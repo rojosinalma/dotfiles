@@ -11,6 +11,10 @@
       "build-essential" "libssl-dev" "libyaml-dev" "zlib1g-dev" "libffi-dev" "libreadline-dev"
       "libbz2-dev" "libsqlite3-dev" "liblzma-dev" "libncurses-dev" "pkg-config") -}}
 {{- end -}}
+{{- if has "dev" .tags -}}
+{{- /* asdf builds tmux from source */ -}}
+{{-   $apt = concat $apt (list "libevent-dev" "bison") -}}
+{{- end -}}
 #!/bin/sh
 # packages: {{ $apt | join " " | sha256sum }}
 set -eu
