@@ -2,6 +2,7 @@
 # Runs the dotfiles test tiers in a throwaway ubuntu:26.04 container (user rojo, uid 1000, sudo).
 #   bin/test            tier 1 (role/tags combinations, legacy conversion, Carbonyl; no vault)
 #   bin/test tier1
+#   bin/test dev        role=homelab tags=server/dev with the real asdf install (10-20 min; run on tiny)
 #   bin/test tier2      needs BW_SESSION in the environment and a logged-in ~/.config/Bitwarden CLI
 #                       optional: GPG_PASSPHRASE for the signed-commit assert
 set -eu
@@ -15,6 +16,9 @@ case "$tier" in
   tier1)
     docker run --rm -v "$PWD:/src:ro" "$IMAGE" /src/test/run-tier1.sh
     ;;
+  dev)
+    docker run --rm -v "$PWD:/src:ro" "$IMAGE" /src/test/run-dev.sh
+    ;;
   tier2)
     : "${BW_SESSION:?set BW_SESSION (bw unlock --raw)}"
     bwdir="$HOME/.config/Bitwarden CLI"
@@ -23,5 +27,5 @@ case "$tier" in
       -e BW_SESSION -e GPG_PASSPHRASE="${GPG_PASSPHRASE:-}" -e DOTFILES_SKIP_SSH_KEY_UPLOAD=1 \
       "$IMAGE" /src/test/run-tier2.sh
     ;;
-  *) echo "usage: bin/test [tier1|tier2]"; exit 2 ;;
+  *) echo "usage: bin/test [tier1|dev|tier2]"; exit 2 ;;
 esac

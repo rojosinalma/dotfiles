@@ -111,7 +111,7 @@ home/                     the managed tree (chezmoi source state)
 bin/bootstrap             new-host one-liner (see above)
 bin/secrets               Bitwarden -> ~/.zsh_secrets ~/.aws_env ~/.bedrock_env ~/.npmrc ~/.ssh/config.rojo, gh login, gpg key
 bin/hosts                 registry of the hosts (hosts.asc): list, add, set, remove
-bin/test [tier1|tier2]    docker test harness
+bin/test [tier1|dev|tier2]  docker test harness
 bin/install-hooks         gitleaks pre-commit hook
 ```
 
@@ -153,6 +153,7 @@ Scripts re-run when their inputs change (`.tool-versions`, `.tmux.conf`, the pac
 
 ```sh
 bin/test            # tier 1: ubuntu:26.04 container, role/tags combinations, no vault
+bin/test dev        # real asdf install for homelab server/dev (10-20 min; run it on tiny)
 bin/test tier2      # + BW_SESSION: gpg import, bin/secrets, gh auth (GPG_PASSPHRASE enables the signed-commit check)
 ```
 

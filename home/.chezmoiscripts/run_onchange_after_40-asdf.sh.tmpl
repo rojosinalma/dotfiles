@@ -15,7 +15,6 @@ command -v asdf >/dev/null 2>&1 || { log "asdf not installed, skipping"; exit 0;
 plugin_url() {
   case "$1" in
     lazydocker) echo https://github.com/comdotlinux/asdf-lazydocker.git ;;
-    zoxide)     echo https://github.com/nyrst/asdf-zoxide.git ;;
     *)          echo "" ;;
   esac
 }
