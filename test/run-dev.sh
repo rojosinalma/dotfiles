@@ -12,13 +12,15 @@ if chezmoi init --apply --source /src --promptChoice role=homelab --promptMultic
   ok "chezmoi init --apply"
 else
   nok "chezmoi init --apply"; grep -E '^\[|chezmoi:|error' /tmp/apply.log | tail -30 | sed 's/^/       /'
+  echo; echo "dev: $pass passed, $fail failed (stopped: the checks below need a finished apply)"
+  exit 1
 fi
 check "no 'could not add plugin' in the log"   sh -c '! grep "could not add plugin" /tmp/apply.log'
 cd "$HOME" || exit 1
 check "every .tool-versions entry is installed" sh -c 'out=$(asdf current 2>&1 | awk "NR > 1 && \$4 != \"true\""); [ -z "$out" ] || { echo "$out"; exit 1; }'
 export PATH="$HOME/.asdf/shims:$PATH"
-check "asdf tmux runs"                         sh -c 'tmux -V | grep -q "^tmux 3.5a"'
-check "asdf bat runs"                          sh -c 'bat --version | grep -q "^bat 0.25.0"'
+check "asdf tmux built and runs"               sh -c '"$(asdf where tmux)/bin/tmux" -V | grep -q "^tmux 3.5a"'
+check "asdf bat built and runs"                sh -c '"$(asdf where bat)/bin/bat" --version | grep -q "^bat 0.25.0"'
 check "ruby runs"                              ruby -v
 check "python runs"                            python -V
 check "zoxide comes from apt"                  sh -c '[ "$(command -v zoxide)" = /usr/bin/zoxide ]'

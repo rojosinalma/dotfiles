@@ -36,11 +36,13 @@ fi
 # Plugins that build from source find cargo, go, … from the runtimes installed earlier in the run
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 cd "$HOME"
+log "asdf install (this compiles ruby/python on first run)"
+# First pass may fail on bat only: it builds with cargo from the rust runtime this pass installs
+asdf install || log "first pass incomplete, building bat as C17 and retrying"
 # bat's bundled oniguruma is not valid C23, GCC 15's default
 if grep -q '^bat ' .tool-versions && ! asdf where bat >/dev/null 2>&1; then
   log "asdf install bat (C17)"
   CFLAGS="${CFLAGS:-} -std=gnu17" asdf install bat || log "asdf install bat failed"
 fi
-log "asdf install (this compiles ruby/python on first run)"
 asdf install
 {{- end }}
