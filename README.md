@@ -53,9 +53,9 @@ Two prompts, stored in `~/.config/chezmoi/chezmoi.yaml` (`data.role`, `data.tags
 
 | | `minimal` | standard | `dev` |
 |---|---|---|---|
-| shell, tmux, git, ssh config, prezto modules, apt CLI tools (eza, bat, fzf, …) | yes | yes | yes |
-| asdf runtimes (ruby, nodejs, python, golang, rust) + build deps | no | yes | yes |
-| asdf CLI tools (neovim, lazygit, bat, eza, fzf, …) | no | apt only | yes |
+| shell, tmux, git, ssh config, prezto modules, CLI tools (neovim, fzf, eza, bat, delta, …) | yes | yes | yes |
+| asdf languages (ruby, nodejs, python, golang, rust) + build deps | no | yes | yes |
+| bun (asdf), pipx, lazydocker, yq | no | no | yes |
 | git-radar in the prompt, `~/.ssh/import-ids` + cron, Bitwarden CLI, lazygit | no | yes | yes |
 | ssh key: generated if missing / uploaded to GitHub | yes / no | yes / yes | yes / yes |
 | nvim/lazygit/lazydocker/bat/yamllint configs | no | no | yes |
@@ -64,6 +64,12 @@ Two prompts, stored in `~/.config/chezmoi/chezmoi.yaml` (`data.role`, `data.tags
 |---|---|---|
 | [Carbonyl](https://github.com/fathyb/carbonyl) (Chromium in the terminal) as `BROWSER` when no display is set | yes | no |
 | alacritty/kitty configs, Brewfile (macOS) | no | yes |
+
+asdf manages languages only. CLI tools come from the system package manager (apt, Homebrew) on every
+OS and CPU; when the distro lacks a tool or ships a different one under its name (Debian's `yq` is the
+Python one), it comes from the upstream GitHub release for amd64/arm64. A tool that leaves asdf goes on
+the retired list in `run_onchange_before_10-install-packages`, which removes its plugin so the shim stops
+shadowing the system binary.
 
 OS and CPU are never tags: templates read `.chezmoi.os` (`linux`, `darwin`), `.chezmoi.arch` (`amd64`,
 `arm64`) and `.chezmoi.osRelease`. Carbonyl is pinned (version + zip sha256 in
@@ -100,10 +106,10 @@ home/                     the managed tree (chezmoi source state)
   .chezmoi.yaml.tmpl      config template: prompts, data, autoCommit/autoPush off, add.secrets=error
   .chezmoiignore.tmpl     tag/os ignores + the secret targets, which chezmoi must never manage
   .chezmoiexternal.toml.tmpl  git-radar (git, not for minimal), catppuccin/tmux v2.1.3 (archive)
-  .chezmoiscripts/        10 packages (apt + gh/chezmoi/bw/asdf/lazygit binaries, import-ids cron if sshd reads the file)
+  .chezmoiscripts/        10 packages (apt/brew + gh/chezmoi/bw/asdf/lazygit/lazydocker/yq binaries, retired asdf plugins, import-ids cron)
                           20 gpg key import from Bitwarden (run_once, first apply)
                           30 prezto + tpm clone and plugin install (onchange: .tmux.conf)
-                          40 asdf plugins + install (onchange: .tool-versions; empty for minimal)
+                          40 asdf plugins + install, languages only (onchange: .tool-versions; empty for minimal)
                           45 Carbonyl for server hosts (pinned zip, libraries, AppArmor profile)
                           50 ssh key generation + upload to GitHub (run_once)
                           60 chsh to zsh when it is not the login shell yet (needs passwordless sudo)

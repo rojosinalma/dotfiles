@@ -3,7 +3,7 @@
            homelab (home servers) | work (adds kubectl/k9s/cloud CLIs + kube prompt) | desktop (personal workstation).
        tags: how the host is set up, any of
            server  no desktop session (gets Carbonyl as BROWSER)  | gui  has a desktop session
-           minimal small box: shell/tmux/git, apt tools only     | dev  full dev toolset (asdf CLI tools, editor configs)
+           minimal small box: shell/tmux/git, apt tools only     | dev  full dev toolset (extra CLI tools, editor configs)
          exactly one of server/gui; minimal and dev exclude each other; neither = the standard set.
        OS and CPU are never tags: templates read .chezmoi.os / .chezmoi.arch.
        Asked once and reused on later inits. Non-interactive (multichoice values are /-separated):

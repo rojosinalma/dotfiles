@@ -38,10 +38,14 @@ assert_role_tags() {
   fi
   if has_tag dev; then
     check "dev has nvim config"                test -d "$HOME/.config/nvim"
-    check "dev .tool-versions has lazygit"     grep -q lazygit "$HOME/.tool-versions"
+    check "dev .tool-versions has bun"         grep -q '^bun ' "$HOME/.tool-versions"
+    check "dev: no CLI tools in .tool-versions" sh -c '! grep -qE "^(tmux|neovim|fzf|bat|eza|delta|lazygit|lazydocker|yq|pipx|bitwarden) " "$HOME/.tool-versions"'
+    check "dev: lazydocker installed"          sh -c 'lazydocker --version'
+    check "dev: yq is mikefarah yq"            sh -c 'yq --version | grep -q mikefarah'
+    check "dev: pipx installed"                sh -c 'pipx --version'
   else
     check "no dev: no nvim config"             sh -c '[ ! -e "$HOME/.config/nvim" ]'
-    has_tag minimal || check "no dev: .tool-versions has no lazygit" sh -c '! grep -q lazygit "$HOME/.tool-versions"'
+    has_tag minimal || check "no dev: .tool-versions has no bun" sh -c '! grep -q "^bun " "$HOME/.tool-versions"'
   fi
   if has_tag gui; then
     check "gui has alacritty config"           test -d "$HOME/.config/alacritty"
@@ -66,7 +70,7 @@ fresh() { # fresh: clean home, sshd drop-in matching the tags
   reset_home
   sudo rm -f "$SSHD_DROPIN"
   # reset_home keeps ~/.local/bin; drop what earlier non-minimal runs installed there
-  has_tag minimal && rm -f "$HOME/.local/bin/asdf" "$HOME/.local/bin/bw" "$HOME/.local/bin/lazygit"
+  has_tag minimal && rm -f "$HOME/.local/bin/asdf" "$HOME/.local/bin/bw" "$HOME/.local/bin/lazygit" "$HOME/.local/bin/lazydocker" "$HOME/.local/bin/yq"
   has_tag minimal || fake_sshd_reads_github
 }
 

@@ -1,4 +1,5 @@
-{{- /* Adds the asdf plugins named in ~/.tool-versions and installs the versions.
+{{- /* Adds the asdf plugins named in ~/.tool-versions and installs the versions (languages only;
+       CLI tools come from the system, see 10-install-packages).
        Re-runs when the rendered .tool-versions changes (hash below).
        DOTFILES_SKIP_ASDF_INSTALL=1 adds the plugins but skips the (slow) installs.
        The minimal tag has no asdf: the script renders empty and chezmoi skips it. */ -}}
@@ -11,20 +12,11 @@ log() { printf '[asdf] %s\n' "$*"; }
 command -v asdf >/dev/null 2>&1 || { log "asdf not installed, skipping"; exit 0; }
 [ -f "$HOME/.tool-versions" ] || exit 0
 
-# Plugins missing from (or broken in) the asdf registry get an explicit URL
-plugin_url() {
-  case "$1" in
-    lazydocker) echo https://github.com/comdotlinux/asdf-lazydocker.git ;;
-    *)          echo "" ;;
-  esac
-}
-
 installed="$(asdf plugin list 2>/dev/null || true)"
 grep -v '^\s*#' "$HOME/.tool-versions" | awk 'NF {print $1}' | while read -r plugin; do
   if ! printf '%s\n' "$installed" | grep -qx "$plugin"; then
     log "adding plugin $plugin"
-    # shellcheck disable=SC2046
-    GIT_TERMINAL_PROMPT=0 asdf plugin add "$plugin" $(plugin_url "$plugin") || log "could not add plugin $plugin"
+    GIT_TERMINAL_PROMPT=0 asdf plugin add "$plugin" || log "could not add plugin $plugin"
   fi
 done
 
@@ -33,16 +25,7 @@ if [ "${DOTFILES_SKIP_ASDF_INSTALL:-0}" = 1 ]; then
   exit 0
 fi
 
-# Plugins that build from source find cargo, go, … from the runtimes installed earlier in the run
-export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 cd "$HOME"
 log "asdf install (this compiles ruby/python on first run)"
-# First pass may fail on bat only: it builds with cargo from the rust runtime this pass installs
-asdf install || log "first pass incomplete, building bat as C17 and retrying"
-# bat's bundled oniguruma is not valid C23, GCC 15's default
-if grep -q '^bat ' .tool-versions && ! asdf where bat >/dev/null 2>&1; then
-  log "asdf install bat (C17)"
-  CFLAGS="${CFLAGS:-} -std=gnu17" asdf install bat || log "asdf install bat failed"
-fi
 asdf install
 {{- end }}

@@ -1,7 +1,10 @@
 {{- /* Installs the base toolset. Re-runs when the package list (hash below) changes.
-       Linux: apt (Debian family) + a few GitHub-release binaries into ~/.local/bin.
+       CLI tools always come from the system; asdf only manages languages (40-asdf).
+       Linux: apt (Debian family) + GitHub-release binaries (amd64/arm64) into ~/.local/bin for tools the
+       distro lacks or ships under another meaning (yq is kislyuk's Python yq in Debian).
        minimal tag: the shell/CLI set only (no build deps, no lazygit/nala, no bw/asdf, no import-ids cron).
-       macOS: brew bundle on gui hosts. */ -}}
+       dev tag: + pipx, lazydocker, yq.
+       macOS: brew bundle on gui hosts, the CLI set via brew install otherwise. */ -}}
 {{- $apt := list
       "zsh" "git" "curl" "wget" "unzip" "ca-certificates" "gnupg" "jq" "tmux" "openssh-client"
       "fzf" "eza" "bat" "zoxide" "git-delta" "ripgrep" "fd-find" "neovim" "tig"
@@ -12,9 +15,10 @@
       "libbz2-dev" "libsqlite3-dev" "liblzma-dev" "libncurses-dev" "pkg-config") -}}
 {{- end -}}
 {{- if has "dev" .tags -}}
-{{- /* asdf builds tmux from source */ -}}
-{{-   $apt = concat $apt (list "libevent-dev" "bison") -}}
+{{-   $apt = concat $apt (list "pipx") -}}
 {{- end -}}
+{{- /* CLI tools that asdf used to manage; their plugins are removed so the shims stop shadowing the system binaries */ -}}
+{{- $retired := list "bitwarden" "neovim" "lazydocker" "lazygit" "tmux" "fzf" "bat" "eza" "delta" "yq" "pipx" -}}
 #!/bin/sh
 # packages: {{ $apt | join " " | sha256sum }}
 set -eu
@@ -24,6 +28,16 @@ have() { command -v "$1" >/dev/null 2>&1; }
 
 BIN="$HOME/.local/bin"
 mkdir -p "$BIN"
+
+if have asdf; then
+  plugins="$(asdf plugin list 2>/dev/null || true)"
+  for p in {{ $retired | join " " }}; do
+    if printf '%s\n' "$plugins" | grep -qx "$p"; then
+      log "removing the asdf plugin $p (now a system package)"
+      asdf plugin remove "$p"
+    fi
+  done
+fi
 
 {{ if eq .chezmoi.os "linux" -}}
 if ! have apt-get; then
@@ -89,6 +103,23 @@ if ! have lazygit; then
     | tar -xz -C "$BIN" lazygit
 fi
 
+{{ if has "dev" .tags -}}
+if ! have lazydocker; then
+  log "installing lazydocker from GitHub releases"
+  ver="$(curl -fsSL https://api.github.com/repos/jesseduffield/lazydocker/releases/latest | jq -r '.tag_name | ltrimstr("v")')"
+  ldarch="x86_64"; [ "$goarch" = arm64 ] && ldarch="arm64"
+  curl -fsSL "https://github.com/jesseduffield/lazydocker/releases/download/v${ver}/lazydocker_${ver}_Linux_${ldarch}.tar.gz" \
+    | tar -xz -C "$BIN" lazydocker
+fi
+
+# mikefarah's yq (the one brew ships), not Debian's Python yq of the same name
+if ! yq --version 2>/dev/null | grep -q mikefarah; then
+  log "installing yq from GitHub releases"
+  curl -fsSL -o "$BIN/yq" "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${goarch}"
+  chmod 755 "$BIN/yq"
+fi
+
+{{ end -}}
 if ! have bw; then
   log "installing the Bitwarden CLI"
   tmp="$(mktemp -d)"
@@ -133,7 +164,7 @@ if [ -f "$HOME/Brewfile" ]; then
 fi
 {{ else -}}
 log "no gui tag on macOS: installing the CLI basics only"
-brew install zsh git curl tmux gnupg jq fzf eza bat zoxide git-delta ripgrep fd neovim lazygit tig htop btop ncdu chezmoi bitwarden-cli asdf gh
+brew install zsh git curl tmux gnupg jq fzf eza bat zoxide git-delta ripgrep fd neovim lazygit tig htop btop ncdu chezmoi bitwarden-cli asdf gh{{ if has "dev" .tags }} pipx lazydocker yq{{ end }}
 {{ end -}}
 {{ end -}}
 log "done"
