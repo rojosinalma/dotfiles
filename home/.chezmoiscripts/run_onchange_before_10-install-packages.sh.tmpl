@@ -3,7 +3,7 @@
        Linux: apt (Debian family) + GitHub-release binaries (amd64/arm64) into ~/.local/bin for tools the
        distro lacks or ships under another meaning (yq is kislyuk's Python yq in Debian).
        minimal tag: the shell/CLI set only (no build deps, no lazygit/nala, no bw/asdf, no import-ids cron).
-       dev tag: + pipx, lazydocker, yq.
+       dev tag: + pipx, lazydocker, dtop, yq.
        macOS: brew bundle on gui hosts, the CLI set via brew install otherwise. */ -}}
 {{- $apt := list
       "zsh" "git" "curl" "wget" "unzip" "ca-certificates" "gnupg" "jq" "tmux" "openssh-client"
@@ -112,6 +112,13 @@ if ! have lazydocker; then
     | tar -xz -C "$BIN" lazydocker
 fi
 
+if ! have dtop; then
+  log "installing dtop from GitHub releases"
+  dtarch="x86_64"; [ "$goarch" = arm64 ] && dtarch="aarch64"
+  curl -fsSL "https://github.com/amir20/dtop/releases/latest/download/dtop-${dtarch}-unknown-linux-gnu.tar.gz" \
+    | tar -xz -C "$BIN" --strip-components=1 "dtop-${dtarch}-unknown-linux-gnu/dtop"
+fi
+
 # mikefarah's yq (the one brew ships), not Debian's Python yq of the same name
 if ! yq --version 2>/dev/null | grep -q mikefarah; then
   log "installing yq from GitHub releases"
@@ -164,7 +171,7 @@ if [ -f "$HOME/Brewfile" ]; then
 fi
 {{ else -}}
 log "no gui tag on macOS: installing the CLI basics only"
-brew install zsh git curl tmux gnupg jq fzf eza bat zoxide git-delta ripgrep fd neovim lazygit tig htop btop ncdu chezmoi bitwarden-cli asdf gh{{ if has "dev" .tags }} pipx lazydocker yq{{ end }}
+brew install zsh git curl tmux gnupg jq fzf eza bat zoxide git-delta ripgrep fd neovim lazygit tig htop btop ncdu chezmoi bitwarden-cli asdf gh{{ if has "dev" .tags }} pipx lazydocker dtop yq{{ end }}
 {{ end -}}
 {{ end -}}
 log "done"

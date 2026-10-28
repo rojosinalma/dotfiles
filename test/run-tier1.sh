@@ -41,6 +41,7 @@ assert_role_tags() {
     check "dev .tool-versions has bun"         grep -q '^bun ' "$HOME/.tool-versions"
     check "dev: no CLI tools in .tool-versions" sh -c '! grep -qE "^(tmux|neovim|fzf|bat|eza|delta|lazygit|lazydocker|yq|pipx|bitwarden) " "$HOME/.tool-versions"'
     check "dev: lazydocker installed"          sh -c 'lazydocker --version'
+    check "dev: dtop installed"                sh -c 'dtop --version'
     check "dev: yq is mikefarah yq"            sh -c 'yq --version | grep -q mikefarah'
     check "dev: pipx installed"                sh -c 'pipx --version'
   else
@@ -70,7 +71,7 @@ fresh() { # fresh: clean home, sshd drop-in matching the tags
   reset_home
   sudo rm -f "$SSHD_DROPIN"
   # reset_home keeps ~/.local/bin; drop what earlier non-minimal runs installed there
-  has_tag minimal && rm -f "$HOME/.local/bin/asdf" "$HOME/.local/bin/bw" "$HOME/.local/bin/lazygit" "$HOME/.local/bin/lazydocker" "$HOME/.local/bin/yq"
+  has_tag minimal && rm -f "$HOME/.local/bin/asdf" "$HOME/.local/bin/bw" "$HOME/.local/bin/lazygit" "$HOME/.local/bin/lazydocker" "$HOME/.local/bin/dtop" "$HOME/.local/bin/yq"
   has_tag minimal || fake_sshd_reads_github
 }
 

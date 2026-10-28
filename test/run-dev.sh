@@ -26,7 +26,7 @@ check "go runs"                                go version
 check "cargo runs"                             cargo -V
 check "bun runs"                               bun -v
 check "asdf has only language plugins"         sh -c '! asdf plugin list | grep -qxE "tmux|neovim|fzf|bat|eza|delta|lazygit|lazydocker|yq|pipx|bitwarden"'
-for t in tmux nvim fzf bat eza delta zoxide lazygit lazydocker yq pipx bw; do
+for t in tmux nvim fzf bat eza delta zoxide lazygit lazydocker dtop yq pipx bw; do
   check "$t comes from the system, not asdf"   sh -c "p=\$(command -v $t) && case \$p in */.asdf/*) exit 1 ;; esac"
 done
 check "tmux runs"                              tmux -V
